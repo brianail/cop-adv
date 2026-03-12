@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entidades Assessoradas | COP Advogados</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"
+        rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in-up {
+            animation: fadeInUp 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+        .delay-100 { animation-delay: 100ms; }
+        .delay-200 { animation-delay: 200ms; }
+        
+        .hover-underline-animation {
+            display: inline-block;
+            position: relative;
+        }
+        .hover-underline-animation::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            transform: scaleX(0);
+            height: 1px;
+            bottom: -4px;
+            left: 0;
+            background-color: #C8102E;
+            transform-origin: bottom right;
+            transition: transform 0.4s cubic-bezier(0.86, 0, 0.07, 1);
+        }
+        .hover-underline-animation:hover::after {
+            transform: scaleX(1);
+            transform-origin: bottom left;
+        }
+    </style>
+</head>
+<body class="font-sans text-[#2C2C2C] bg-[#F9F9F9] min-h-screen selection:bg-[#C8102E] selection:text-white">
+    <div id="page-transition"
+      class="fixed inset-0 bg-[#111111] z-[9999] scale-y-0 origin-top transition-transform duration-700 ease-in-out">
+    </div>  
+
+    <!-- Navegação -->
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-500 bg-transparent py-6 top-0">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
+            <div class="flex justify-between items-center">
+
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center cursor-pointer group" onclick="window.location.href='index.html'">
+                    <div class="flex items-center gap-4">
+                        <img id="site-logo" src="/assets/logos/logo.png" alt="LOGO" class="h-12 w-auto object-contain transition-all duration-300">
+                        <div class="flex flex-col border-l-2 border-[#C8102E] pl-4">
+                            <span id="logo-main" class="text-3xl font-serif font-bold tracking-tight leading-none text-white transition-colors">
+                                COP<span class="text-[#C8102E]">.</span>
+                            </span>
+                            <span id="logo-sub" class="text-[0.65rem] font-bold tracking-[0.3em] uppercase mt-1 text-gray-300 transition-colors">
+                                Advogados
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Desktop Menu -->
+                <div class="hidden lg:flex space-x-8 items-center">
+                    <a href="index.html" class="nav-link text-sm font-medium tracking-wide text-gray-200 hover:text-white transition-colors hover-underline-animation">Home</a>
+                    <a href="index.html#quem-somos" class="nav-link text-sm font-medium tracking-wide text-gray-200 hover:text-white transition-colors hover-underline-animation">Quem Somos</a>
+                    <a href="index.html#areas-de-atuacao" class="nav-link text-sm font-medium tracking-wide text-gray-200 hover:text-white transition-colors hover-underline-animation">Áreas de Atuação</a>
+                    <a href="clientes.html" class="text-sm font-medium tracking-wide text-[#C8102E] border-b border-[#C8102E] transition-colors">Clientes</a>
+                    <a href="blog.html" class="nav-link text-sm font-medium tracking-wide text-gray-200 hover:text-white transition-colors hover-underline-animation">Blog</a>
+                    <a href="index.html#contato" class="nav-link text-sm font-medium tracking-wide text-gray-200 hover:text-white transition-colors hover-underline-animation">Contato</a>
+                </div>
+
+                <!-- Mobile Button -->
+                <div class="lg:hidden flex items-center">
+                    <button id="menu-toggle-btn" class="text-white hover:text-[#C8102E] transition-colors">
+                        <span id="icon-menu">
+                            <i data-lucide="menu" class="w-8 h-8 stroke-[1.5]"></i>
+                        </span>
+                        <span id="icon-x" class="hidden">
+                            <i data-lucide="x" class="w-8 h-8 stroke-[1.5]"></i>
+                        </span>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden lg:hidden bg-white border-t border-gray-100 shadow-2xl absolute w-full top-full left-0">
+            <div class="px-6 py-8 space-y-6">
+                <a href="index.html" class="block text-sm font-medium tracking-wide text-gray-800 hover:text-[#C8102E] transition-colors">Home</a>
+                <a href="index.html#quem-somos" class="block text-sm font-medium tracking-wide text-gray-800 hover:text-[#C8102E] transition-colors">Quem Somos</a>
+                <a href="index.html#areas-de-atuacao" class="block text-sm font-medium tracking-wide text-gray-800 hover:text-[#C8102E] transition-colors">Áreas de Atuação</a>
+                <a href="index.html#equipe" class="block text-sm font-medium tracking-wide text-gray-800 hover:text-[#C8102E] transition-colors">Equipe</a>
+                <a href="clientes.html" class="block text-sm font-medium tracking-wide text-[#C8102E] transition-colors">Clientes</a>
+                <a href="blog.html" class="block text-sm font-medium tracking-wide text-gray-800 hover:text-[#C8102E] transition-colors">Blog</a>
+                <a href="index.html#contato" class="block text-sm font-medium tracking-wide text-gray-800 hover:text-[#C8102E] transition-colors">Contato</a>
+
+                <div class="pt-4 border-t border-gray-200">
+                    <a href="https://wa.me/5551981915878" target="_blank" rel="noreferrer" class="flex items-center text-sm font-bold text-[#C8102E] tracking-widest uppercase">
+                        <i data-lucide="message-circle" class="w-5 h-5 mr-3"></i> Fale via WhatsApp
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header da Página -->
+    <header class="bg-[#1A1A1A] pt-24 pb-32 relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10 bg-[url('https://images.unsplash.com/photo-1699665235382-a6666f77a60e?q=80&w=2072&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')] bg-cover bg-center"></div>
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent to-[#1A1A1A]"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 relative z-10">
+            <div class="max-w-4xl mx-auto text-center">
+                <h1 class="text-xs font-bold tracking-[0.2em] text-[#C8102E] uppercase mb-6 animate-fade-in-up">Parceiros de Luta</h1>
+                <h2 class="text-4xl md:text-5xl lg:text-6xl font-serif text-white mb-8 leading-tight animate-fade-in-up delay-100">Entidades de Classe e Associações</h2>
+                <p class="text-lg text-gray-300 font-light leading-relaxed animate-fade-in-up delay-200">
+                    O escritório Castro, Osório, Pedrassani & Advogados Associados representa trabalhadores em geral, segurados da Previdência Social e aposentados da Administração Pública, além das entidades de classe dentre as quais destacamos abaixo.
+                </p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Grelha de Clientes -->
+    <section class="py-24 bg-[#F9F9F9] -mt-16 relative z-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Os scripts Javascript vão preencher esta grelha com os dados reais -->
+                <div id="clients-grid" class="contents"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Chamada para Ação -->
+    <section class="py-24 bg-white border-t border-gray-200">
+        <div class="max-w-4xl mx-auto text-center px-4 sm:px-6">
+            <h3 class="text-3xl font-serif text-[#1A1A1A] mb-6">A sua entidade também precisa de representação?</h3>
+            <p class="text-[#666666] font-light mb-10 text-lg">Oferecemos assessoria jurídica completa, desde negociações coletivas a defesas judiciais complexas.</p>
+            <a href="index.html#contato" class="inline-flex items-center justify-center bg-[#C8102E] text-white px-8 py-4 text-xs font-bold tracking-[0.15em] uppercase hover:bg-[#1A1A1A] transition-colors duration-300 shadow-lg">
+                Fale com os nossos time
+            </a>
+        </div>
+    </section>
+
+    <!-- Rodapé -->
+    <footer class="bg-[#0a0a0a] text-gray-400 pt-20 pb-12 border-t border-gray-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+                <!-- Branding & Socials -->
+                <div class="flex flex-col">
+                    <span class="text-4xl font-serif font-bold text-white tracking-tight leading-none mb-2">
+                        <img src="/assets/logos/logovermelho.png" alt="LOGO" class="h-12 w-auto object-contain transition-all duration-300">
+                    </span>
+                    <span class="text-[0.65rem] font-bold text-gray-500 tracking-[0.3em] uppercase mb-6">
+                        Advogados Associados
+                    </span>
+                    <p class="text-sm font-light text-gray-400 mb-8 leading-relaxed">
+                        Referência em Direito Social e na defesa dos trabalhadores há mais de 20 anos.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="https://www.instagram.com/copadvogados/" class="w-10 h-10 rounded-full bg-gray-900 border border-gray-800 flex items-center justify-center hover:bg-[#C8102E] hover:text-white hover:border-[#C8102E] transition-all duration-300">
+                            <i data-lucide="instagram" class="w-4 h-4"></i>
+                        </a>
+                        <a href="https://www.facebook.com/copadvogados" class="w-10 h-10 rounded-full bg-gray-900 border border-gray-800 flex items-center justify-center hover:bg-[#C8102E] hover:text-white hover:border-[#C8102E] transition-all duration-300">
+                            <i data-lucide="facebook" class="w-4 h-4"></i>
+                        </a>
+                        <a href="https://www.youtube.com/channel/UC9tAT0ujNYheikSqdrL_0wg" class="w-10 h-10 rounded-full bg-gray-900 border border-gray-800 flex items-center justify-center hover:bg-[#C8102E] hover:text-white hover:border-[#C8102E] transition-all duration-300">
+                            <i data-lucide="youtube" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Contato Direto -->
+                <div>
+                    <h4 class="text-xs font-bold tracking-[0.2em] text-white uppercase mb-6">Fale Connosco</h4>
+                    <ul class="space-y-4 text-sm font-light">
+                        <li class="flex items-center group cursor-default">
+                            <i data-lucide="phone" class="w-4 h-4 mr-3 text-[#C8102E] group-hover:text-white transition-colors"></i>
+                            <span class="group-hover:text-white transition-colors">(51) 3212-7877 / 3300-6333</span>
+                        </li>
+                        <li class="flex items-center group cursor-pointer">
+                            <i data-lucide="message-circle" class="w-4 h-4 mr-3 text-[#C8102E] group-hover:text-[#25D366] transition-colors"></i>
+                            <a href="https://wa.me/5551981915878" target="_blank" class="group-hover:text-white transition-colors">WhatsApp: (51) 98191-5878</a>
+                        </li>
+                        <li class="flex items-center group cursor-pointer">
+                            <i data-lucide="mail" class="w-4 h-4 mr-3 text-[#C8102E] group-hover:text-white transition-colors"></i>
+                            <a href="mailto:cop@copadvogados.com.br" class="hover:text-white transition-colors border-b border-transparent hover:border-white pb-0.5">cop@copadvogados.com.br</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Endereço -->
+                <div>
+                    <h4 class="text-xs font-bold tracking-[0.2em] text-white uppercase mb-6">Sede Principal</h4>
+                    <ul class="space-y-4 text-sm font-light">
+                        <li class="flex items-start group">
+                            <i data-lucide="map-pin" class="w-4 h-4 mr-3 text-[#C8102E] mt-1 group-hover:text-white transition-colors"></i>
+                            <span class="leading-relaxed group-hover:text-white transition-colors">
+                                Rua Uruguai, 240 - Conjunto 801<br />
+                                Centro Histórico, Porto Alegre - RS<br />
+                                CEP: 90010-140
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Links Rápidos -->
+                <div>
+                    <h4 class="text-xs font-bold tracking-[0.2em] text-white uppercase mb-6">Navegação</h4>
+                    <ul class="space-y-3 text-sm font-light flex flex-col items-start">
+                        <li><a href="index.html" class="hover:text-[#C8102E] transition-colors flex items-center"><i data-lucide="chevron-right" class="w-3 h-3 mr-2 text-gray-700"></i> Início</a></li>
+                        <li><a href="index.html#quem-somos" class="hover:text-[#C8102E] transition-colors flex items-center"><i data-lucide="chevron-right" class="w-3 h-3 mr-2 text-gray-700"></i> Quem Somos</a></li>
+                        <li><a href="index.html#areas-de-atuacao" class="hover:text-[#C8102E] transition-colors flex items-center"><i data-lucide="chevron-right" class="w-3 h-3 mr-2 text-gray-700"></i> Áreas de Atuação</a></li>
+                        <li><a href="index.html#equipe" class="hover:text-[#C8102E] transition-colors flex items-center"><i data-lucide="chevron-right" class="w-3 h-3 mr-2 text-gray-700"></i> Corpo Jurídico</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Divisor -->
+            <div class="w-full h-px bg-gray-900 mb-8"></div>
+
+            <div class="flex flex-col md:flex-row justify-between items-center text-xs font-light tracking-wide text-gray-600">
+                <p class="mb-4 md:mb-0 text-center md:text-left">
+                    &copy; <span id="current-year"></span> COP Advogados Associados. Todos os direitos reservados.
+                </p>
+                <p class="text-xs text-gray-500 text-center md:text-left font-light tracking-wide">
+                    Criado por
+                    <a href="https://brian-ail-portfolio.netlify.app" target="_blank" class="hover:text-[#C8102E] transition-colors">
+                        Brian Ail - Desenvolvimento Web
+                    </a>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        // 1. Lógica do Menu Mobile e Scroll da Nav
+        const navbar = document.getElementById('navbar');
+        const logoMain = document.getElementById('logo-main');
+        const logoSub = document.getElementById('logo-sub');
+        const siteLogo = document.getElementById('site-logo');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const menuToggleBtn = document.getElementById('menu-toggle-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const iconMenu = document.getElementById('icon-menu');
+        const iconX = document.getElementById('icon-x');
+
+        // Efeito da NavBar ao fazer Scroll
+        window.addEventListener('scroll', () => {
+            const scrollPos = window.scrollY;
+
+            if (scrollPos > 50) {
+                // Background Branco com Sombra
+                navbar.classList.add('bg-white', 'shadow-[0_4px_20px_-10px_rgba(0,0,0,0.1)]', 'py-4');
+                navbar.classList.remove('bg-transparent', 'py-6');
+                
+                // Mudar a Imagem do Logo para a versão vermelha
+                siteLogo.src = '/assets/logos/logovermelho.png';
+                
+                // Cores do Logótipo (Escuras)
+                logoMain.classList.add('text-[#1A1A1A]');
+                logoMain.classList.remove('text-white');
+                logoSub.classList.add('text-[#666666]');
+                logoSub.classList.remove('text-gray-300');
+                
+                // Botão Menu Mobile (Escuro)
+                menuToggleBtn.classList.add('text-[#2C2C2C]');
+                menuToggleBtn.classList.remove('text-white');
+
+                // Transição das Letras (Pretas, Hover Vermelho)
+                navLinks.forEach(link => {
+                    link.classList.add('text-[#2C2C2C]', 'hover:text-[#C8102E]');
+                    link.classList.remove('text-gray-200', 'hover:text-white');
+                });
+            } else {
+                // Voltar ao Topo (Transparente)
+                navbar.classList.remove('bg-white', 'shadow-[0_4px_20px_-10px_rgba(0,0,0,0.1)]', 'py-4');
+                navbar.classList.add('bg-transparent', 'py-6');
+                
+                // Voltar a Imagem do Logo Original (Branca)
+                siteLogo.src = '/assets/logos/logo.png';
+                
+                // Cores do Logótipo (Claras)
+                logoMain.classList.remove('text-[#1A1A1A]');
+                logoMain.classList.add('text-white');
+                logoSub.classList.remove('text-[#666666]');
+                logoSub.classList.add('text-gray-300');
+                
+                // Botão Menu Mobile (Claro)
+                menuToggleBtn.classList.remove('text-[#2C2C2C]');
+                menuToggleBtn.classList.add('text-white');
+
+                // Transição das Letras (Claras, Hover Branco)
+                navLinks.forEach(link => {
+                    link.classList.remove('text-[#2C2C2C]', 'hover:text-[#C8102E]');
+                    link.classList.add('text-gray-200', 'hover:text-white');
+                });
+            }
+        });
+
+        // Alternar Menu Mobile
+        menuToggleBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            iconMenu.classList.toggle('hidden');
+            iconX.classList.toggle('hidden');
+        });
+
+        // Base de Dados de Clientes (Consolidada e Formatada)
+        const clientes = [
+            { sigla: "SINDIÁGUA", nome: "Sindicato dos Trabalhadores nas Indústrias da Purificação e Distribuição de Água e em Serviços de Esgoto do RS", link: "http://www.sindiaguars.com.br" },
+            { sigla: "SINDIRADIALISTAS", nome: "Sindicato das Empresas de Rádio e Televisão no Estado do Rio Grande do Sul", link: "http://www.radialistas-rs.org.br" },
+            { sigla: "AAFCorsan", nome: "Associação dos Aposentados da Fundação CORSAN. Aposentados e Pensionistas", link: "http://www.aafcorsan.com.br" },
+            { sigla: "ABOJERIS", nome: "Associação dos Oficiais de Justiça do Rio Grande do Sul", link: "http://www.abojeris.com.br" },
+            { sigla: "APAR-RS", nome: "Associação dos Participantes de Planos Previdenciários da Fundação CEEE", link: "https://aparrs.com/" },
+            { sigla: "SINDJUS/RS", nome: "Sindicato dos Servidores da Justiça do Rio Grande do Sul", link: "http://www.sindjus.com.br" },
+            { sigla: "ADEFERS", nome: "Associação dos Funcionários em Defesa das Estatais e do Patrimônio Publico", link: "https://www.facebook.com/adefersassociacao" },
+            { sigla: "SIMTRAPLI RS", nome: "Sindicato dos Motoristas em Transportes Privados por Aplicativos do Estado do RS", link: "https://www.facebook.com/simtrapliriograndedosul" },
+            { sigla: "SEMAPI RS", nome: "Sindicato dos Empregados em Empresas de Assessoria, Perícias, Informações e Pesquisas", link: "http://semapisindicato.org.br" },
+            { sigla: "ACRIGS", nome: "Associação dos Peritos Criminais do Rio Grande do Sul", link: "http://www.acrigs.com.br" },
+            { sigla: "FEDARGS", nome: "Federação das Entidades de Artesãos do Estado do Rio Grande do Sul", link: "https://www.facebook.com/fedargs" },
+            { sigla: "SOERGS", nome: "Sindicato dos Odontologistas no Estado do Rio Grande do Sul", link: "http://www.soergs.com.br" },
+            { sigla: "SIMPE RS", nome: "Sindicato dos Servidores do Ministério Público do Rio Grande do Sul", link: "http://simpe-rs.com.br" },
+            { sigla: "SISMI", nome: "Sindicato dos Servidores Municipais de Imbé", link: "https://www.instagram.com/sismisindicato" },
+            { sigla: "SSPMO", nome: "Sindicato dos Servidores Públicos Municipais de Osório", link: "http://www.sspmo.com.br" },
+            { sigla: "USSLIN", nome: "União dos Servidores da Saúde do Litoral Norte", link: "https://www.sites.google.com/view/usslin" },
+            { sigla: "ASSAGRA", nome: "Associação de Servidores das Ciências Agrárias", link: "https://assagra-rs.wixsite.com/assagra" },
+            { sigla: "SINDICAERS", nome: "Sindicato dos Condutores de Ambulância do Estado do Rio Grande do Sul", link: "http://www.sindcaers.com" },
+            { sigla: "SINDTCE RS", nome: "Sindicato dos Oficiais de Controle Externo do TCE/RS", link: "http://sindtce-rs.org" }
+        ];
+
+        const grid = document.getElementById('clients-grid');
+
+        // Geração dos Cards Dinamicamente
+        clientes.forEach(cliente => {
+            let displayUrl = cliente.link.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');
+
+            const cardHTML = `
+                <div class="bg-white border border-gray-200 p-8 hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] transition-all duration-300 group flex flex-col h-full relative">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-[#C8102E] scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+                    
+                    <div class="h-20 flex items-center justify-start mb-8">
+                        <img src="https://placehold.co/400x200/transparent/999999?text=${encodeURIComponent(cliente.sigla)}" alt="Logo ${cliente.sigla}" class="max-h-full max-w-[160px] object-contain grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500">
+                    </div>
+                    
+                    <h4 class="text-[#C8102E] font-bold tracking-widest uppercase text-[10px] mb-3">${cliente.sigla}</h4>
+                    <p class="text-[#1A1A1A] font-serif text-lg leading-snug mb-8 flex-grow">
+                        ${cliente.nome}
+                    </p>
+                    
+                    <div class="border-t border-gray-100 pt-4 mt-auto">
+                        <a href="${cliente.link}" target="_blank" rel="noreferrer" class="text-gray-500 hover:text-[#C8102E] text-sm font-medium flex items-center transition-colors truncate">
+                            <i data-lucide="external-link" class="w-4 h-4 mr-2 flex-shrink-0"></i> 
+                            <span class="truncate">${displayUrl}</span>
+                        </a>
+                    </div>
+                </div>
+            `;
+            grid.innerHTML += cardHTML;
+        });
+
+        // Re-inicializar os icones nos cards gerados
+        lucide.createIcons();
+    </script>
+
+    <script src="index.js"></script>
+</body>
+</html>
