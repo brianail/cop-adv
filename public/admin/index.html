@@ -1,154 +1,873 @@
 <!DOCTYPE html>
-<html lang="pt-BR" class="scroll-smooth">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin — COP Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — COP Advogados</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script>tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','sans-serif'],serif:['Playfair Display','serif']}}}}</script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest"></script>
-  <!-- TipTap via CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/@tiptap/core@2.4.0/dist/tiptap-core.umd.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@tiptap/starter-kit@2.4.0/dist/tiptap-starter-kit.umd.min.js"></script>
+  <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
+  <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
+
   <style>
-    /* Editor */
-    .ProseMirror{outline:none;min-height:320px;padding:1rem;font-size:.95rem;line-height:1.8;color:#2C2C2C}
-    .ProseMirror p{margin-bottom:.8rem}
-    .ProseMirror h3{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:600;margin:1.5rem 0 .5rem;color:#1A1A1A}
-    .ProseMirror ul{list-style:disc;padding-left:1.4rem;margin:.6rem 0 1.2rem}
-    .ProseMirror li{margin:.3rem 0;color:#555}
-    .ProseMirror strong{color:#1A1A1A;font-weight:600}
-    .ProseMirror blockquote{border-left:3px solid #C8102E;padding:.8rem 1.2rem;background:#F9F9F9;margin:1.2rem 0;border-radius:0 2px 2px 0;font-style:italic;color:#444}
-    .ProseMirror.ProseMirror-focused{outline:none}
-    .tiptap-btn{padding:.3rem .6rem;border-radius:4px;font-size:.8rem;font-weight:600;transition:all .2s;border:1px solid #e5e7eb;color:#555;background:#fff;cursor:pointer}
-    .tiptap-btn:hover{background:#f3f4f6}
-    .tiptap-btn.is-active{background:#C8102E;color:#fff;border-color:#C8102E}
+    :root {
+      --red: #C8102E;
+      --dark: #1A1A1A;
+      --mid: #2C2C2C;
+      --muted: #8f8f8f;
+      --border: rgba(0,0,0,0.08);
+      --bg: #F5F4F0;
+      --white: #ffffff;
+      --serif: 'Cormorant Garamond', Georgia, serif;
+      --sans: 'DM Sans', system-ui, sans-serif;
+    }
 
-    /* Toast */
-    #toast{transition:opacity .3s,transform .3s}
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: var(--sans); background: var(--bg); color: var(--mid); min-height: 100vh; }
 
-    /* Overlay */
-    #editor-overlay{display:none}
-    #editor-overlay.open{display:flex}
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 
-    /* Drag & Drop */
-    #drop-zone.dragover{border-color:#C8102E;background:#fff5f5}
+    /* ── Login ── */
+    #login-screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--dark);
+      background-image:
+        radial-gradient(ellipse at 20% 50%, rgba(200,16,46,0.15) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 20%, rgba(200,16,46,0.08) 0%, transparent 50%);
+    }
+
+    .login-box {
+      width: 100%;
+      max-width: 380px;
+      padding: 0 1.5rem;
+    }
+
+    .login-logo {
+      font-family: var(--serif);
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: -0.02em;
+      line-height: 1;
+      margin-bottom: 0.25rem;
+    }
+
+    .login-logo span { color: var(--red); }
+
+    .login-sub {
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+      font-weight: 500;
+      margin-bottom: 3rem;
+    }
+
+    .login-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 2.5rem;
+      backdrop-filter: blur(10px);
+    }
+
+    .field-label {
+      display: block;
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+      margin-bottom: 0.6rem;
+    }
+
+    .login-input {
+      width: 100%;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: white;
+      padding: 0.875rem 1rem;
+      font-size: 0.9rem;
+      font-family: var(--sans);
+      outline: none;
+      transition: border-color 0.2s;
+      margin-bottom: 1.5rem;
+    }
+
+    .login-input:focus { border-color: var(--red); }
+    .login-input::placeholder { color: rgba(255,255,255,0.2); }
+
+    .btn-login {
+      width: 100%;
+      background: var(--red);
+      color: white;
+      border: none;
+      padding: 0.9rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: var(--sans);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .btn-login:hover { background: white; color: var(--red); }
+    .btn-login:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    #login-err {
+      font-size: 0.75rem;
+      color: #ff6b6b;
+      margin-bottom: 1rem;
+      display: none;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    /* ── Panel ── */
+    #admin-panel { display: none; min-height: 100vh; }
+
+    .topbar {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      padding: 0 2rem;
+      justify-content: space-between;
+      box-shadow: 0 1px 20px rgba(0,0,0,0.04);
+    }
+
+    .topbar-logo {
+      font-family: var(--serif);
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--dark);
+      letter-spacing: -0.02em;
+    }
+
+    .topbar-logo span { color: var(--red); }
+
+    .topbar-sep {
+      width: 1px;
+      height: 18px;
+      background: var(--border);
+      margin: 0 1rem;
+    }
+
+    .topbar-tag {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .topbar-actions { display: flex; align-items: center; gap: 0.5rem; }
+
+    .btn-ghost {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.4rem 0.75rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      transition: color 0.2s;
+      font-family: var(--sans);
+      text-decoration: none;
+    }
+
+    .btn-ghost:hover { color: var(--red); }
+
+    /* ── Main content ── */
+    .main { max-width: 900px; margin: 0 auto; padding: 2.5rem 1.5rem; }
+
+    .page-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .page-title {
+      font-family: var(--serif);
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--dark);
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+
+    .page-count {
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-weight: 300;
+      margin-top: 0.3rem;
+    }
+
+    .btn-primary {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--red);
+      color: white;
+      border: none;
+      padding: 0.7rem 1.25rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: var(--sans);
+      white-space: nowrap;
+    }
+
+    .btn-primary:hover { background: var(--dark); }
+
+    /* ── Filters ── */
+    .filters {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+
+    .filter-btn {
+      padding: 0.3rem 0.8rem;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      border: 1px solid var(--border);
+      background: white;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: var(--sans);
+    }
+
+    .filter-btn:hover, .filter-btn.active {
+      border-color: var(--red);
+      color: var(--red);
+      background: rgba(200,16,46,0.04);
+    }
+
+    /* ── Post list ── */
+    #posts-list { display: flex; flex-direction: column; gap: 0.5rem; }
+
+    .post-row {
+      background: white;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.875rem 1rem;
+      cursor: pointer;
+      transition: all 0.15s;
+      position: relative;
+    }
+
+    .post-row:hover { border-color: var(--red); }
+    .post-row:hover .post-row-title { color: var(--red); }
+
+    .post-row-img {
+      width: 56px;
+      height: 56px;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .post-row-meta { flex: 1; min-width: 0; }
+
+    .post-row-badges {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .badge {
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0.15rem 0.5rem;
+    }
+
+    .badge-cat { color: var(--red); background: rgba(200,16,46,0.06); }
+    .badge-featured { color: #92400e; background: #fef3c7; }
+
+    .post-row-title {
+      font-family: var(--serif);
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--dark);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transition: color 0.15s;
+      line-height: 1.3;
+    }
+
+    .post-row-date {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 0.2rem;
+      font-weight: 300;
+    }
+
+    .btn-edit {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.4rem 0.75rem;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: none;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: var(--sans);
+    }
+
+    .btn-edit:hover { border-color: var(--red); color: var(--red); }
+
+    /* ── Empty state ── */
+    #empty-state {
+      display: none;
+      text-align: center;
+      padding: 5rem 0;
+    }
+
+    .empty-icon { color: #d1d5db; margin-bottom: 1rem; }
+    .empty-text { font-size: 0.85rem; color: var(--muted); font-weight: 300; margin-bottom: 1rem; }
+    .empty-cta { font-size: 0.75rem; color: var(--red); font-weight: 600; cursor: pointer; background: none; border: none; font-family: var(--sans); }
+    .empty-cta:hover { text-decoration: underline; }
+
+    /* ── Loading skeleton ── */
+    .skeleton {
+      background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 2px;
+    }
+
+    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+    /* ── Editor overlay ── */
+    #editor-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px);
+      align-items: flex-start;
+      justify-content: center;
+      overflow-y: auto;
+      padding: 2rem 1rem;
+    }
+
+    #editor-overlay.open { display: flex; }
+
+    .editor-panel {
+      background: white;
+      width: 100%;
+      max-width: 860px;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.2);
+      animation: slideUp 0.25s ease;
+      flex-shrink: 0;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .editor-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .editor-header-title {
+      font-family: var(--serif);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--dark);
+    }
+
+    .btn-close {
+      background: none;
+      border: none;
+      color: #d1d5db;
+      cursor: pointer;
+      padding: 0.25rem;
+      transition: color 0.15s;
+    }
+
+    .btn-close:hover { color: var(--red); }
+
+    .editor-body { padding: 2rem; display: flex; flex-direction: column; gap: 1.5rem; }
+
+    /* ── Form fields ── */
+    .form-label {
+      display: block;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .form-input {
+      width: 100%;
+      border: 1px solid var(--border);
+      padding: 0.75rem 1rem;
+      font-size: 0.9rem;
+      font-family: var(--sans);
+      color: var(--dark);
+      outline: none;
+      transition: border-color 0.15s;
+      background: white;
+    }
+
+    .form-input:focus { border-color: var(--red); }
+
+    .form-input-title {
+      font-family: var(--serif);
+      font-size: 1.1rem;
+    }
+
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+    @media (max-width: 600px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .main { padding: 1.5rem 1rem; }
+      .topbar { padding: 0 1rem; }
+      .editor-body { padding: 1.25rem; }
+      .editor-header { padding: 1rem 1.25rem; }
+    }
+
+    /* ── Title counter ── */
+    .title-wrap { position: relative; }
+    .title-counter {
+      position: absolute;
+      right: 0.75rem;
+      bottom: 0.6rem;
+      font-size: 0.65rem;
+      color: #d1d5db;
+      pointer-events: none;
+      transition: color 0.15s;
+    }
+
+    .title-counter.warn { color: #f59e0b; }
+    .title-counter.over { color: var(--red); }
+
+    /* ── Drop zone ── */
+    .drop-zone {
+      border: 2px dashed var(--border);
+      padding: 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.15s;
+      position: relative;
+    }
+
+    .drop-zone:hover, .drop-zone.dragover {
+      border-color: var(--red);
+      background: rgba(200,16,46,0.02);
+    }
+
+    .drop-zone-text { font-size: 0.85rem; color: var(--muted); font-weight: 300; }
+    .drop-zone-text span { color: var(--red); font-weight: 500; }
+    .drop-zone-hint { font-size: 0.72rem; color: #d1d5db; margin-top: 0.3rem; }
+
+    #img-preview { display: none; }
+    .img-preview-img { max-height: 140px; margin: 0 auto; object-fit: contain; display: block; }
+    .img-preview-name { font-size: 0.72rem; color: var(--muted); margin-top: 0.5rem; }
+    .btn-remove-img {
+      margin-top: 0.5rem;
+      font-size: 0.7rem;
+      color: var(--red);
+      font-weight: 600;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: var(--sans);
+    }
+
+    .btn-remove-img:hover { text-decoration: underline; }
+
+    /* ── Upload progress ── */
+    .upload-progress {
+      display: none;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      background: rgba(200,16,46,0.04);
+      border: 1px solid rgba(200,16,46,0.1);
+    }
+
+    .upload-progress.active { display: flex; }
+    .upload-bar-wrap { flex: 1; height: 2px; background: rgba(200,16,46,0.15); }
+    .upload-bar { height: 100%; background: var(--red); width: 0%; transition: width 0.3s; }
+    .upload-label { font-size: 0.7rem; color: var(--red); font-weight: 600; white-space: nowrap; }
+
+    /* ── Featured toggle ── */
+    .featured-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.875rem 1rem;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: border-color 0.15s;
+    }
+
+    .featured-row:hover { border-color: var(--red); }
+
+    .toggle {
+      width: 36px;
+      height: 20px;
+      background: #e5e7eb;
+      border-radius: 10px;
+      position: relative;
+      transition: background 0.2s;
+      flex-shrink: 0;
+    }
+
+    .toggle.on { background: var(--red); }
+
+    .toggle::after {
+      content: '';
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      background: white;
+      border-radius: 50%;
+      top: 3px;
+      left: 3px;
+      transition: transform 0.2s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+
+    .toggle.on::after { transform: translateX(16px); }
+
+    .featured-label { font-size: 0.85rem; font-weight: 500; color: var(--mid); }
+    .featured-desc { font-size: 0.75rem; color: var(--muted); font-weight: 300; }
+
+    /* ── Quill editor ── */
+    .ql-toolbar.ql-snow {
+      border: 1px solid var(--border) !important;
+      border-bottom: none !important;
+      background: #fafafa;
+      padding: 0.5rem 0.75rem;
+      font-family: var(--sans);
+    }
+
+    .ql-container.ql-snow {
+      border: 1px solid var(--border) !important;
+      font-family: var(--sans);
+      font-size: 0.92rem;
+    }
+
+    .ql-editor {
+      min-height: 280px;
+      padding: 1.25rem;
+      line-height: 1.85;
+      color: var(--mid);
+    }
+
+    .ql-editor p { margin-bottom: 0.8rem; }
+    .ql-editor p:last-child { margin-bottom: 0; }
+
+    .ql-editor h3 {
+      font-family: var(--serif);
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin: 1.5rem 0 0.5rem;
+      color: var(--dark);
+    }
+
+    .ql-editor ul { list-style: disc; padding-left: 1.5rem; margin: 0.5rem 0 1rem; }
+    .ql-editor li { margin: 0.3rem 0; }
+    .ql-editor strong { color: var(--dark); font-weight: 600; }
+
+    .ql-editor blockquote {
+      border-left: 3px solid var(--red) !important;
+      padding: 0.75rem 1.25rem;
+      background: #fafafa;
+      margin: 1rem 0;
+      font-style: italic;
+      color: #555;
+    }
+
+    .ql-snow .ql-stroke { stroke: var(--muted); }
+    .ql-snow .ql-fill { fill: var(--muted); }
+    .ql-snow .ql-picker { color: var(--muted); }
+    .ql-snow.ql-toolbar button:hover .ql-stroke,
+    .ql-snow .ql-toolbar button:hover .ql-stroke { stroke: var(--red); }
+    .ql-snow.ql-toolbar button.ql-active .ql-stroke,
+    .ql-snow .ql-toolbar button.ql-active .ql-stroke { stroke: var(--red); }
+    .ql-snow.ql-toolbar button:hover .ql-fill,
+    .ql-snow .ql-toolbar button.ql-active .ql-fill { fill: var(--red); }
+    .ql-snow.ql-toolbar button:hover,
+    .ql-snow .ql-toolbar button.ql-active { color: var(--red); }
+
+    /* char count */
+    .editor-footer {
+      border: 1px solid var(--border);
+      border-top: none;
+      padding: 0.4rem 1rem;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .char-count { font-size: 0.65rem; color: #d1d5db; }
+
+    /* ── Editor actions ── */
+    .editor-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .btn-danger {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #d1d5db;
+      background: none;
+      border: none;
+      cursor: pointer;
+      transition: color 0.15s;
+      font-family: var(--sans);
+    }
+
+    .btn-danger:hover { color: #ef4444; }
+
+    .btn-secondary {
+      padding: 0.65rem 1.25rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: none;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: var(--sans);
+    }
+
+    .btn-secondary:hover { border-color: var(--dark); color: var(--dark); }
+
+    .btn-save {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.65rem 1.5rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: white;
+      background: var(--red);
+      border: none;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: var(--sans);
+    }
+
+    .btn-save:hover { background: var(--dark); }
+    .btn-save:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* ── Unsaved warning ── */
+    #unsaved-banner {
+      display: none;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1rem;
+      background: #fef3c7;
+      border-bottom: 1px solid #fde68a;
+      font-size: 0.75rem;
+      color: #92400e;
+      font-weight: 500;
+    }
+
+    #unsaved-banner.show { display: flex; }
+
+    /* ── Toast ── */
+    #toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(8px);
+      background: var(--dark);
+      color: white;
+      font-size: 0.82rem;
+      font-weight: 500;
+      padding: 0.75rem 1.5rem;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s, transform 0.25s;
+      white-space: nowrap;
+      z-index: 999;
+    }
+
+    #toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ── Spinner ── */
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spin { animation: spin 0.8s linear infinite; display: inline-block; }
   </style>
 </head>
-<body class="font-sans bg-[#F7F7F5] min-h-screen text-[#2C2C2C]">
+<body>
 
 <!-- ── LOGIN ── -->
-<div id="login-screen" class="min-h-screen flex items-center justify-center px-4">
-  <div class="w-full max-w-sm">
-    <div class="text-center mb-10">
-      <div class="font-serif text-4xl font-bold text-[#1A1A1A] mb-1">COP<span class="text-[#C8102E]">.</span></div>
-      <p class="text-xs tracking-[.25em] uppercase text-gray-400 font-medium">Painel Administrativo</p>
-    </div>
-    <div class="bg-white shadow-sm border border-gray-100 p-8">
-      <p class="text-sm text-gray-500 mb-6 font-light">Entre com sua senha para gerenciar o blog.</p>
-      <div class="mb-4">
-        <label class="block text-xs font-semibold tracking-widest uppercase text-gray-400 mb-2">Senha</label>
-        <input id="login-pw" type="password" placeholder="••••••••"
-          class="w-full border border-gray-200 px-4 py-3 text-sm focus:outline-none focus:border-[#C8102E] transition-colors"
-          onkeydown="if(event.key==='Enter')doLogin()">
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">COP<span>.</span></div>
+    <div class="login-sub">Painel Administrativo</div>
+    <div class="login-card">
+      <label class="field-label">Senha de acesso</label>
+      <input id="login-pw" type="password" class="login-input" placeholder="••••••••"
+        onkeydown="if(event.key==='Enter')doLogin()">
+      <div id="login-err">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Senha incorreta.
       </div>
-      <div id="login-err" class="hidden text-xs text-[#C8102E] mb-4 font-medium"></div>
-      <button onclick="doLogin()"
-        class="w-full bg-[#C8102E] text-white text-xs font-bold tracking-widest uppercase py-3.5 hover:bg-[#1A1A1A] transition-colors">
-        Entrar
+      <button class="btn-login" id="login-btn" onclick="doLogin()">
+        <span id="login-btn-label">Entrar</span>
       </button>
     </div>
   </div>
 </div>
 
 <!-- ── PAINEL ── -->
-<div id="admin-panel" class="hidden min-h-screen">
+<div id="admin-panel">
 
-  <!-- Topbar -->
-  <header class="bg-white border-b border-gray-100 sticky top-0 z-40 shadow-sm">
-    <div class="max-w-6xl mx-auto px-6 flex items-center justify-between h-16">
-      <div class="flex items-center gap-4">
-        <div class="font-serif text-2xl font-bold text-[#1A1A1A]">COP<span class="text-[#C8102E]">.</span></div>
-        <span class="text-gray-200">|</span>
-        <span class="text-sm font-medium text-gray-500">Blog Admin</span>
-      </div>
-      <div class="flex items-center gap-3">
-        <a href="../blog.html" target="_blank"
-          class="flex items-center gap-2 text-xs font-semibold tracking-wider uppercase text-gray-400 hover:text-[#C8102E] transition-colors">
-          <i data-lucide="external-link" class="w-3.5 h-3.5"></i> Ver blog
-        </a>
-        <button onclick="doLogout()"
-          class="flex items-center gap-2 text-xs font-semibold tracking-wider uppercase text-gray-400 hover:text-[#C8102E] transition-colors ml-4">
-          <i data-lucide="log-out" class="w-3.5 h-3.5"></i> Sair
-        </button>
-      </div>
+  <header class="topbar">
+    <div style="display:flex;align-items:center">
+      <div class="topbar-logo">COP<span>.</span></div>
+      <div class="topbar-sep"></div>
+      <div class="topbar-tag">Blog Admin</div>
+    </div>
+    <div class="topbar-actions">
+      <a href="../blog.html" target="_blank" class="btn-ghost">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Ver blog
+      </a>
+      <div style="width:1px;height:16px;background:var(--border);margin:0 0.25rem"></div>
+      <button class="btn-ghost" onclick="doLogout()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Sair
+      </button>
     </div>
   </header>
 
-  <!-- Content -->
-  <main class="max-w-6xl mx-auto px-6 py-10">
+  <main class="main">
 
-    <!-- Título + botão novo -->
-    <div class="flex items-center justify-between mb-8">
+    <div class="page-header">
       <div>
-        <h1 class="text-2xl font-serif font-bold text-[#1A1A1A]">Publicações</h1>
-        <p class="text-sm text-gray-400 font-light mt-1" id="posts-count">Carregando...</p>
+        <div class="page-title">Publicações</div>
+        <div class="page-count" id="posts-count">Carregando...</div>
       </div>
-      <button onclick="openEditor(null)"
-        class="flex items-center gap-2 bg-[#C8102E] text-white text-xs font-bold tracking-widest uppercase px-5 py-3 hover:bg-[#1A1A1A] transition-colors">
-        <i data-lucide="plus" class="w-4 h-4"></i> Nova publicação
+      <button class="btn-primary" onclick="openEditor(null)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Nova publicação
       </button>
     </div>
 
-    <!-- Filtro rápido -->
-    <div class="flex gap-2 flex-wrap mb-6" id="cat-filters">
-      <button onclick="loadPosts('todos', this)"
-        class="filter-btn active px-4 py-1.5 text-xs font-bold tracking-wider uppercase border border-gray-200 text-gray-500 hover:border-[#C8102E] hover:text-[#C8102E] transition-all">
-        Todos
-      </button>
+    <div class="filters" id="cat-filters">
+      <button class="filter-btn active" onclick="loadPosts('todos', this)">Todos</button>
     </div>
 
-    <!-- Lista de posts -->
-    <div id="posts-list" class="space-y-3"></div>
+    <div id="posts-list"></div>
 
-    <!-- Empty state -->
-    <div id="empty-state" class="hidden text-center py-20">
-      <i data-lucide="file-text" class="w-10 h-10 text-gray-200 mx-auto mb-4"></i>
-      <p class="text-sm text-gray-400 font-light">Nenhuma publicação ainda.</p>
-      <button onclick="openEditor(null)" class="mt-4 text-xs text-[#C8102E] font-semibold hover:underline">Criar a primeira</button>
+    <div id="empty-state">
+      <svg class="empty-icon" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      <div class="empty-text">Nenhuma publicação ainda.</div>
+      <button class="empty-cta" onclick="openEditor(null)">Criar a primeira →</button>
     </div>
 
   </main>
 </div>
 
-<!-- ── EDITOR (overlay) ── -->
-<div id="editor-overlay" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm items-start justify-center overflow-y-auto py-8 px-4">
-  <div class="bg-white w-full max-w-4xl shadow-2xl">
+<!-- ── EDITOR ── -->
+<div id="editor-overlay">
+  <div class="editor-panel">
 
-    <!-- Header do editor -->
-    <div class="flex items-center justify-between px-8 py-5 border-b border-gray-100">
-      <h2 id="editor-title" class="text-lg font-serif font-bold text-[#1A1A1A]">Nova publicação</h2>
-      <button onclick="closeEditor()" class="text-gray-300 hover:text-[#C8102E] transition-colors">
-        <i data-lucide="x" class="w-5 h-5"></i>
+    <div id="unsaved-banner">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      Alterações não salvas
+    </div>
+
+    <div class="editor-header">
+      <div class="editor-header-title" id="editor-title">Nova publicação</div>
+      <button class="btn-close" onclick="tryCloseEditor()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
     </div>
 
-    <div class="p-8 space-y-6">
+    <div class="editor-body">
 
       <!-- Título -->
       <div>
-        <label class="block text-xs font-bold tracking-widest uppercase text-gray-400 mb-2">Título *</label>
-        <input id="f-title" type="text" placeholder="Ex: STJ decide que..."
-          class="w-full border border-gray-200 px-4 py-3 text-base font-serif focus:outline-none focus:border-[#C8102E] transition-colors">
+        <label class="form-label">Título *</label>
+        <div class="title-wrap">
+          <input id="f-title" type="text" class="form-input form-input-title"
+            placeholder="Ex: STJ decide que..."
+            oninput="updateTitleCounter(this)" maxlength="150">
+          <span class="title-counter" id="title-counter">0/150</span>
+        </div>
       </div>
 
-      <!-- Categoria + Destaque -->
-      <div class="grid grid-cols-2 gap-4">
+      <!-- Categoria + Leitura -->
+      <div class="form-grid">
         <div>
-          <label class="block text-xs font-bold tracking-widest uppercase text-gray-400 mb-2">Categoria *</label>
-          <select id="f-cat"
-            class="w-full border border-gray-200 px-4 py-3 text-sm focus:outline-none focus:border-[#C8102E] transition-colors bg-white appearance-none">
+          <label class="form-label">Categoria *</label>
+          <select id="f-cat" class="form-input">
             <option value="">Selecione...</option>
             <option value="trabalhista">Trabalhista</option>
             <option value="previdenciario">Previdenciário</option>
@@ -159,101 +878,79 @@
           </select>
         </div>
         <div>
-          <label class="block text-xs font-bold tracking-widest uppercase text-gray-400 mb-2">Tempo de leitura</label>
-          <input id="f-read" type="text" placeholder="Ex: 5 min de leitura"
-            class="w-full border border-gray-200 px-4 py-3 text-sm focus:outline-none focus:border-[#C8102E] transition-colors">
+          <label class="form-label">Tempo de leitura</label>
+          <input id="f-read" type="text" class="form-input" placeholder="Ex: 5 min de leitura">
         </div>
       </div>
 
-      <!-- Upload de imagem -->
+      <!-- Imagem -->
       <div>
-        <label class="block text-xs font-bold tracking-widest uppercase text-gray-400 mb-2">Imagem de capa *</label>
-        <div id="drop-zone"
-          class="border-2 border-dashed border-gray-200 p-6 text-center cursor-pointer hover:border-[#C8102E] transition-colors relative"
+        <label class="form-label">Imagem de capa *</label>
+        <div class="drop-zone" id="drop-zone"
           onclick="document.getElementById('f-img-file').click()"
           ondragover="event.preventDefault();this.classList.add('dragover')"
           ondragleave="this.classList.remove('dragover')"
           ondrop="handleDrop(event)">
-          <input id="f-img-file" type="file" accept="image/*" class="hidden" onchange="handleFileSelect(this)">
+          <input id="f-img-file" type="file" accept="image/*" style="display:none" onchange="handleFileSelect(this)">
           <div id="drop-placeholder">
-            <i data-lucide="image-plus" class="w-8 h-8 text-gray-300 mx-auto mb-2"></i>
-            <p class="text-sm text-gray-400 font-light">Arraste ou <span class="text-[#C8102E] font-medium">clique para selecionar</span></p>
-            <p class="text-xs text-gray-300 mt-1">JPG, PNG, WEBP — máx. 4MB</p>
+            <svg style="margin:0 auto 0.5rem;display:block;color:#d1d5db" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <div class="drop-zone-text">Arraste ou <span>clique para selecionar</span></div>
+            <div class="drop-zone-hint">JPG, PNG, WEBP — máx. 4MB</div>
           </div>
-          <div id="img-preview" class="hidden">
-            <img id="img-preview-el" src="" alt="" class="max-h-40 mx-auto object-contain rounded">
-            <p id="img-preview-name" class="text-xs text-gray-400 mt-2"></p>
-            <button onclick="event.stopPropagation();clearImage()"
-              class="mt-2 text-xs text-[#C8102E] font-medium hover:underline">Remover</button>
+          <div id="img-preview">
+            <img id="img-preview-el" src="" alt="" class="img-preview-img">
+            <div class="img-preview-name" id="img-preview-name"></div>
+            <button class="btn-remove-img" onclick="event.stopPropagation();clearImage()">Remover imagem</button>
           </div>
+        </div>
+        <div class="upload-progress" id="upload-progress">
+          <div class="upload-bar-wrap"><div class="upload-bar" id="upload-bar"></div></div>
+          <div class="upload-label" id="upload-label">Enviando...</div>
         </div>
       </div>
 
-      <!-- Destaque -->
-      <div class="flex items-center gap-3">
-        <input id="f-featured" type="checkbox" class="w-4 h-4 accent-[#C8102E]">
-        <label for="f-featured" class="text-sm font-medium text-gray-600 cursor-pointer">
-          Destacar este post no topo do blog
-        </label>
+      <!-- Destaque toggle -->
+      <div class="featured-row" onclick="toggleFeatured()">
+        <div class="toggle" id="featured-toggle"></div>
+        <div>
+          <div class="featured-label">Destacar no topo do blog</div>
+          <div class="featured-desc">Este post aparece em destaque na página principal</div>
+        </div>
       </div>
 
       <!-- Editor WYSIWYG -->
       <div>
-        <label class="block text-xs font-bold tracking-widest uppercase text-gray-400 mb-2">Conteúdo *</label>
-
-        <!-- Toolbar -->
-        <div class="border border-gray-200 border-b-0 bg-gray-50 px-3 py-2 flex flex-wrap gap-1.5 items-center">
-          <button class="tiptap-btn font-bold" onclick="editor.chain().focus().toggleBold().run()" id="btn-bold">N</button>
-          <button class="tiptap-btn italic" onclick="editor.chain().focus().toggleItalic().run()" id="btn-italic">I</button>
-          <span class="text-gray-200">|</span>
-          <button class="tiptap-btn text-xs" onclick="editor.chain().focus().toggleHeading({level:3}).run()" id="btn-h3">H3</button>
-          <span class="text-gray-200">|</span>
-          <button class="tiptap-btn" onclick="editor.chain().focus().toggleBulletList().run()" id="btn-ul">
-            <i data-lucide="list" class="w-3.5 h-3.5"></i>
-          </button>
-          <button class="tiptap-btn" onclick="editor.chain().focus().toggleBlockquote().run()" id="btn-quote">
-            <i data-lucide="quote" class="w-3.5 h-3.5"></i>
-          </button>
-          <span class="text-gray-200">|</span>
-          <button class="tiptap-btn" onclick="editor.chain().focus().undo().run()">
-            <i data-lucide="undo-2" class="w-3.5 h-3.5"></i>
-          </button>
-          <button class="tiptap-btn" onclick="editor.chain().focus().redo().run()">
-            <i data-lucide="redo-2" class="w-3.5 h-3.5"></i>
-          </button>
+        <label class="form-label">Conteúdo *</label>
+        <div id="quill-editor"></div>
+        <div class="editor-footer">
+          <span class="char-count" id="char-count">0 palavras</span>
         </div>
-
-        <!-- Área de edição -->
-        <div id="tiptap-editor" class="border border-gray-200 min-h-[320px] bg-white"></div>
       </div>
 
       <!-- Ações -->
-      <div class="flex items-center justify-between pt-4 border-t border-gray-100">
-        <button id="btn-delete" onclick="deletePost()" class="hidden text-xs font-semibold text-gray-400 hover:text-red-600 transition-colors flex items-center gap-1.5">
-          <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Excluir publicação
+      <div class="editor-actions">
+        <button class="btn-danger" id="btn-delete" style="display:none" onclick="deletePost()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+          Excluir
         </button>
-        <div class="flex gap-3 ml-auto">
-          <button onclick="closeEditor()"
-            class="px-6 py-3 text-xs font-bold tracking-wider uppercase border border-gray-200 text-gray-500 hover:border-[#1A1A1A] hover:text-[#1A1A1A] transition-colors">
-            Cancelar
-          </button>
-          <button onclick="savePost()" id="btn-save"
-            class="flex items-center gap-2 px-7 py-3 bg-[#C8102E] text-white text-xs font-bold tracking-wider uppercase hover:bg-[#1A1A1A] transition-colors">
-            <i data-lucide="send" class="w-3.5 h-3.5"></i>
+        <div style="display:flex;gap:0.5rem;margin-left:auto">
+          <button class="btn-secondary" onclick="tryCloseEditor()">Cancelar</button>
+          <button class="btn-save" id="btn-save" onclick="savePost()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
             <span id="btn-save-label">Publicar</span>
           </button>
         </div>
       </div>
+
     </div>
   </div>
 </div>
 
 <!-- Toast -->
-<div id="toast"
-  class="fixed bottom-8 left-1/2 -translate-x-1/2 z-[999] bg-[#1A1A1A] text-white text-sm font-medium px-6 py-3 shadow-xl pointer-events-none opacity-0 whitespace-nowrap"></div>
+<div id="toast"></div>
 
 <script>
-  // ─── Config ───────────────────────────────────────────────
+  // ── Config ────────────────────────────────────────────────────────────────
   const API = '/api';
   const CATS = ['trabalhista','previdenciario','administrativo','sindical','civel','institucional'];
   const CAT_LABELS = {
@@ -267,28 +964,33 @@
   let uploadedImgUrl = null;
   let editor = null;
   let allPosts = [];
+  let featuredOn = false;
+  let isDirty = false;
 
-  // ─── Inicialização ────────────────────────────────────────
+  // ── Init ──────────────────────────────────────────────────────────────────
   if (token) showPanel();
 
   function showPanel() {
-    document.getElementById('login-screen').classList.add('hidden');
-    document.getElementById('admin-panel').classList.remove('hidden');
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('admin-panel').style.display = 'block';
     initEditor();
-    loadPosts('todos');
     buildCatFilters();
-    lucide.createIcons();
+    loadPosts('todos');
   }
 
-  // ─── Login / Logout ───────────────────────────────────────
+  // ── Login / Logout ────────────────────────────────────────────────────────
   async function doLogin() {
-    const pw = document.getElementById('login-pw').value;
+    const pw  = document.getElementById('login-pw').value;
     const err = document.getElementById('login-err');
-    err.classList.add('hidden');
+    const btn = document.getElementById('login-btn');
+    const lbl = document.getElementById('login-btn-label');
+    err.style.display = 'none';
+    btn.disabled = true;
+    lbl.innerHTML = '<span class="spin">↻</span> Entrando...';
     try {
       const r = await fetch(`${API}/auth/login`, {
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ password: pw })
       });
       if (!r.ok) throw new Error();
@@ -297,152 +999,233 @@
       localStorage.setItem('cop_admin_token', t);
       showPanel();
     } catch {
-      err.textContent = 'Senha incorreta.';
-      err.classList.remove('hidden');
+      err.style.display = 'flex';
+      btn.disabled = false;
+      lbl.textContent = 'Entrar';
+      document.getElementById('login-pw').focus();
     }
   }
 
   function doLogout() {
     localStorage.removeItem('cop_admin_token');
-    token = null;
     location.reload();
   }
 
-  // ─── Carregar posts ────────────────────────────────────────
+  // ── Carregar posts ─────────────────────────────────────────────────────────
   async function loadPosts(cat = 'todos', btn = null) {
     if (btn) {
-      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active','bg-[#C8102E]','text-white','border-[#C8102E]'));
-      btn.classList.add('active','bg-[#C8102E]','text-white','border-[#C8102E]');
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
     }
-    const url = cat === 'todos' ? `${API}/posts` : `${API}/posts?cat=${cat}`;
-    const r = await fetch(url, { headers:{ Authorization:`Bearer ${token}` }});
-    allPosts = await r.json();
 
+    // skeleton
     const list = document.getElementById('posts-list');
+    list.innerHTML = [1,2,3].map(() => `
+      <div class="post-row" style="pointer-events:none">
+        <div class="skeleton" style="width:56px;height:56px;flex-shrink:0"></div>
+        <div style="flex:1">
+          <div class="skeleton" style="height:10px;width:60px;margin-bottom:8px"></div>
+          <div class="skeleton" style="height:14px;width:80%"></div>
+          <div class="skeleton" style="height:10px;width:40%;margin-top:6px"></div>
+        </div>
+      </div>`).join('');
+
+    try {
+      const url = cat === 'todos' ? `${API}/posts` : `${API}/posts?cat=${cat}`;
+      const r = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
+      if (r.status === 401) { doLogout(); return; }
+      allPosts = await r.json();
+      renderPostList(allPosts);
+    } catch {
+      list.innerHTML = '<div style="text-align:center;padding:3rem;color:var(--muted);font-size:.85rem">Erro ao carregar posts.</div>';
+    }
+  }
+
+  function renderPostList(posts) {
+    const list  = document.getElementById('posts-list');
     const empty = document.getElementById('empty-state');
+    const count = document.getElementById('posts-count');
+
     list.innerHTML = '';
 
-    if (!allPosts.length) { empty.classList.remove('hidden'); lucide.createIcons(); return; }
-    empty.classList.add('hidden');
+    if (!posts.length) {
+      empty.style.display = 'block';
+      count.textContent = 'Nenhuma publicação';
+      return;
+    }
 
-    document.getElementById('posts-count').textContent =
-      `${allPosts.length} publicaç${allPosts.length === 1 ? 'ão' : 'ões'}`;
+    empty.style.display = 'none';
+    count.textContent = `${posts.length} publicaç${posts.length === 1 ? 'ão' : 'ões'}`;
 
-    allPosts.forEach(p => {
-      const el = document.createElement('div');
-      el.className = 'bg-white border border-gray-100 flex items-center gap-5 p-4 hover:border-[#C8102E] transition-colors group cursor-pointer';
-      el.innerHTML = `
-        <img src="${p.img}" alt="" class="w-16 h-16 object-cover flex-shrink-0 rounded-sm">
-        <div class="flex-1 min-w-0">
-          <div class="flex items-center gap-2 mb-1">
-            <span class="text-[9px] font-bold tracking-widest uppercase text-[#C8102E]">${CAT_LABELS[p.cat] || p.cat}</span>
-            ${p.featured ? '<span class="text-[9px] font-bold tracking-widest uppercase bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded">Destaque</span>' : ''}
+    posts.forEach(p => {
+      const row = document.createElement('div');
+      row.className = 'post-row';
+      row.innerHTML = `
+        <img class="post-row-img" src="${p.img}" alt="" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 56 56%22><rect width=%2256%22 height=%2256%22 fill=%22%23f3f4f6%22/></svg>'">
+        <div class="post-row-meta">
+          <div class="post-row-badges">
+            <span class="badge badge-cat">${CAT_LABELS[p.cat] || p.cat}</span>
+            ${p.featured ? '<span class="badge badge-featured">Destaque</span>' : ''}
           </div>
-          <h3 class="font-serif text-sm font-semibold text-[#1A1A1A] line-clamp-1 group-hover:text-[#C8102E] transition-colors">${p.title}</h3>
-          <p class="text-xs text-gray-400 mt-1">${p.date} · ${p.read_time}</p>
+          <div class="post-row-title">${p.title}</div>
+          <div class="post-row-date">${p.date} · ${p.read_time}</div>
         </div>
-        <button onclick="event.stopPropagation();openEditor(${p.id})"
-          class="flex-shrink-0 flex items-center gap-1.5 text-xs font-semibold text-gray-400 hover:text-[#C8102E] transition-colors px-3 py-2">
-          <i data-lucide="pencil" class="w-3.5 h-3.5"></i> Editar
-        </button>
-      `;
-      el.querySelector('div.flex-1').onclick = () => openEditor(p.id);
-      list.appendChild(el);
+        <button class="btn-edit" onclick="event.stopPropagation();openEditor(${p.id})">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          Editar
+        </button>`;
+      row.querySelector('.post-row-meta').onclick = () => openEditor(p.id);
+      list.appendChild(row);
     });
-    lucide.createIcons();
   }
 
   function buildCatFilters() {
     const wrap = document.getElementById('cat-filters');
     CATS.forEach(c => {
       const b = document.createElement('button');
-      b.className = 'filter-btn px-4 py-1.5 text-xs font-bold tracking-wider uppercase border border-gray-200 text-gray-500 hover:border-[#C8102E] hover:text-[#C8102E] transition-all';
+      b.className = 'filter-btn';
       b.textContent = CAT_LABELS[c];
       b.onclick = () => loadPosts(c, b);
       wrap.appendChild(b);
     });
   }
 
-  // ─── Editor TipTap ────────────────────────────────────────
+  // ── Quill editor ──────────────────────────────────────────────────────────
   function initEditor() {
-    editor = new StarterKit.StarterKit({
-      element: document.getElementById('tiptap-editor'),
-      extensions: [],
+    editor = new Quill('#quill-editor', {
+      theme: 'snow',
+      placeholder: 'Escreva o conteúdo do post aqui...',
+      modules: {
+        toolbar: [
+          ['bold', 'italic'],
+          [{ header: 3 }],
+          [{ list: 'bullet' }],
+          ['blockquote'],
+          ['clean']
+        ]
+      }
     });
-    // Fallback simples se CDN não carregou completamente
-    if (!window.StarterKit) return;
-    try {
-      editor = window.tiptap?.Editor
-        ? new window.tiptap.Editor({
-            element: document.getElementById('tiptap-editor'),
-            extensions: [window.StarterKit],
-            onUpdate() { updateToolbarState(); }
-          })
-        : null;
-    } catch(e) { editor = null; }
+
+    editor.on('text-change', () => {
+      updateCharCount();
+      markDirty();
+    });
   }
 
-  function updateToolbarState() {
+  function updateCharCount() {
     if (!editor) return;
-    document.getElementById('btn-bold').classList.toggle('is-active', editor.isActive('bold'));
-    document.getElementById('btn-italic').classList.toggle('is-active', editor.isActive('italic'));
-    document.getElementById('btn-h3').classList.toggle('is-active', editor.isActive('heading',{level:3}));
-    document.getElementById('btn-ul').classList.toggle('is-active', editor.isActive('bulletList'));
-    document.getElementById('btn-quote').classList.toggle('is-active', editor.isActive('blockquote'));
+    const text  = editor.getText().trim();
+    const words = text ? text.split(/\s+/).length : 0;
+    const el = document.getElementById('char-count');
+    if (el) el.textContent = `${words} palavra${words !== 1 ? 's' : ''}`;
   }
 
   function getEditorHTML() {
-    if (editor) return editor.getHTML();
-    return document.getElementById('tiptap-editor').innerHTML;
+    if (!editor) return '';
+    // converte Delta do Quill para HTML
+    const tempDiv = document.createElement('div');
+    const delta = editor.getContents();
+    const quillTemp = new Quill(tempDiv, { modules: { toolbar: false } });
+    quillTemp.setContents(delta);
+    return tempDiv.querySelector('.ql-editor').innerHTML;
   }
 
   function setEditorHTML(html) {
-    if (editor) { editor.commands.setContent(html); return; }
-    document.getElementById('tiptap-editor').innerHTML = html;
+    if (!editor) return;
+    if (!html || html === '<p></p>' || html === '') {
+      editor.setContents([]);
+      return;
+    }
+    // converte HTML de volta para Delta
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = html;
+    // Quill clipboard.convert para HTML → Delta
+    const delta = editor.clipboard.convert(html);
+    editor.setContents(delta, 'silent');
   }
 
-  // ─── Abrir/fechar editor ──────────────────────────────────
+  // ── Featured toggle ───────────────────────────────────────────────────────
+  function toggleFeatured() {
+    featuredOn = !featuredOn;
+    document.getElementById('featured-toggle').classList.toggle('on', featuredOn);
+    markDirty();
+  }
+
+  function setFeatured(val) {
+    featuredOn = !!val;
+    document.getElementById('featured-toggle').classList.toggle('on', featuredOn);
+  }
+
+  // ── Dirty state ───────────────────────────────────────────────────────────
+  function markDirty() {
+    isDirty = true;
+    document.getElementById('unsaved-banner').classList.add('show');
+  }
+
+  function clearDirty() {
+    isDirty = false;
+    document.getElementById('unsaved-banner').classList.remove('show');
+  }
+
+  // ── Abrir / fechar editor ─────────────────────────────────────────────────
   function openEditor(id) {
     currentPostId = id;
     clearImage();
+    clearDirty();
+
+    // watch inputs for dirty
+    ['f-title','f-cat','f-read'].forEach(fid => {
+      const el = document.getElementById(fid);
+      el.oninput = () => markDirty();
+    });
 
     if (id === null) {
-      // Novo post
       document.getElementById('editor-title').textContent = 'Nova publicação';
       document.getElementById('f-title').value = '';
       document.getElementById('f-cat').value = '';
       document.getElementById('f-read').value = '';
-      document.getElementById('f-featured').checked = false;
+      document.getElementById('title-counter').textContent = '0/150';
       setEditorHTML('');
-      document.getElementById('btn-delete').classList.add('hidden');
+      setFeatured(false);
+      document.getElementById('btn-delete').style.display = 'none';
       document.getElementById('btn-save-label').textContent = 'Publicar';
+      if (editor) updateCharCount(editor);
     } else {
-      // Editar post existente
       const p = allPosts.find(x => x.id === id);
       if (!p) return;
       document.getElementById('editor-title').textContent = 'Editar publicação';
       document.getElementById('f-title').value = p.title;
+      document.getElementById('title-counter').textContent = `${p.title.length}/150`;
       document.getElementById('f-cat').value = p.cat;
       document.getElementById('f-read').value = p.read_time;
-      document.getElementById('f-featured').checked = p.featured;
       setEditorHTML(p.body);
+      setFeatured(p.featured);
       uploadedImgUrl = p.img;
       showImagePreview(p.img, 'imagem atual');
-      document.getElementById('btn-delete').classList.remove('hidden');
+      document.getElementById('btn-delete').style.display = 'flex';
       document.getElementById('btn-save-label').textContent = 'Salvar alterações';
+      if (editor) updateCharCount(editor);
     }
 
     document.getElementById('editor-overlay').classList.add('open');
     document.body.style.overflow = 'hidden';
-    lucide.createIcons();
+    setTimeout(() => document.getElementById('f-title').focus(), 100);
+  }
+
+  function tryCloseEditor() {
+    if (isDirty) {
+      if (!confirm('Tem alterações não salvas. Deseja fechar mesmo assim?')) return;
+    }
+    closeEditor();
   }
 
   function closeEditor() {
     document.getElementById('editor-overlay').classList.remove('open');
     document.body.style.overflow = '';
+    clearDirty();
   }
 
-  // ─── Upload de imagem ─────────────────────────────────────
+  // ── Upload ────────────────────────────────────────────────────────────────
   function handleFileSelect(input) {
     const file = input.files[0];
     if (file) uploadFile(file);
@@ -457,25 +1240,59 @@
 
   async function uploadFile(file) {
     if (file.size > 4 * 1024 * 1024) { showToast('⚠ Imagem muito grande. Máx. 4MB.'); return; }
-    showToast('⏳ Enviando imagem...');
+
+    // mostrar preview local imediato
+    const reader = new FileReader();
+    reader.onload = e => showImagePreview(e.target.result, file.name);
+    reader.readAsDataURL(file);
+
+    // progress bar animada
+    const prog = document.getElementById('upload-progress');
+    const bar  = document.getElementById('upload-bar');
+    const lbl  = document.getElementById('upload-label');
+    prog.classList.add('active');
+    bar.style.width = '0%';
+    lbl.textContent = 'Enviando...';
+
+    // simula progresso até 90%
+    let pct = 0;
+    const tick = setInterval(() => {
+      pct = Math.min(pct + Math.random() * 15, 90);
+      bar.style.width = pct + '%';
+    }, 200);
+
     try {
       const r = await fetch(`${API}/upload?filename=${encodeURIComponent(file.name)}`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}`, 'Content-Type': file.type },
         body: file
       });
+
+      clearInterval(tick);
+
+      if (!r.ok) {
+        const err = await r.json().catch(() => ({}));
+        throw new Error(err.error || `Erro ${r.status}`);
+      }
+
       const { url } = await r.json();
       uploadedImgUrl = url;
+      bar.style.width = '100%';
+      lbl.textContent = '✓ Enviado';
       showImagePreview(url, file.name);
-      showToast('✓ Imagem enviada!');
-    } catch {
-      showToast('✗ Erro ao enviar imagem.');
+      markDirty();
+      setTimeout(() => prog.classList.remove('active'), 1500);
+    } catch(e) {
+      clearInterval(tick);
+      prog.classList.remove('active');
+      showToast(`✗ ${e.message || 'Erro ao enviar imagem.'}`);
+      clearImage();
     }
   }
 
   function showImagePreview(url, name) {
-    document.getElementById('drop-placeholder').classList.add('hidden');
-    document.getElementById('img-preview').classList.remove('hidden');
+    document.getElementById('drop-placeholder').style.display = 'none';
+    document.getElementById('img-preview').style.display = 'block';
     document.getElementById('img-preview-el').src = url;
     document.getElementById('img-preview-name').textContent = name;
   }
@@ -483,30 +1300,37 @@
   function clearImage() {
     uploadedImgUrl = null;
     document.getElementById('f-img-file').value = '';
-    document.getElementById('drop-placeholder').classList.remove('hidden');
-    document.getElementById('img-preview').classList.add('hidden');
+    document.getElementById('drop-placeholder').style.display = 'block';
+    document.getElementById('img-preview').style.display = 'none';
     document.getElementById('img-preview-el').src = '';
+    document.getElementById('upload-progress').classList.remove('active');
   }
 
-  // ─── Salvar post ──────────────────────────────────────────
-  async function savePost() {
-    const title = document.getElementById('f-title').value.trim();
-    const cat   = document.getElementById('f-cat').value;
-    const read  = document.getElementById('f-read').value.trim() || '3 min de leitura';
-    const body  = getEditorHTML();
-    const featured = document.getElementById('f-featured').checked;
+  // ── Title counter ─────────────────────────────────────────────────────────
+  function updateTitleCounter(input) {
+    const len = input.value.length;
+    const el  = document.getElementById('title-counter');
+    el.textContent = `${len}/150`;
+    el.className = 'title-counter' + (len > 130 ? (len >= 150 ? ' over' : ' warn') : '');
+  }
 
-    if (!title) { showToast('⚠ Preencha o título.'); return; }
-    if (!cat)   { showToast('⚠ Selecione uma categoria.'); return; }
-    if (!uploadedImgUrl) { showToast('⚠ Adicione uma imagem de capa.'); return; }
-    if (!body || body === '<p></p>') { showToast('⚠ Escreva o conteúdo do post.'); return; }
+  // ── Salvar post ───────────────────────────────────────────────────────────
+  async function savePost() {
+    const title    = document.getElementById('f-title').value.trim();
+    const cat      = document.getElementById('f-cat').value;
+    const read     = document.getElementById('f-read').value.trim() || '3 min de leitura';
+    const body     = getEditorHTML();
+
+    if (!title)                        { showToast('⚠ Preencha o título.');          return; }
+    if (!cat)                          { showToast('⚠ Selecione uma categoria.');    return; }
+    if (!uploadedImgUrl)               { showToast('⚠ Adicione uma imagem de capa.');return; }
+    if (!body || body === '<p></p>')   { showToast('⚠ Escreva o conteúdo.');         return; }
 
     const btn = document.getElementById('btn-save');
     btn.disabled = true;
-    btn.innerHTML = '<i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin"></i> Salvando...';
-    lucide.createIcons();
+    btn.innerHTML = '<span class="spin" style="font-size:1rem">↻</span> Salvando...';
 
-    const payload = { title, cat, read_time: read, img: uploadedImgUrl, body, featured };
+    const payload = { title, cat, read_time: read, img: uploadedImgUrl, body, featured: featuredOn };
 
     try {
       const isEdit = currentPostId !== null;
@@ -514,11 +1338,13 @@
         isEdit ? `${API}/posts/${currentPostId}` : `${API}/posts`,
         {
           method: isEdit ? 'PUT' : 'POST',
-          headers: { 'Content-Type':'application/json', Authorization:`Bearer ${token}` },
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
           body: JSON.stringify(payload)
         }
       );
+      if (r.status === 401) { doLogout(); return; }
       if (!r.ok) throw new Error();
+      clearDirty();
       closeEditor();
       showToast(isEdit ? '✓ Post atualizado!' : '✓ Post publicado!');
       loadPosts('todos');
@@ -526,38 +1352,46 @@
       showToast('✗ Erro ao salvar. Tente novamente.');
     } finally {
       btn.disabled = false;
-      btn.innerHTML = '<i data-lucide="send" class="w-3.5 h-3.5"></i> <span id="btn-save-label">Publicar</span>';
-      lucide.createIcons();
+      btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg><span id="btn-save-label">Publicar</span>';
     }
   }
 
-  // ─── Deletar post ─────────────────────────────────────────
+  // ── Deletar post ──────────────────────────────────────────────────────────
   async function deletePost() {
     if (!currentPostId) return;
-    if (!confirm('Tem certeza que deseja excluir esta publicação? Esta ação não pode ser desfeita.')) return;
-    await fetch(`${API}/posts/${currentPostId}`, {
-      method: 'DELETE',
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    closeEditor();
-    showToast('✓ Post excluído.');
-    loadPosts('todos');
+    if (!confirm('Excluir esta publicação? Esta ação não pode ser desfeita.')) return;
+    try {
+      const r = await fetch(`${API}/posts/${currentPostId}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (!r.ok) throw new Error();
+      closeEditor();
+      showToast('✓ Post excluído.');
+      loadPosts('todos');
+    } catch {
+      showToast('✗ Erro ao excluir.');
+    }
   }
 
-  // ─── Toast ────────────────────────────────────────────────
+  // ── Toast ─────────────────────────────────────────────────────────────────
+  let toastTimer;
   function showToast(msg) {
     const t = document.getElementById('toast');
     t.textContent = msg;
-    t.style.opacity = '1';
-    t.style.transform = 'translateX(-50%) translateY(0)';
-    setTimeout(() => {
-      t.style.opacity = '0';
-      t.style.transform = 'translateX(-50%) translateY(6px)';
-    }, 3000);
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 3500);
   }
 
-  // ESC fecha editor
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeEditor(); });
+  // ── Keyboard ──────────────────────────────────────────────────────────────
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') tryCloseEditor();
+    if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+      e.preventDefault();
+      if (document.getElementById('editor-overlay').classList.contains('open')) savePost();
+    }
+  });
 </script>
 </body>
 </html>
