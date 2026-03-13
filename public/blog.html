@@ -590,19 +590,29 @@
             }
         }
 
+        // ── Função auxiliar de Imagem/Thumbnail do YouTube ────────────────────────
+        function getPostThumb(p, quality = 'maxresdefault') {
+            if (p.img) return p.img;
+            if (p.yt_id) return `https://img.youtube.com/vi/${p.yt_id}/${quality}.jpg`;
+            return 'https://via.placeholder.com/800x450';
+        }
+
         // ── Render: card destaque ─────────────────────────────────────────────────
         function renderFeatured() {
             const p = ALL_POSTS.find(x => x.featured) || ALL_POSTS[0];
             const el = document.getElementById('featured-card');
             if (!p || !el) return;
+
+            const thumb = getPostThumb(p);
             const excerpt = p.body.replace(/<[^>]+>/g, '').slice(0, 220) + '…';
+            
             el.innerHTML = `
       <div class="post-card grid grid-cols-1 md:grid-cols-2 border border-gray-100
                   shadow-[0_8px_40px_-12px_rgba(0,0,0,0.15)] group cursor-pointer"
            data-cat="${p.cat}" onclick="openPost(${p.id})">
         <div class="img-wrap overflow-hidden relative min-h-[280px] md:min-h-[420px]">
           <img class="img-zoom w-full h-full object-cover absolute inset-0"
-               src="${p.img}" alt="${p.title}">
+               src="${thumb}" alt="${p.title}">
           <div class="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent"></div>
           <div class="absolute top-6 left-6">
             <span class="bg-[#C8102E] text-white text-[10px] font-bold tracking-[.2em] uppercase px-3 py-1.5">
@@ -648,6 +658,7 @@
             const list = posts.filter(p => !featured || p.id !== featured.id);
             grid.innerHTML = '';
             list.forEach(p => {
+                const thumb = getPostThumb(p, 'mqdefault');
                 const excerpt = p.body.replace(/<[^>]+>/g, '').slice(0, 120) + '…';
                 const a = document.createElement('article');
                 a.className = 'post-card bg-white group cursor-pointer flex flex-col';
@@ -655,7 +666,7 @@
                 a.onclick = () => openPost(p.id);
                 a.innerHTML = `
         <div class="img-wrap overflow-hidden relative h-52 flex-shrink-0">
-          <img class="img-zoom w-full h-full object-cover" src="${p.img}" alt="${p.title}">
+          <img class="img-zoom w-full h-full object-cover" src="${thumb}" alt="${p.title}">
           <div class="absolute top-4 left-4">
             <span class="bg-[#C8102E] text-white text-[9px] font-bold tracking-[.2em] uppercase px-2.5 py-1">
               ${p.cat}
