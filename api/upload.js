@@ -1,7 +1,13 @@
-import { put } from '@vercel/blob';
 import { requireAuth } from '../lib/auth.js';
+import { v2 as cloudinary } from 'cloudinary';
 
 export const config = { api: { bodyParser: false } };
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key:    process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -11,18 +17,19 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
   if (!requireAuth(req, res)) return;
 
-  const filename = req.query.filename;
-  if (!filename) return res.status(400).json({ error: 'filename obrigatório' });
-
-  // lê o body como stream (imagem)
+  // lê o body como buffer
   const chunks = [];
   for await (const chunk of req) chunks.push(chunk);
   const buffer = Buffer.concat(chunks);
 
-  const blob = await put(`blog/${Date.now()}-${filename}`, buffer, {
-    access: 'public',
-    contentType: req.headers['content-type'] || 'image/jpeg',
+  // envia para Cloudinary via upload stream
+  const result = await new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      { folder: 'cop-blog', resource_type: 'image' },
+      (error, result) => error ? reject(error) : resolve(result)
+    );
+    stream.end(buffer);
   });
 
-  res.status(200).json({ url: blob.url });
+  res.status(200).json({ url: result.secure_url });
 }
