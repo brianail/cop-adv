@@ -1,14 +1,6 @@
 import { requireAuth } from '../lib/auth.js';
-import cloudinaryPkg from 'cloudinary';
-const { v2: cloudinary } = cloudinaryPkg;
 
 export const config = { api: { bodyParser: false } };
-
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key:    process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -18,19 +10,31 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
   if (!requireAuth(req, res)) return;
 
-  // lê o body como buffer
-  const chunks = [];
-  for await (const chunk of req) chunks.push(chunk);
-  const buffer = Buffer.concat(chunks);
+  try {
+    const cloudinaryModule = await import('cloudinary');
+    const cloudinary = cloudinaryModule.v2;
 
-  // envia para Cloudinary via upload stream
-  const result = await new Promise((resolve, reject) => {
-    const stream = cloudinary.uploader.upload_stream(
-      { folder: 'cop-blog', resource_type: 'image' },
-      (error, result) => error ? reject(error) : resolve(result)
-    );
-    stream.end(buffer);
-  });
+    cloudinary.config({
+      cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+      api_key:    process.env.CLOUDINARY_API_KEY,
+      api_secret: process.env.CLOUDINARY_API_SECRET,
+    });
 
-  res.status(200).json({ url: result.secure_url });
+    const chunks = [];
+    for await (const chunk of req) chunks.push(chunk);
+    const buffer = Buffer.concat(chunks);
+
+    const result = await new Promise((resolve, reject) => {
+      const stream = cloudinary.uploader.upload_stream(
+        { folder: 'cop-blog', resource_type: 'image' },
+        (error, result) => error ? reject(error) : resolve(result)
+      );
+      stream.end(buffer);
+    });
+
+    res.status(200).json({ url: result.secure_url });
+  } catch (err) {
+    console.error('Upload error:', err);
+    res.status(500).json({ error: err.message || 'Erro no upload' });
+  }
 }
