@@ -1,10 +1,8 @@
 import { sql } from '../lib/db.js';
+import { requireAuth } from '../lib/auth.js';
 
 export default async function handler(req, res) {
-  // Segurança mínima — só roda com ?secret=
-  if (req.query.secret !== process.env.ADMIN_SECRET) {
-    return res.status(401).json({ error: 'Não autorizado.' });
-  }
+  if (!requireAuth(req, res)) return;
 
   try {
     await sql`ALTER TABLE posts ADD COLUMN IF NOT EXISTS slug      TEXT`;
@@ -12,8 +10,6 @@ export default async function handler(req, res) {
     await sql`ALTER TABLE posts ADD COLUMN IF NOT EXISTS meta_desc TEXT`;
     await sql`ALTER TABLE posts ADD COLUMN IF NOT EXISTS status    TEXT DEFAULT 'published'`;
     await sql`ALTER TABLE posts ADD COLUMN IF NOT EXISTS yt_id     TEXT`;
-
-    // Garante que posts antigos sem status fiquem como publicados
     await sql`UPDATE posts SET status = 'published' WHERE status IS NULL`;
 
     return res.status(200).json({ ok: true, msg: 'Migration concluída.' });
