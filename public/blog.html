@@ -784,13 +784,31 @@
         }
 
         // ── Newsletter ────────────────────────────────────────────────────────────
-        function subscribeNewsletter() {
-            const inp = document.getElementById('newsletter-email');
-            const v = inp.value.trim();
-            const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
-            showToast(ok ? '✓  Inscrição realizada com sucesso!' : '⚠  Por favor, insira um e-mail válido.');
-            if (ok) { inp.value = ''; inp.placeholder = 'Obrigado por se inscrever!'; }
-        }
+     async function subscribeNewsletter() {
+  const inp = document.getElementById('newsletter-email');
+  const email = inp.value.trim();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    showToast('⚠ Por favor, insira um e-mail válido.');
+    return;
+  }
+  try {
+    const r = await fetch('/api/newsletter', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+    if (!r.ok) throw new Error();
+    showToast('✓ Inscrição realizada com sucesso!');
+    inp.value = '';
+  } catch {
+    showToast('✗ Erro ao inscrever. Tente novamente.');
+  }
+}
+```
+
+**Para ver os e-mails salvos**, acessa:
+```
+https://cop-adv.vercel.app/api/newsletter?secret=SUA_SENHA_ADMIN
 
         function showToast(msg) {
             const t = document.getElementById('toast');
