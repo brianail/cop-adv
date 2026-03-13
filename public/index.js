@@ -168,3 +168,87 @@ faqButtons.forEach(button => {
         }
     });
 });
+
+(function () {
+  const CAT_LABELS = {
+    trabalhista: 'Trabalhista', previdenciario: 'Previdenciário',
+    administrativo: 'Administrativo', sindical: 'Sindical',
+    civel: 'Cível', institucional: 'Institucional'
+  };
+ 
+  async function loadHomePosts() {
+    const grid  = document.getElementById('home-posts-grid');
+    const empty = document.getElementById('home-posts-empty');
+    if (!grid) return;
+ 
+    try {
+      const r = await fetch('/api/posts');
+      if (!r.ok) throw new Error();
+      const posts = await r.json();
+ 
+      // pega os 3 mais recentes
+      const recent = posts.slice(0, 3);
+ 
+      grid.innerHTML = '';
+ 
+      if (!recent.length) {
+        grid.style.display = 'none';
+        empty.classList.remove('hidden');
+        return;
+      }
+ 
+      recent.forEach((p, i) => {
+        const excerpt = p.body.replace(/<[^>]+>/g, '').slice(0, 110) + '…';
+        const art = document.createElement('article');
+        art.className = 'bg-white group cursor-pointer flex flex-col';
+        art.style.animationDelay = (i * 80) + 'ms';
+        art.innerHTML = `
+          <a href="blog.html" class="block">
+            <div class="overflow-hidden relative h-52 flex-shrink-0">
+              <img
+                src="${p.img}"
+                alt="${p.title}"
+                class="w-full h-full object-cover transition-transform duration-[1200ms] cubic-bezier(.2,.8,.2,1) group-hover:scale-105"
+                onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 600 400%22><rect width=%22600%22 height=%22400%22 fill=%22%23f3f4f6%22/></svg>'">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+              <div class="absolute top-4 left-4">
+                <span class="bg-[#C8102E] text-white text-[9px] font-bold tracking-[.2em] uppercase px-2.5 py-1">
+                  ${CAT_LABELS[p.cat] || p.cat}
+                </span>
+              </div>
+            </div>
+            <div class="p-8 flex flex-col flex-1 border border-t-0 border-gray-100 group-hover:border-[#C8102E] transition-colors duration-300">
+              <p class="text-[10px] font-medium tracking-[.18em] uppercase text-gray-400 mb-3">
+                ${p.date} · ${p.read_time}
+              </p>
+              <h3 class="font-serif text-lg text-[#1A1A1A] leading-snug mb-3 group-hover:text-[#C8102E] transition-colors duration-300 flex-1">
+                ${p.title}
+              </h3>
+              <p class="text-sm text-[#888] font-light leading-relaxed mb-5">${excerpt}</p>
+              <div class="flex items-center justify-between pt-5 border-t border-gray-100 mt-auto">
+                <span class="text-xs text-gray-400">${CAT_LABELS[p.cat] || p.cat}</span>
+                <span class="text-[#C8102E] text-xs font-bold tracking-[.15em] uppercase flex items-center gap-1.5 group-hover:gap-3 transition-all">
+                  Ler <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </span>
+              </div>
+            </div>
+          </a>`;
+        grid.appendChild(art);
+      });
+ 
+      lucide.createIcons();
+ 
+    } catch (e) {
+      // falha silenciosa — não quebra a home
+      grid.style.display = 'none';
+      empty.classList.remove('hidden');
+    }
+  }
+ 
+  // carrega quando DOM estiver pronto
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadHomePosts);
+  } else {
+    loadHomePosts();
+  }
+})();
