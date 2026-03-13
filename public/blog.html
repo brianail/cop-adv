@@ -200,7 +200,6 @@
 
     <div id="read-bar"></div>
 
-    <!-- NAVBAR -->
     <nav id="navbar" class="fixed w-full z-50 transition-all duration-500 bg-transparent py-6">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 flex justify-between items-center">
             <a href="index.html" class="flex items-center gap-4">
@@ -208,11 +207,9 @@
 
                     <div class="flex items-center gap-4">
 
-                        <!-- Imagem do Logo -->
                         <img id="site-logo" src="/assets/logos/logo.png" alt="LOGO"
                             class="h-12 w-auto object-contain transition-all duration-300">
 
-                        <!-- Texto -->
                         <div class="flex flex-col border-l-2 border-[#C8102E] pl-4">
 
                             <span id="logo-main"
@@ -270,7 +267,6 @@
         </div>
     </nav>
 
-    <!-- HERO -->
     <section class="relative h-[60vh] min-h-[440px] flex items-end overflow-hidden">
         <div class="absolute inset-0 bg-cover bg-center z-0"
             style="background-image:url('https://images.unsplash.com/photo-1495020689067-958852a7765e?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')">
@@ -294,7 +290,6 @@
         </div>
     </section>
 
-    <!-- FILTROS -->
     <div class="bg-[#1A1A1A] border-b border-[#252525] sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
             <div class="flex items-center gap-2 overflow-x-auto no-scroll py-4">
@@ -316,19 +311,16 @@
         </div>
     </div>
 
-    <!-- DESTAQUE -->
     <section id="section-featured" class="bg-white pt-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
             <div class="flex items-center mb-10">
                 <div class="h-px w-8 bg-[#C8102E] mr-3"></div>
                 <span class="text-[#C8102E] text-xs font-bold tracking-[.22em] uppercase">Em Destaque</span>
             </div>
-            <!-- preenchido dinamicamente por renderFeatured() -->
             <div id="featured-card" class="mb-20"></div>
         </div>
     </section>
 
-    <!-- GRID DE POSTS -->
     <section class="bg-white pb-32">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
             <div class="flex items-center mb-12">
@@ -338,8 +330,7 @@
             </div>
 
             <div id="posts-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-gray-100">
-                <!-- preenchido dinamicamente por renderGrid() -->
-            </div>
+                </div>
 
             <div id="empty-state" class="hidden text-center py-24">
                 <i data-lucide="file-search" class="w-12 h-12 text-gray-200 mx-auto mb-4"></i>
@@ -350,7 +341,6 @@
         </div>
     </section>
 
-    <!-- BANNER NEWSLETTER -->
     <section class="relative py-24 bg-[#C8102E] overflow-hidden">
         <div class="absolute inset-0 opacity-10 bg-cover bg-center"
             style="background-image:url('https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&q=80')">
@@ -376,7 +366,6 @@
         </div>
     </section>
 
-    <!-- FOOTER -->
     <footer id="contato" class="bg-[#0a0a0a] text-gray-400 pt-20 pb-12 border-t border-gray-900">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
@@ -456,7 +445,6 @@
         </div>
     </footer>
 
-    <!-- WhatsApp flutuante -->
     <a href="https://wa.me/5551981915878" target="_blank" aria-label="WhatsApp"
         class="fixed bottom-6 right-6 z-50 bg-[#25D366] text-white w-14 h-14 rounded-full shadow-[0_4px_20px_rgba(37,211,102,0.4)] flex items-center justify-center hover:scale-110 transition-all duration-300">
         <svg class="w-7 h-7 fill-current" viewBox="0 0 24 24">
@@ -465,19 +453,16 @@
         </svg>
     </a>
 
-    <!-- MODAL -->
     <div id="modal-overlay"
         class="fixed inset-0 z-[200] hidden bg-black/75 backdrop-blur-sm items-end sm:items-center justify-center p-0 sm:p-6"
         onclick="handleOverlayClick(event)">
         <div id="modal-panel"
             class="relative bg-white w-full sm:max-w-3xl h-[92vh] sm:max-h-[90vh] flex flex-col shadow-2xl overflow-hidden sm:rounded-none">
 
-            <!-- barra de progresso de leitura -->
             <div class="h-0.5 bg-gray-100 flex-shrink-0">
                 <div id="modal-progress" class="h-full bg-[#C8102E] transition-all duration-100" style="width:0%"></div>
             </div>
 
-            <!-- header do modal -->
             <div
                 class="flex items-center justify-between px-6 sm:px-8 py-4 border-b border-gray-100 flex-shrink-0 bg-white">
                 <div class="flex items-center gap-3 min-w-0">
@@ -495,20 +480,14 @@
                 </div>
             </div>
 
-            <!-- imagem header -->
-            <div class="w-full h-44 sm:h-60 flex-shrink-0 overflow-hidden relative">
-                <img id="m-img" src alt class="w-full h-full object-cover">
-                <div class="absolute inset-0 bg-gradient-to-t from-black/25 to-transparent"></div>
-            </div>
+            <div id="m-media" class="w-full h-44 sm:h-60 flex-shrink-0 overflow-hidden relative bg-black"></div>
 
-            <!-- corpo com scroll -->
             <div id="modal-scroll" class="overflow-y-auto flex-1 px-6 sm:px-10 py-8"
                 onscroll="updateReadProgress(this)">
                 <h2 id="m-title" class="font-serif text-xl sm:text-2xl md:text-3xl text-[#1A1A1A] leading-tight mb-7">
                 </h2>
                 <div id="m-body" class="article-body"></div>
 
-                <!-- CTA -->
                 <div class="mt-10 pt-8 border-t border-gray-100">
                     <p class="text-xs font-bold tracking-[.2em] uppercase text-[#C8102E] mb-2">Precisa
                         de assessoria jurídica?</p>
@@ -528,7 +507,6 @@
                     </div>
                 </div>
 
-                <!-- relacionados -->
                 <div class="mt-10 pt-8 border-t border-gray-100">
                     <p class="text-xs font-bold tracking-[.2em] uppercase text-gray-400 mb-5">Leia
                         também</p>
@@ -538,7 +516,6 @@
         </div>
     </div>
 
-    <!-- Toast -->
     <div id="toast"
         class="fixed bottom-24 left-1/2 -translate-x-1/2 z-[300] bg-[#1A1A1A] text-white text-sm font-medium px-6 py-3 shadow-xl pointer-events-none opacity-0 whitespace-nowrap rounded-sm">
     </div>
@@ -730,10 +707,16 @@
                 document.getElementById('m-cat').textContent = p.cat;
                 document.getElementById('m-date').textContent = p.date;
                 document.getElementById('m-read').textContent = p.read_time;
-                document.getElementById('m-img').src = p.img;
-                document.getElementById('m-img').alt = p.title;
                 document.getElementById('m-title').textContent = p.title;
                 document.getElementById('m-body').innerHTML = p.body;
+
+                // Lógica de Mídia Dinâmica: YouTube ou Imagem
+                const mediaContainer = document.getElementById('m-media');
+                if (p.yt_id) {
+                    mediaContainer.innerHTML = `<iframe class="w-full h-full" src="https://www.youtube.com/embed/${p.yt_id}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+                } else {
+                    mediaContainer.innerHTML = `<img src="${p.img}" alt="${p.title}" class="w-full h-full object-cover">`;
+                }
 
                 // relacionados (retornados pela API automaticamente por categoria)
                 const rel = document.getElementById('m-related');
@@ -769,6 +752,8 @@
             ov.classList.add('hidden');
             ov.classList.remove('flex');
             document.body.style.overflow = '';
+            // Reseta o container de mídia para parar o vídeo
+            document.getElementById('m-media').innerHTML = '';
         }
 
         function handleOverlayClick(e) {
@@ -804,8 +789,6 @@
                 showToast('✗ Erro ao inscrever. Tente novamente.');
             }
         }
-
-        https://cop-adv.vercel.app/api/newsletter?secret=SUA_SENHA_ADMIN
 
         function showToast(msg) {
             const t = document.getElementById('toast');
