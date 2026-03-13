@@ -158,7 +158,6 @@
     .form-textarea:focus{border-color:var(--red)}
     .f-title-inp{font-family:var(--serif);font-size:1.05rem}
     .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
-    .form-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
     .rel{position:relative}
     .ctr{position:absolute;right:.75rem;bottom:.55rem;font-size:.6rem;color:#d1d5db;pointer-events:none;transition:color .15s}
     .ctr.warn{color:#f59e0b}.ctr.over{color:var(--red)}
@@ -240,7 +239,7 @@
       .sb-logo{padding:0;border:none}
       .main{margin-left:0;margin-top:52px}
       .stats-grid{grid-template-columns:1fr 1fr}
-      .form-grid,.form-grid{grid-template-columns:1fr}
+      .form-grid{grid-template-columns:1fr}
       .content{padding:1.25rem}
     }
   </style>
@@ -326,10 +325,6 @@
             <div class="stat-ico"><svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
           </div>
         </div>
-        <div class="chart-wrap">
-          <div class="chart-head"><span class="chart-title">Publicações por mês</span></div>
-          <div style="position:relative;height:180px"><canvas id="chart-posts"></canvas></div>
-        </div>
         <div class="sec-head">
           <div><div class="sec-title">Recentes</div><div class="sec-sub">Últimas 5 publicações</div></div>
           <button class="btn-secondary" onclick="showPage('posts',document.querySelectorAll('.nav-item')[1])">Ver todas →</button>
@@ -405,7 +400,7 @@
           <span class="ctr" id="title-ctr">0/150</span>
         </div>
       </div>
-      <!-- Categoria + leitura + status -->
+      <!-- Categoria + leitura -->
       <div class="form-grid">
         <div>
           <label class="form-label">Categoria *</label>
@@ -422,9 +417,6 @@
         <div>
           <label class="form-label">Tempo de leitura</label>
           <input id="f-read" type="text" class="form-input" placeholder="Ex: 5 min" oninput="markDirty()">
-        </div>
-        <div>
-          <label class="form-label">Status</label></div>
         </div>
       </div>
       <!-- Capa -->
@@ -510,6 +502,18 @@
 </div>
 
 
+<!-- CONFIRM MODAL -->
+<div id="confirm-modal" style="display:none;position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.55);align-items:center;justify-content:center">
+  <div style="background:#fff;padding:1.8rem;max-width:380px;width:100%;margin:1rem">
+    <div id="cm-title" style="font-family:var(--serif);font-size:1.15rem;font-weight:700;color:var(--dark);margin-bottom:.6rem">Confirmar</div>
+    <div id="cm-msg" style="font-size:.82rem;color:var(--muted);font-weight:300;margin-bottom:1.4rem;line-height:1.6"></div>
+    <div style="display:flex;gap:.55rem;justify-content:flex-end">
+      <button onclick="closeConfirm()" style="padding:.52rem .9rem;font-size:.65rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);background:none;border:1px solid var(--border);cursor:pointer;font-family:var(--sans)">Cancelar</button>
+      <button id="cm-ok" style="padding:.52rem 1.1rem;font-size:.65rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#fff;background:#ef4444;border:none;cursor:pointer;font-family:var(--sans)">Confirmar</button>
+    </div>
+  </div>
+</div>
+
 <div id="toast"></div>
 
 <script>
@@ -522,6 +526,7 @@ let token = localStorage.getItem('cop_token');
 let adminPw = localStorage.getItem('cop_pw') || '';
 let allPosts = [], allEmails = [], filteredPosts = [], currentPage = 1;
 let currentId = null, uploadedUrl = null, ytVideoId = null, capaMode = 'img';
+let featOn = false, isDirty = false;
 let editor = null;
 
 if (token) boot();
@@ -564,7 +569,7 @@ function showPage(page, btn) {
 async function loadPosts() {
   showSkeletons('posts-list',4);
   try {
-    const r = await fetch(`${API}/posts?all=1`,{headers:{Authorization:`Bearer ${token}`}});
+    const r = await fetch(`${API}/posts`,{headers:{Authorization:`Bearer ${token}`}});
     if (r.status===401) { doLogout(); return; }
     allPosts = await r.json();
     filteredPosts = allPosts; currentPage = 1;
@@ -693,6 +698,12 @@ function initEditor() {
   });
   editor.on('text-change',()=>{ updateWords(); markDirty(); });
 }
+function updateCtr(fid, ctrid, max) {
+  const len = document.getElementById(fid).value.length;
+  const el = document.getElementById(ctrid); if (!el) return;
+  el.textContent = `${len}/${max}`;
+  el.className = 'ctr' + (len > max*0.87 ? (len >= max ? ' over' : ' warn') : '');
+}
 function updateWords() {
   const t=editor.getText().trim(), w=t?t.split(/\s+/).length:0;
   const el=document.getElementById('char-count'); if(el) el.textContent=`${w} palavra${w!==1?'s':''}`;
@@ -732,7 +743,7 @@ function openEditor(id) {
   if (id===null) {
     document.getElementById('e-title').textContent='Nova publicação';
     ['f-title','f-cat','f-read'].forEach(fid=>{ document.getElementById(fid).value=''; });
-    ['title-ctr','excerpt-ctr','meta-ctr'].forEach((cid,i)=>{ const el=document.getElementById(cid); if(el){ el.textContent=`0/${[150,200,160][i]}`; el.className='ctr'; if(i>0)el.style.bottom='.45rem'; } });
+    const tctr=document.getElementById('title-ctr'); if(tctr){tctr.textContent='0/150';tctr.className='ctr';}
     setHTML(''); setFeat(false);
     document.getElementById('btn-del').style.display='none';
     document.getElementById('save-lbl').textContent='Publicar';
@@ -743,8 +754,6 @@ function openEditor(id) {
     document.getElementById('f-cat').value=p.cat;
     document.getElementById('f-read').value=p.read_time||'';
     document.getElementById('title-ctr').textContent=`${p.title.length}/150`;
-    document.getElementById('excerpt-ctr').textContent=`${(p.excerpt||'').length}/200`;
-    document.getElementById('meta-ctr').textContent=`${(p.meta_desc||'').length}/160`;
     setHTML(p.body); setFeat(p.featured);
     if (p.yt_id) {
       setCapaTab('yt'); ytVideoId=p.yt_id;
@@ -855,6 +864,29 @@ async function deletePost() {
     const r=await fetch(`${API}/posts/${currentId}`,{method:'DELETE',headers:{Authorization:`Bearer ${token}`}});
     if(!r.ok) throw new Error(); closeEditor(); showToast('✓ Post excluído.'); await loadPosts();
   } catch { showToast('✗ Erro ao excluir.'); }
+}
+
+
+// ── CONFIRM MODAL ──
+let confirmCb = null;
+function openConfirm(title, msg, okLabel, cb) {
+  document.getElementById('cm-title').textContent = title;
+  document.getElementById('cm-msg').textContent = msg;
+  document.getElementById('cm-ok').textContent = okLabel || 'Confirmar';
+  confirmCb = cb;
+  const m = document.getElementById('confirm-modal');
+  m.style.display = 'flex';
+}
+function closeConfirm() {
+  document.getElementById('confirm-modal').style.display = 'none';
+  confirmCb = null;
+}
+document.getElementById('cm-ok').onclick = () => { if (confirmCb) confirmCb(); closeConfirm(); };
+function confirmDeletePost() {
+  openConfirm('Excluir publicação', 'Esta ação é irreversível. Deseja excluir?', 'Excluir', deletePost);
+}
+function confirmDeleteEmail(email) {
+  openConfirm('Remover inscrito', `Remover ${email} da lista?`, 'Remover', () => deleteEmail(email));
 }
 
 // ── UTILS ──
