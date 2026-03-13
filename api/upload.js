@@ -1,5 +1,6 @@
 import { requireAuth } from '../lib/auth.js';
-import { v2 as cloudinary } from 'cloudinary';
+import cloudinaryPkg from 'cloudinary';
+const { v2: cloudinary } = cloudinaryPkg;
 
 export const config = { api: { bodyParser: false } };
 
