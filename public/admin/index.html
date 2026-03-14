@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Dashboard — COP Advogados</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
@@ -50,8 +50,12 @@
     .main{margin-left:var(--sidebar-w);min-height:100vh;display:flex;flex-direction:column}
     .topbar{background:var(--white);border-bottom:1px solid var(--border);height:54px;display:flex;align-items:center;padding:0 2rem;justify-content:space-between;position:sticky;top:0;z-index:20;box-shadow:0 1px 14px rgba(0,0,0,.04)}
     .topbar-left{display:flex;flex-direction:column}
+    .topbar-right{display:flex;align-items:center;gap:1rem}
     .topbar-title{font-size:.82rem;font-weight:600;color:var(--dark)}
     .topbar-crumb{font-size:.68rem;color:var(--muted);font-weight:300}
+    .mobile-actions{display:none;align-items:center;gap:.8rem}
+    .mobile-actions a, .mobile-actions button{color:var(--muted);background:none;border:none;cursor:pointer;display:flex;align-items:center;}
+    .mobile-actions a:hover, .mobile-actions button:hover{color:var(--red)}
     .btn-new{display:none;align-items:center;gap:.45rem;background:var(--red);color:#fff;border:none;padding:.6rem 1.1rem;font-size:.65rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;transition:all .15s;font-family:var(--sans)}
     .btn-new:hover{background:var(--dark)}
     .btn-new.visible{display:flex}
@@ -131,6 +135,15 @@
     .btn-del-row{display:inline-flex;align-items:center;gap:.3rem;padding:.3rem .6rem;font-size:.6rem;font-weight:600;color:#ccc;background:none;border:1px solid var(--border);cursor:pointer;transition:all .15s;font-family:var(--sans)}
     .btn-del-row:hover{border-color:#ef4444;color:#ef4444}
 
+    /* FAQ SUPORTE */
+    .faq-item { background:#fff; border:1px solid var(--border); padding:1rem; margin-bottom:.5rem; cursor:pointer; transition:all 0.2s; }
+    .faq-item:hover { border-color:var(--red); }
+    .faq-title { display:flex; justify-content:space-between; align-items:center; font-weight:600; font-size:0.85rem; color:var(--dark); }
+    .faq-title svg { transition:transform 0.3s; color:var(--muted); }
+    .faq-content { max-height:0; overflow:hidden; transition:max-height 0.3s ease; font-size:0.8rem; color:var(--muted); margin-top:0;}
+    .faq-item.open .faq-content { max-height:150px; margin-top:.5rem; }
+    .faq-item.open .faq-title svg { transform:rotate(180deg); color:var(--red); }
+
     /* EMPTY */
     .empty{display:none;text-align:center;padding:4rem 0}
     .empty svg{color:#d1d5db;margin-bottom:.85rem}
@@ -140,7 +153,9 @@
 
     /* SKELETON */
     .sk{background:linear-gradient(90deg,#f0f0f0 25%,#e8e8e8 50%,#f0f0f0 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:2px}
-    @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}/* EDITOR */
+    @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+    
+    /* EDITOR */
     #editor-overlay{display:none;position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);align-items:flex-start;justify-content:center;overflow-y:auto;padding:2rem 1rem}
     #editor-overlay.open{display:flex}
     .e-panel{background:#fff;width:100%;max-width:880px;box-shadow:0 30px 70px rgba(0,0,0,.25);animation:su .22s ease;flex-shrink:0}
@@ -200,7 +215,7 @@
     .toggle-desc{font-size:.7rem;color:var(--muted);font-weight:300}
 
     /* Quill */
-    .ql-toolbar.ql-snow{border:1px solid var(--border)!important;border-bottom:none!important;background:#fafafa;padding:.45rem .7rem;font-family:var(--sans)}
+    .ql-toolbar.ql-snow{border:1px solid var(--border)!important;border-bottom:none!important;background:#fafafa;padding:.45rem .7rem;font-family:var(--sans);overflow-x:auto;white-space:nowrap;}
     .ql-container.ql-snow{border:1px solid var(--border)!important;font-family:var(--sans);font-size:.9rem}
     .ql-editor{min-height:240px;padding:1.2rem;line-height:1.85;color:var(--mid)}
     .ql-editor p{margin-bottom:.8rem}
@@ -233,20 +248,48 @@
     @keyframes spin{to{transform:rotate(360deg)}}
     .spin{animation:spin .8s linear infinite;display:inline-block}
 
+    /* OTIMIZAÇÕES MOBILE PROFISSIONAIS */
     @media(max-width:768px){
-      .sidebar{width:100%;height:52px;bottom:auto;flex-direction:row;align-items:center;padding:0 1rem}
-      .sb-nav,.sb-bottom,.sb-logo-sub,.sb-section{display:none}
-      .sb-logo{padding:0;border:none}
-      .main{margin-left:0;margin-top:52px}
-      .stats-grid{grid-template-columns:1fr 1fr}
-      .form-grid{grid-template-columns:1fr}
-      .content{padding:1.25rem}
+      /* Transforma a sidebar numa Bottom Navigation Bar estilo app */
+      .sidebar{ top:auto; bottom:0; width:100%; height:65px; flex-direction:row; padding:0; z-index:40; border-right:none; border-top:1px solid var(--sborder); box-shadow:0 -2px 10px rgba(0,0,0,0.2); }
+      .sb-logo, .sb-bottom, .sb-section, .sb-logo-sub { display:none; }
+      .sb-nav { display:flex; flex-direction:row; width:100%; overflow-y:visible; padding:0; justify-content:space-around; align-items:center; }
+      .nav-item { flex-direction:column; gap:6px; padding:0.5rem 0; font-size:0.65rem; justify-content:center; text-align:center; width:25%; }
+      .nav-item svg { margin:0; }
+      .nav-item.active { background:transparent; color:var(--red); }
+      .nav-item.active::before { width:100%; height:3px; left:0; top:0; bottom:auto; }
+      .nav-badge { display:none; } /* Esconde o badge no mobile para economizar espaço */
+
+      /* Ajusta o painel principal e header */
+      .main{ margin-left:0; margin-bottom:65px; } /* Deixa espaço pra bottom nav */
+      .topbar{ padding:0 1.25rem; }
+      .btn-new .btn-text { display:none; } /* Esconde o texto do botão, deixa só icone no mobile */
+      .btn-new { padding: .6rem; border-radius:4px; }
+      .mobile-actions { display:flex; } /* Mostra botões de blog e sair no header */
+      
+      .content{ padding:1.25rem 1.25rem 2.5rem 1.25rem; }
+      .stats-grid{ grid-template-columns: 1fr; gap:1rem; } /* Cards um abaixo do outro pra não quebrar numero */
+      .form-grid{ grid-template-columns:1fr; }
+      .posts-search, .search-box { width:100%; } /* Busca ocupa a tela toda no mobile */
+      .posts-toolbar { flex-direction:column; align-items:stretch; }
+      .pr-meta { width:100%; }
+      .post-row { flex-wrap:wrap; }
+
+      /* Melhoria do Modal de Edição para Mobile */
+      #editor-overlay { padding: 0; align-items:flex-end; }
+      .e-panel { height: 95vh; display:flex; flex-direction:column; max-width:100%; border-radius:12px 12px 0 0; animation:slideUp .3s ease; }
+      @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+      .e-body { padding: 1.25rem; overflow-y:auto; flex:1; }
+      .e-header { padding: 1.25rem; }
+      .e-actions { flex-wrap:wrap; gap:1rem; padding-bottom:1rem; }
+      .btn-save { flex:1; justify-content:center; }
+      
+      #toast { bottom: 80px; } /* Toast acima da bottom nav */
     }
   </style>
 </head>
 <body>
 
-<!-- LOGIN -->
 <div id="login-screen">
   <div class="login-wrap">
     <div class="l-logo">COP<span>.</span></div>
@@ -260,7 +303,6 @@
   </div>
 </div>
 
-<!-- DASHBOARD -->
 <div id="dashboard">
   <aside class="sidebar">
     <div class="sb-logo">
@@ -270,17 +312,21 @@
     <nav class="sb-nav">
       <div class="sb-section">Geral</div>
       <button class="nav-item active" onclick="showPage('overview',this)">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Visão Geral
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Visão Geral
       </button>
       <div class="sb-section" style="margin-top:.4rem">Conteúdo</div>
       <button class="nav-item" onclick="showPage('posts',this)">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Publicações
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Publicações
         <span class="nav-badge" id="badge-posts">0</span>
       </button>
       <div class="sb-section" style="margin-top:.4rem">Marketing</div>
       <button class="nav-item" onclick="showPage('newsletter',this)">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>Newsletter
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>Newsletter
         <span class="nav-badge" id="badge-nl">0</span>
+      </button>
+      <div class="sb-section" style="margin-top:.4rem">Ajuda</div>
+      <button class="nav-item" onclick="showPage('support',this)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>Suporte
       </button>
     </nav>
     <div class="sb-bottom">
@@ -299,14 +345,24 @@
         <span class="topbar-title" id="topbar-title">Visão Geral</span>
         <span class="topbar-crumb">COP Advogados · Dashboard</span>
       </div>
-      <button class="btn-new" id="btn-new" onclick="openEditor(null)">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Nova publicação
-      </button>
+      <div class="topbar-right">
+        <div class="mobile-actions">
+           <a href="../blog.html" target="_blank" title="Ver Blog">
+             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+           </a>
+           <button onclick="doLogout()" title="Sair">
+             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+           </button>
+        </div>
+        <button class="btn-new" id="btn-new" onclick="openEditor(null)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <span class="btn-text">Nova publicação</span>
+        </button>
+      </div>
     </header>
 
     <div class="content">
 
-      <!-- OVERVIEW -->
       <div class="page active" id="page-overview">
         <div class="stats-grid">
           <div class="stat-card">
@@ -332,7 +388,6 @@
         <div class="post-list" id="ov-posts"></div>
       </div>
 
-      <!-- POSTS -->
       <div class="page" id="page-posts">
         <div class="sec-head">
           <div><div class="sec-title">Publicações</div><div class="sec-sub" id="posts-sub">Carregando...</div></div>
@@ -352,7 +407,6 @@
         <div class="pagination" id="pagination"></div>
       </div>
 
-      <!-- NEWSLETTER -->
       <div class="page" id="page-newsletter">
         <div class="sec-head">
           <div><div class="sec-title">Newsletter</div><div class="sec-sub" id="nl-sub">Carregando...</div></div>
@@ -374,12 +428,58 @@
         </div>
       </div>
 
+      <div class="page" id="page-support">
+        <div class="sec-head">
+          <div><div class="sec-title">Suporte ao Cliente</div><div class="sec-sub">Precisa de ajuda com o painel? Entre em contato ou veja as dúvidas frequentes.</div></div>
+        </div>
+        <div class="form-grid">
+          
+          <div class="table-card" style="padding:1.6rem">
+            <h3 style="font-family:var(--serif);font-size:1.3rem;margin-bottom:1.2rem;color:var(--dark)">Contato Direto</h3>
+            <label class="form-label">Qual a sua dúvida ou problema? *</label>
+            <input type="text" class="form-input" style="margin-bottom:1rem" placeholder="Ex: Dificuldade em subir imagem de capa">
+            
+            <label class="form-label">Detalhes *</label>
+            <textarea class="form-textarea" style="margin-bottom:1.2rem;min-height:120px" placeholder="Descreva o que está acontecendo detalhadamente..."></textarea>
+            
+            <button class="btn-primary" style="width:100%;justify-content:center" onclick="showToast('✓ Mensagem enviada para a equipe de suporte! Retornaremos em breve.'); this.previousElementSibling.value=''; this.previousElementSibling.previousElementSibling.previousElementSibling.value='';">
+              Enviar Mensagem
+            </button>
+          </div>
+
+          <div>
+            <h3 style="font-family:var(--serif);font-size:1.3rem;margin-bottom:1.2rem;color:var(--dark)">Dúvidas Frequentes (FAQ)</h3>
+            
+            <div class="faq-item" onclick="this.classList.toggle('open')">
+              <div class="faq-title">Como altero a capa de uma publicação? <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
+              <div class="faq-content">Basta clicar em "Editar" na aba de publicações. Na seção "Capa", clique em "Remover" na imagem atual e então arraste a nova imagem para a área pontilhada. O sistema converte automaticamente para o formato otimizado WebP.</div>
+            </div>
+
+            <div class="faq-item" onclick="this.classList.toggle('open')">
+              <div class="faq-title">Qual o tamanho recomendado das imagens? <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
+              <div class="faq-content">Recomendamos utilizar imagens retangulares de boa qualidade (por exemplo, 1200 x 800 pixels). Não se preocupe com o peso, nosso sistema redimensiona e comprime a imagem automaticamente para não deixar o site lento.</div>
+            </div>
+
+            <div class="faq-item" onclick="this.classList.toggle('open')">
+              <div class="faq-title">Como uso um vídeo do YouTube como capa? <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
+              <div class="faq-content">Na tela de criação de post, logo abaixo do campo de Capa, selecione a aba "Vídeo YouTube". Cole o link completo do vídeo (ex: https://youtube.com/watch?v=...) e clique em OK. A thumbnail do vídeo será carregada automaticamente.</div>
+            </div>
+
+            <div class="faq-item" onclick="this.classList.toggle('open')">
+              <div class="faq-title">O que é a tag "Em destaque"? <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
+              <div class="faq-content">Ao habilitar a chave "Destacar no topo do blog" durante a edição de uma publicação, este artigo ganhará relevância e aparecerá nas primeiras posições da página inicial do seu site (dependendo do design da vitrine do seu blog).</div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
 
     </div>
   </div>
 </div>
 
-<!-- EDITOR OVERLAY -->
 <div id="editor-overlay">
   <div class="e-panel">
     <div id="unsaved-banner">
@@ -392,7 +492,6 @@
     </div>
     <div class="e-body">
 
-      <!-- Título -->
       <div>
         <label class="form-label">Título *</label>
         <div class="rel">
@@ -400,7 +499,6 @@
           <span class="ctr" id="title-ctr">0/150</span>
         </div>
       </div>
-      <!-- Categoria + leitura -->
       <div class="form-grid">
         <div>
           <label class="form-label">Categoria *</label>
@@ -419,7 +517,6 @@
           <input id="f-read" type="text" class="form-input" placeholder="Ex: 5 min" oninput="markDirty()">
         </div>
       </div>
-      <!-- Capa -->
       <div>
         <label class="form-label">Capa *</label>
         <div class="capa-tabs">
@@ -455,10 +552,10 @@
           </div>
         </div>
 
-         <div>
-        <label class="form-label">Vídeo YouTube <span style="color:#bbb;font-weight:400;text-transform:none;letter-spacing:0;font-size:.62rem">— opcional, substitui a imagem de capa</span></label>
-        <div style="display:flex;gap:.5rem">
-          <input id="f-yt-url" type="text" class="form-input" placeholder="https://youtube.com/watch?v=..." oninput="previewYT()">
+         <div id="capa-yt-panel">
+        <label class="form-label" style="display:none">Vídeo YouTube <span style="color:#bbb;font-weight:400;text-transform:none;letter-spacing:0;font-size:.62rem">— opcional, substitui a imagem de capa</span></label>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+          <input id="f-yt-url" type="text" class="form-input" style="flex:1;min-width:200px" placeholder="https://youtube.com/watch?v=..." oninput="previewYT()">
           <button class="btn-secondary" onclick="previewYT()" style="flex-shrink:0;padding:.68rem .9rem">OK</button>
         </div>
         <div id="yt-preview" style="display:none;margin-top:.75rem">
@@ -468,7 +565,6 @@
       </div>
       </div>
 
-      <!-- Destaque -->
       <div class="toggle-row" onclick="toggleFeat()">
         <div class="toggle" id="feat-toggle"></div>
         <div>
@@ -477,19 +573,17 @@
         </div>
       </div>
 
-      <!-- Conteúdo -->
       <div>
         <label class="form-label">Conteúdo *</label>
         <div id="quill-editor"></div>
         <div class="e-footer"><span class="char-count" id="char-count">0 palavras</span></div>
       </div>
 
-      <!-- Ações -->
       <div class="e-actions">
         <button class="btn-danger" id="btn-del" style="display:none" onclick="confirmDeletePost()">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>Excluir publicação
         </button>
-        <div style="display:flex;gap:.45rem;margin-left:auto">
+        <div style="display:flex;gap:.45rem;margin-left:auto;flex-wrap:wrap;">
           <button class="btn-secondary" style="padding:.55rem .9rem" onclick="tryClose()">Cancelar</button>
           <button class="btn-save" id="btn-save" onclick="savePost()">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
@@ -503,9 +597,8 @@
 </div>
 
 
-<!-- CONFIRM MODAL -->
 <div id="confirm-modal" style="display:none;position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.55);align-items:center;justify-content:center">
-  <div style="background:#fff;padding:1.8rem;max-width:380px;width:100%;margin:1rem">
+  <div style="background:#fff;padding:1.8rem;max-width:380px;width:100%;margin:1rem;border-radius:4px;">
     <div id="cm-title" style="font-family:var(--serif);font-size:1.15rem;font-weight:700;color:var(--dark);margin-bottom:.6rem">Confirmar</div>
     <div id="cm-msg" style="font-size:.82rem;color:var(--muted);font-weight:300;margin-bottom:1.4rem;line-height:1.6"></div>
     <div style="display:flex;gap:.55rem;justify-content:flex-end">
@@ -560,7 +653,7 @@ function showPage(page, btn) {
   document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
   document.getElementById('page-'+page).classList.add('active');
   if (btn) btn.classList.add('active');
-  const titles={overview:'Visão Geral',posts:'Publicações',newsletter:'Newsletter'};
+  const titles={overview:'Visão Geral',posts:'Publicações',newsletter:'Newsletter',support:'Suporte'};
   document.getElementById('topbar-title').textContent = titles[page]||page;
   document.getElementById('btn-new').classList.toggle('visible', page==='posts');
   if (page==='newsletter') renderNL(allEmails);
@@ -720,8 +813,8 @@ function setCapaTab(tab) {
   capaMode=tab;
   document.getElementById('tab-img').className='capa-tab'+(tab==='img'?' active':'');
   document.getElementById('tab-yt').className='capa-tab'+(tab==='yt'?' active':'');
-  document.getElementById('capa-img-panel').className='capa-img-panel'+(tab==='img'?' active':'');
-  document.getElementById('capa-yt-panel').className='capa-yt-panel'+(tab==='yt'?' active':'');
+  document.getElementById('capa-img-panel').className=(tab==='img'?'active':'');
+  document.getElementById('capa-yt-panel').className=(tab==='yt'?'active':'');
   markDirty();
 }
 
@@ -733,8 +826,6 @@ function previewYT() {
   if (id) { ytVideoId=id; img.src=`https://img.youtube.com/vi/${id}/hqdefault.jpg`; wrap.style.display='block'; markDirty(); }
   else { ytVideoId=null; wrap.style.display='none'; if(url) showToast('⚠ URL do YouTube inválida.'); }
 }
-
-// Slug
 
 // Open editor
 function openEditor(id) {
@@ -770,7 +861,8 @@ function openEditor(id) {
   document.getElementById('editor-overlay').classList.add('open');
   document.body.style.overflow='hidden';
   updateWords();
-  setTimeout(()=>document.getElementById('f-title').focus(),100);
+  // no mobile evitamos dar focus direto para o teclado não subir imediatamente e tampar a tela.
+  if(window.innerWidth > 768) { setTimeout(()=>document.getElementById('f-title').focus(),100); }
 }
 
 function tryClose() {
