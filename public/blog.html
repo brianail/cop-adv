@@ -308,7 +308,8 @@
                 </div>
             </div>
 
-            <div id="m-media" class="w-full h-48 sm:h-64 flex items-center justify-center flex-shrink-0 relative bg-[#111] overflow-hidden"></div>
+            <!-- Ajuste na altura do container para dar mais respiro à imagem e usar object-contain via JS -->
+            <div id="m-media" class="w-full h-56 sm:h-80 flex items-center justify-center flex-shrink-0 relative bg-[#111] overflow-hidden"></div>
 
             <div id="modal-scroll" class="overflow-y-auto custom-scrollbar flex-1 px-6 sm:px-12 py-8" onscroll="updateReadProgress(this)">
                 <h2 id="m-title" class="font-serif text-2xl sm:text-3xl md:text-[2rem] text-[#1A1A1A] leading-tight mb-8"></h2>
@@ -334,6 +335,14 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- Novo: Visualizador de Imagens (Lightbox) -->
+    <div id="lightbox" class="fixed inset-0 z-[9999] hidden opacity-0 bg-black/95 items-center justify-center p-4 sm:p-8 cursor-zoom-out transition-opacity duration-300 backdrop-blur-sm" onclick="closeLightbox()">
+        <button class="absolute top-4 right-4 sm:top-8 sm:right-8 text-white/70 hover:text-white bg-white/10 hover:bg-white/20 p-3 rounded-full transition-colors focus:outline-none z-10" onclick="closeLightbox(event)" aria-label="Fechar visualização">
+            <i data-lucide="x" class="w-6 h-6"></i>
+        </button>
+        <img id="lightbox-img" src="" alt="Imagem em tamanho real" class="max-w-full max-h-full object-contain shadow-2xl transform scale-95 transition-transform duration-300">
     </div>
 
     <div id="toast" class="fixed bottom-24 left-1/2 -translate-x-1/2 z-[300] bg-[#1A1A1A] text-white text-sm font-medium px-6 py-3 shadow-2xl pointer-events-none opacity-0 whitespace-nowrap rounded-sm border border-gray-800"></div>
@@ -603,10 +612,24 @@
                 document.getElementById('m-body').innerHTML = p.body;
 
                 const mediaContainer = document.getElementById('m-media');
+                
+                // Melhoria do tratamento de imagens vs videos
                 if (p.yt_id) {
                     mediaContainer.innerHTML = `<iframe class="w-full h-full" src="https://www.youtube.com/embed/${p.yt_id}?autoplay=1&mute=0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
                 } else {
-                    mediaContainer.innerHTML = `<img src="${p.img || 'https://via.placeholder.com/800x450'}" alt="${p.title}" class="w-full h-full object-cover">`;
+                    const imgSrc = p.img || 'https://via.placeholder.com/800x450';
+                    // Implementação do overlay de Zoom + troca de object-cover para object-contain
+                    mediaContainer.innerHTML = `
+                        <div class="relative w-full h-full group cursor-zoom-in flex items-center justify-center bg-[#111]" onclick="openLightbox('${imgSrc}')">
+                            <img src="${imgSrc}" alt="${p.title}" class="w-full h-full object-contain">
+                            <div class="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all duration-300 flex items-center justify-center">
+                                <div class="bg-black/70 backdrop-blur-sm text-white px-5 py-2.5 rounded-full opacity-0 group-hover:opacity-100 transition-all transform translate-y-4 group-hover:translate-y-0 duration-300 flex items-center gap-2 border border-white/10">
+                                    <i data-lucide="zoom-in" class="w-4 h-4"></i>
+                                    <span class="text-xs font-bold tracking-widest uppercase">Ver tamanho real</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
                 }
 
                 // Relacionados
@@ -647,6 +670,40 @@
             }
         }
 
+        // ── Funções do Lightbox (Zoom de Imagens) ─────────────────────────────────
+        function openLightbox(src) {
+            const lb = document.getElementById('lightbox');
+            const lbImg = document.getElementById('lightbox-img');
+            lbImg.src = src;
+            lb.classList.remove('hidden');
+            lb.classList.add('flex');
+            
+            // Forçar reflow para ativar as transições de classe do tailwind
+            void lb.offsetWidth;
+            
+            lb.classList.remove('opacity-0');
+            lb.classList.add('opacity-100');
+            lbImg.classList.remove('scale-95');
+            lbImg.classList.add('scale-100');
+        }
+
+        function closeLightbox(e) {
+            if (e) e.stopPropagation();
+            const lb = document.getElementById('lightbox');
+            const lbImg = document.getElementById('lightbox-img');
+            
+            lb.classList.remove('opacity-100');
+            lb.classList.add('opacity-0');
+            lbImg.classList.remove('scale-100');
+            lbImg.classList.add('scale-95');
+            
+            setTimeout(() => {
+                lb.classList.add('hidden');
+                lb.classList.remove('flex');
+                lbImg.src = '';
+            }, 300);
+        }
+
         // ── Fechar Modal ──────────────────────────────────────────────────────────
         function closePost() {
             const ov = document.getElementById('modal-overlay');
@@ -664,7 +721,17 @@
             if (e.target === document.getElementById('modal-overlay')) closePost();
         }
 
-        document.addEventListener('keydown', e => { if (e.key === 'Escape') closePost(); });
+        // Modificado para fechar primeiro o lightbox caso ele esteja aberto
+        document.addEventListener('keydown', e => { 
+            if (e.key === 'Escape') {
+                const lb = document.getElementById('lightbox');
+                if (lb && !lb.classList.contains('hidden')) {
+                    closeLightbox();
+                } else {
+                    closePost(); 
+                }
+            }
+        });
 
         // ── Progresso de leitura (Modal) ──────────────────────────────────────────
         function updateReadProgress(el) {
