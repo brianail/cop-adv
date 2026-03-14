@@ -218,8 +218,10 @@
     .dz-text{font-size:.82rem;color:var(--muted);font-weight:300}
     .dz-text span{color:var(--red);font-weight:500}
     .dz-hint{font-size:.68rem;color:#d1d5db;margin-top:.25rem}
+    
     #img-preview{display:none; animation: fadeIn 0.3s ease;}
-    .prev-img{max-height:130px;margin:0 auto;object-fit:contain;display:block; border-radius:2px}
+    /* NOVA ESTILIZAÇÃO PARA A PREVIEW DA IMAGEM MOSTRANDO CROP */
+    .prev-img{max-height:180px; width:100%; margin:0 auto; object-fit:cover; object-position:center; display:block; border-radius:4px; border:1px solid var(--border);}
     .prev-name{font-size:.68rem;color:var(--muted);margin-top:.5rem;text-align:center}
     .btn-rm-img{display:block;margin:.35rem auto 0;font-size:.65rem;color:var(--red);font-weight:600;background:none;border:none;cursor:pointer;font-family:var(--sans); padding:.2rem .5rem; border-radius:2px; transition:background .15s}
     .btn-rm-img:hover{background:rgba(200,16,46,.08)}
@@ -495,8 +497,8 @@
               <div class="faq-content">Basta clicar em "Editar" na aba de publicações. Na seção "Capa", clique em "Remover" na imagem atual e então arraste a nova imagem para a área pontilhada. O sistema converte automaticamente para o formato otimizado WebP.</div>
             </div>
             <div class="faq-item" onclick="this.classList.toggle('open')">
-              <div class="faq-title">Qual o tamanho recomendado das imagens? <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
-              <div class="faq-content">Recomendamos utilizar imagens retangulares de boa qualidade (por exemplo, 1200 x 800 pixels). Não se preocupe com o peso, nosso sistema redimensiona e comprime a imagem automaticamente para não deixar o site lento.</div>
+              <div class="faq-title">Como uso o Ajuste de Visualização na Capa? <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
+              <div class="faq-content">Quando você sobe uma imagem, pode escolher como ela é cortada na página do blog. Se a parte importante da foto estiver em cima, selecione "Alinhar ao Topo". A pré-visualização no próprio dashboard mostrará exatamente como ela ficará cortada.</div>
             </div>
             <div class="faq-item" onclick="this.classList.toggle('open')">
               <div class="faq-title">Como uso um vídeo do YouTube como capa? <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
@@ -571,10 +573,23 @@
               <div class="dz-text">Arraste ou <span style="text-decoration:underline">clique para selecionar</span></div>
               <div class="dz-hint">JPG, PNG, WEBP — convertido para WebP 1200px automaticamente</div>
             </div>
-            <div id="img-preview">
+            
+            <div id="img-preview" onclick="event.stopPropagation()">
+              <!-- A imagem simulando as proporções da tela do blog para preview de corte -->
               <img id="prev-el" src="" alt="" class="prev-img">
               <div class="prev-name" id="prev-name"></div>
-              <button class="btn-rm-img" title="Remover imagem" onclick="event.stopPropagation();clearImg()">Remover</button>
+              
+              <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); text-align: left;">
+                <label class="form-label" for="f-img-pos">Ajuste de Visualização (Como aparecerá no blog)</label>
+                <select id="f-img-pos" class="form-input" style="padding: .4rem .6rem; font-size: .8rem;" onchange="updateImgPos()">
+                  <option value="center">Centralizado (Corta as bordas)</option>
+                  <option value="top">Alinhar ao Topo (Foco na parte de cima)</option>
+                  <option value="bottom">Alinhar à Base (Foco na parte de baixo)</option>
+                  <option value="contain">Mostrar Imagem Inteira (Sem cortes)</option>
+                </select>
+              </div>
+
+              <button class="btn-rm-img" title="Remover imagem" onclick="event.stopPropagation();clearImg()">Remover Imagem</button>
             </div>
           </div>
           <div class="up-prog" id="up-prog">
@@ -884,6 +899,24 @@ function updateWords() {
   }
 }
 
+// NOVO: AJUSTE DE VISUALIZAÇÃO DA IMAGEM DA CAPA
+function updateImgPos() {
+  const val = document.getElementById('f-img-pos').value;
+  const img = document.getElementById('prev-el');
+  if (!img) return;
+
+  if (val === 'contain') {
+      img.style.objectFit = 'contain';
+      img.style.objectPosition = 'center';
+  } else {
+      img.style.objectFit = 'cover';
+      img.style.objectPosition = val; // Aceita top, center, bottom
+  }
+  
+  // Se existir uma imagem carregada, marca o post como alterado para salvar
+  if(uploadedUrl) markDirty();
+}
+
 function getHTML() { return editor.root.innerHTML; }
 function setHTML(html) { if(!editor) return; if(!html||html==='<p></p>'){editor.setContents([]);return;} editor.setContents(editor.clipboard.convert(html),'silent'); }
 function toggleFeat() { 
@@ -928,6 +961,8 @@ function openEditor(id) {
     ['f-title','f-cat','f-read'].forEach(fid=>{ document.getElementById(fid).value=''; });
     const tctr=document.getElementById('title-ctr'); if(tctr){tctr.textContent='0/150';tctr.className='ctr';}
     setHTML(''); setFeat(false);
+    document.getElementById('f-img-pos').value = 'center';
+    updateImgPos(); // Reseta para o padrão
     document.getElementById('btn-del').style.display='none';
     document.getElementById('save-lbl').textContent='Publicar';
   } else {
@@ -943,7 +978,10 @@ function openEditor(id) {
       document.getElementById('yt-thumb').src=`https://img.youtube.com/vi/${p.yt_id}/hqdefault.jpg`;
       document.getElementById('yt-preview').style.display='block';
     } else if (p.img) {
-      uploadedUrl=p.img; showPrev(p.img,'imagem atual');
+      uploadedUrl=p.img; 
+      document.getElementById('f-img-pos').value = p.img_pos || 'center'; // Carrega configuração do backend (se houver)
+      updateImgPos();
+      showPrev(p.img,'imagem atual');
     }
     document.getElementById('btn-del').style.display='flex';
     document.getElementById('save-lbl').textContent='Salvar alterações';
@@ -1025,18 +1063,24 @@ async function savePost() {
   const title=document.getElementById('f-title').value.trim();
   const cat=document.getElementById('f-cat').value;
   const read=document.getElementById('f-read').value.trim()||'1 min de leitura';
+  const imgPos=document.getElementById('f-img-pos').value; // Pega o ajuste da imagem
   const body=getHTML();
+
   if(!title){showToast('⚠ Preencha o título.');return;}
   if(!cat){showToast('⚠ Selecione uma categoria.');return;}
   if(capaMode==='img'&&!uploadedUrl){showToast('⚠ Adicione uma imagem de capa.');return;}
   if(capaMode==='yt'&&!ytVideoId){showToast('⚠ Cole um link válido do YouTube.');return;}
   if(!body||body==='<p></p>'){showToast('⚠ Escreva o conteúdo.');return;}
+
   const btn=document.getElementById('btn-save'); btn.disabled=true; btn.innerHTML='<span class="spin" style="font-size:1rem">↻</span>';
+  
   const payload={
     title, cat, read_time:read, body, featured:featOn,
-    img:   capaMode==='img' ? uploadedUrl : null,
-    yt_id: capaMode==='yt'  ? ytVideoId   : null,
+    img:      capaMode==='img' ? uploadedUrl : null,
+    img_pos:  capaMode==='img' ? imgPos      : null, // Nova propriedade enviada para a API
+    yt_id:    capaMode==='yt'  ? ytVideoId   : null,
   };
+
   try {
     const isEdit=currentId!==null;
     const r=await fetch(isEdit?`${API}/posts/${currentId}`:`${API}/posts`,{method:isEdit?'PUT':'POST',headers:{'Content-Type':'application/json',Authorization:`Bearer ${token}`},body:JSON.stringify(payload)});
