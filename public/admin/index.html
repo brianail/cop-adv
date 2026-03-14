@@ -87,7 +87,7 @@
     .posts-toolbar{display:flex;align-items:center;gap:.75rem;margin-bottom:1rem;flex-wrap:wrap}
     .posts-search{border:1px solid var(--border);padding:.42rem .85rem;font-size:.8rem;font-family:var(--sans);outline:none;transition:border-color .15s;width:220px;color:var(--mid);background:#fff}
     .posts-search:focus{border-color:var(--red)}
-    .filters{display:flex;gap:.35rem;flex-wrap:wrap}
+    .filters{display:flex;gap:.35rem;flex-wrap:wrap;flex:1}
     .filter-btn{padding:.28rem .75rem;font-size:.6rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;border:1px solid var(--border);background:#fff;color:var(--muted);cursor:pointer;transition:all .15s;font-family:var(--sans)}
     .filter-btn:hover,.filter-btn.active{border-color:var(--red);color:var(--red);background:rgba(200,16,46,.04)}
 
@@ -169,6 +169,7 @@
     .form-label em{font-style:normal;color:#bbb;font-weight:400;letter-spacing:0;text-transform:none;font-size:.62rem}
     .form-input{width:100%;border:1px solid var(--border);padding:.68rem .95rem;font-size:.88rem;font-family:var(--sans);color:var(--dark);outline:none;transition:border-color .15s;background:#fff}
     .form-input:focus{border-color:var(--red)}
+    .form-input[readonly] {background:#f9f9f9; color:#6b7280; cursor:not-allowed;}
     .form-textarea{width:100%;border:1px solid var(--border);padding:.68rem .95rem;font-size:.85rem;font-family:var(--sans);color:var(--dark);outline:none;transition:border-color .15s;background:#fff;resize:vertical;min-height:72px;line-height:1.6}
     .form-textarea:focus{border-color:var(--red)}
     .f-title-inp{font-family:var(--serif);font-size:1.05rem}
@@ -219,6 +220,7 @@
     .ql-container.ql-snow{border:1px solid var(--border)!important;font-family:var(--sans);font-size:.9rem}
     .ql-editor{min-height:240px;padding:1.2rem;line-height:1.85;color:var(--mid)}
     .ql-editor p{margin-bottom:.8rem}
+    .ql-editor h2{font-family:var(--serif);font-size:1.4rem;font-weight:700;margin:1.8rem 0 .5rem;color:var(--dark)}
     .ql-editor h3{font-family:var(--serif);font-size:1.2rem;font-weight:600;margin:1.5rem 0 .5rem;color:var(--dark)}
     .ql-editor ul,.ql-editor ol{padding-left:1.5rem;margin:.5rem 0 1rem}
     .ql-editor li{margin-bottom:.3rem}
@@ -230,6 +232,8 @@
     .ql-snow.ql-toolbar button:hover .ql-stroke,.ql-snow .ql-toolbar button.ql-active .ql-stroke{stroke:var(--red)}
     .ql-snow.ql-toolbar button:hover .ql-fill,.ql-snow .ql-toolbar button.ql-active .ql-fill{fill:var(--red)}
     .ql-snow.ql-toolbar button:hover,.ql-snow .ql-toolbar button.ql-active{color:var(--red)}
+    .ql-snow .ql-picker-label:hover .ql-stroke{stroke:var(--red)}
+    .ql-snow .ql-picker-label:hover{color:var(--red)}
     .ql-snow a{color:var(--red)}
     .e-footer{border:1px solid var(--border);border-top:none;padding:.32rem .95rem;display:flex;justify-content:flex-end}
     .char-count{font-size:.6rem;color:#d1d5db}
@@ -258,19 +262,19 @@
       .nav-item svg { margin:0; }
       .nav-item.active { background:transparent; color:var(--red); }
       .nav-item.active::before { width:100%; height:3px; left:0; top:0; bottom:auto; }
-      .nav-badge { display:none; } /* Esconde o badge no mobile para economizar espaço */
+      .nav-badge { display:none; } 
 
       /* Ajusta o painel principal e header */
-      .main{ margin-left:0; margin-bottom:65px; } /* Deixa espaço pra bottom nav */
+      .main{ margin-left:0; margin-bottom:65px; }
       .topbar{ padding:0 1.25rem; }
-      .btn-new .btn-text { display:none; } /* Esconde o texto do botão, deixa só icone no mobile */
+      .btn-new .btn-text { display:none; } 
       .btn-new { padding: .6rem; border-radius:4px; }
-      .mobile-actions { display:flex; } /* Mostra botões de blog e sair no header */
+      .mobile-actions { display:flex; } 
       
       .content{ padding:1.25rem 1.25rem 2.5rem 1.25rem; }
-      .stats-grid{ grid-template-columns: 1fr; gap:1rem; } /* Cards um abaixo do outro pra não quebrar numero */
+      .stats-grid{ grid-template-columns: 1fr; gap:1rem; }
       .form-grid{ grid-template-columns:1fr; }
-      .posts-search, .search-box { width:100%; } /* Busca ocupa a tela toda no mobile */
+      .posts-search, .search-box { width:100%; }
       .posts-toolbar { flex-direction:column; align-items:stretch; }
       .pr-meta { width:100%; }
       .post-row { flex-wrap:wrap; }
@@ -284,7 +288,7 @@
       .e-actions { flex-wrap:wrap; gap:1rem; padding-bottom:1rem; }
       .btn-save { flex:1; justify-content:center; }
       
-      #toast { bottom: 80px; } /* Toast acima da bottom nav */
+      #toast { bottom: 80px; } 
     }
   </style>
 </head>
@@ -391,9 +395,18 @@
       <div class="page" id="page-posts">
         <div class="sec-head">
           <div><div class="sec-title">Publicações</div><div class="sec-sub" id="posts-sub">Carregando...</div></div>
+          <button class="btn-secondary" onclick="exportPostsCSV()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Exportar CSV
+          </button>
         </div>
         <div class="posts-toolbar">
           <input type="text" class="posts-search" id="posts-search" placeholder="Buscar por título..." oninput="applyFilters()">
+          <select class="posts-search" id="posts-sort" style="width:auto; padding: .42rem .5rem;" onchange="applyFilters()">
+            <option value="newest">Mais recentes</option>
+            <option value="oldest">Mais antigos</option>
+            <option value="az">Ordem alfabética (A-Z)</option>
+            <option value="za">Ordem alfabética (Z-A)</option>
+          </select>
           <div class="filters" id="cat-filters">
             <button class="filter-btn active" onclick="filterCat('todos',this)">Todos</button>
           </div>
@@ -433,48 +446,33 @@
           <div><div class="sec-title">Suporte ao Cliente</div><div class="sec-sub">Precisa de ajuda com o painel? Entre em contato ou veja as dúvidas frequentes.</div></div>
         </div>
         <div class="form-grid">
-          
           <div class="table-card" style="padding:1.6rem">
             <h3 style="font-family:var(--serif);font-size:1.3rem;margin-bottom:1.2rem;color:var(--dark)">Contato Direto</h3>
             <label class="form-label">Qual a sua dúvida ou problema? *</label>
             <input type="text" class="form-input" style="margin-bottom:1rem" placeholder="Ex: Dificuldade em subir imagem de capa">
-            
             <label class="form-label">Detalhes *</label>
             <textarea class="form-textarea" style="margin-bottom:1.2rem;min-height:120px" placeholder="Descreva o que está acontecendo detalhadamente..."></textarea>
-            
-            <button class="btn-primary" style="width:100%;justify-content:center" onclick="showToast('✓ Mensagem enviada para a equipe de suporte! Retornaremos em breve.'); this.previousElementSibling.value=''; this.previousElementSibling.previousElementSibling.previousElementSibling.value='';">
+            <button class="btn-primary" style="width:100%;justify-content:center" onclick="showToast('✓ Mensagem enviada para a equipa de suporte! Retornaremos em breve.'); this.previousElementSibling.value=''; this.previousElementSibling.previousElementSibling.previousElementSibling.value='';">
               Enviar Mensagem
             </button>
           </div>
-
           <div>
             <h3 style="font-family:var(--serif);font-size:1.3rem;margin-bottom:1.2rem;color:var(--dark)">Dúvidas Frequentes (FAQ)</h3>
-            
             <div class="faq-item" onclick="this.classList.toggle('open')">
               <div class="faq-title">Como altero a capa de uma publicação? <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
               <div class="faq-content">Basta clicar em "Editar" na aba de publicações. Na seção "Capa", clique em "Remover" na imagem atual e então arraste a nova imagem para a área pontilhada. O sistema converte automaticamente para o formato otimizado WebP.</div>
             </div>
-
             <div class="faq-item" onclick="this.classList.toggle('open')">
               <div class="faq-title">Qual o tamanho recomendado das imagens? <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
               <div class="faq-content">Recomendamos utilizar imagens retangulares de boa qualidade (por exemplo, 1200 x 800 pixels). Não se preocupe com o peso, nosso sistema redimensiona e comprime a imagem automaticamente para não deixar o site lento.</div>
             </div>
-
             <div class="faq-item" onclick="this.classList.toggle('open')">
               <div class="faq-title">Como uso um vídeo do YouTube como capa? <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
-              <div class="faq-content">Na tela de criação de post, logo abaixo do campo de Capa, selecione a aba "Vídeo YouTube". Cole o link completo do vídeo (ex: https://youtube.com/watch?v=...) e clique em OK. A thumbnail do vídeo será carregada automaticamente.</div>
+              <div class="faq-content">Na tela de criação de post, selecione a aba "Vídeo YouTube" logo acima da área de upload de imagem. Cole o link completo do vídeo e clique em OK.</div>
             </div>
-
-            <div class="faq-item" onclick="this.classList.toggle('open')">
-              <div class="faq-title">O que é a tag "Em destaque"? <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></div>
-              <div class="faq-content">Ao habilitar a chave "Destacar no topo do blog" durante a edição de uma publicação, este artigo ganhará relevância e aparecerá nas primeiras posições da página inicial do seu site (dependendo do design da vitrine do seu blog).</div>
-            </div>
-
           </div>
-
         </div>
       </div>
-
 
     </div>
   </div>
@@ -513,8 +511,8 @@
           </select>
         </div>
         <div>
-          <label class="form-label">Tempo de leitura</label>
-          <input id="f-read" type="text" class="form-input" placeholder="Ex: 5 min" oninput="markDirty()">
+          <label class="form-label">Tempo de leitura <em>— calculado automaticamente</em></label>
+          <input id="f-read" type="text" class="form-input" placeholder="Automático ao digitar..." readonly title="Este campo é preenchido sozinho com base no texto do conteúdo.">
         </div>
       </div>
       <div>
@@ -666,8 +664,8 @@ async function loadPosts() {
     const r = await fetch(`${API}/posts`,{headers:{Authorization:`Bearer ${token}`}});
     if (r.status===401) { doLogout(); return; }
     allPosts = await r.json();
-    filteredPosts = allPosts; currentPage = 1;
-    renderPosts(filteredPosts); renderOvPosts(allPosts.slice(0,5));
+    applyFilters(); // Aplica filtros e ordenação logo no carregamento inicial
+    renderOvPosts(allPosts.slice(0,5));
     updateStats();
   } catch {
     document.getElementById('posts-list').innerHTML='<div style="text-align:center;padding:2rem;color:var(--muted);font-size:.8rem">Erro ao carregar.</div>';
@@ -731,18 +729,52 @@ function filterCat(cat,btn) {
   document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active'); activeFilter=cat; applyFilters();
 }
+
+// NOVO: Ordenação e Filtro em conjunto
 function applyFilters() {
   const q=document.getElementById('posts-search').value.toLowerCase();
+  const sortMode=document.getElementById('posts-sort').value;
+  
+  // 1. Filtra
   filteredPosts=allPosts.filter(p=>{
     const catOk=activeFilter==='todos'||p.cat===activeFilter;
     const qOk=!q||p.title.toLowerCase().includes(q);
     return catOk&&qOk;
   });
+  
+  // 2. Ordena
+  filteredPosts.sort((a,b) => {
+    if (sortMode === 'newest') return (b.id||0) - (a.id||0);
+    if (sortMode === 'oldest') return (a.id||0) - (b.id||0);
+    if (sortMode === 'az') return a.title.localeCompare(b.title);
+    if (sortMode === 'za') return b.title.localeCompare(a.title);
+    return 0;
+  });
+
   currentPage=1; renderPosts(filteredPosts);
 }
 function buildFilters() {
   const wrap=document.getElementById('cat-filters');
   CATS.forEach(c=>{ const b=document.createElement('button'); b.className='filter-btn'; b.textContent=CAT_LABELS[c]; b.onclick=()=>filterCat(c,b); wrap.appendChild(b); });
+}
+
+// NOVO: Exportar Publicações para CSV
+function exportPostsCSV() {
+  if (!allPosts.length) { showToast('⚠ Nenhuma publicação para exportar.'); return; }
+  const csv = 'ID,Título,Categoria,Tempo_Leitura,Destaque,Data\n' + 
+    allPosts.map(p => {
+      // escapando aspas no título
+      const safeTitle = p.title.replace(/"/g, '""');
+      const catName = CAT_LABELS[p.cat] || p.cat;
+      const feat = p.featured ? 'Sim' : 'Não';
+      return `"${p.id}","${safeTitle}","${catName}","${p.read_time||''}","${feat}","${p.date||''}"`;
+    }).join('\n');
+  
+  Object.assign(document.createElement('a'), {
+    href: URL.createObjectURL(new Blob(['\ufeff' + csv], {type: 'text/csv;charset=utf-8;'})),
+    download: `posts-cop-${new Date().toISOString().slice(0,10)}.csv`
+  }).click();
+  showToast('✓ Backup de Posts exportado!');
 }
 
 // ── NEWSLETTER ──
@@ -785,10 +817,21 @@ function updateStats() {
 
 // ── EDITOR ──
 function initEditor() {
+  // NOVO: Toolbar melhorada (Alinhamento, cores, youtube embutido)
   editor=new Quill('#quill-editor',{
     theme:'snow',
     placeholder:'Escreva o conteúdo do post aqui...',
-    modules:{toolbar:[['bold','italic','underline'],[{header:3}],[{list:'bullet'},{list:'ordered'}],['blockquote','link'],['clean']]}
+    modules:{
+      toolbar:[
+        ['bold','italic','underline','strike'],
+        [{header:[2,3,false]}],
+        [{color:[]},{background:[]}],
+        [{list:'bullet'},{list:'ordered'}],
+        [{align:[]}],
+        ['blockquote','link','video'],
+        ['clean']
+      ]
+    }
   });
   editor.on('text-change',()=>{ updateWords(); markDirty(); });
 }
@@ -798,10 +841,24 @@ function updateCtr(fid, ctrid, max) {
   el.textContent = `${len}/${max}`;
   el.className = 'ctr' + (len > max*0.87 ? (len >= max ? ' over' : ' warn') : '');
 }
+
+// NOVO: Cálculo Automático de Tempo de Leitura
 function updateWords() {
   const t=editor.getText().trim(), w=t?t.split(/\s+/).length:0;
-  const el=document.getElementById('char-count'); if(el) el.textContent=`${w} palavra${w!==1?'s':''}`;
+  const el=document.getElementById('char-count'); 
+  if(el) el.textContent=`${w} palavra${w!==1?'s':''}`;
+  
+  const readInput = document.getElementById('f-read');
+  if(readInput) {
+    if(w > 0) {
+      const mins = Math.max(1, Math.ceil(w / 200)); // 200 palavras por minuto
+      readInput.value = `${mins} min de leitura`;
+    } else {
+      readInput.value = '';
+    }
+  }
 }
+
 function getHTML() { return editor.root.innerHTML; }
 function setHTML(html) { if(!editor) return; if(!html||html==='<p></p>'){editor.setContents([]);return;} editor.setContents(editor.clipboard.convert(html),'silent'); }
 function toggleFeat() { featOn=!featOn; document.getElementById('feat-toggle').classList.toggle('on',featOn); markDirty(); }
@@ -844,7 +901,7 @@ function openEditor(id) {
     document.getElementById('e-title').textContent='Editar publicação';
     document.getElementById('f-title').value=p.title;
     document.getElementById('f-cat').value=p.cat;
-    document.getElementById('f-read').value=p.read_time||'';
+    // O campo f-read agora é read-only, será atualizado pela função updateWords
     document.getElementById('title-ctr').textContent=`${p.title.length}/150`;
     setHTML(p.body); setFeat(p.featured);
     if (p.yt_id) {
@@ -860,8 +917,8 @@ function openEditor(id) {
   }
   document.getElementById('editor-overlay').classList.add('open');
   document.body.style.overflow='hidden';
-  updateWords();
-  // no mobile evitamos dar focus direto para o teclado não subir imediatamente e tampar a tela.
+  updateWords(); // Chama isto imediatamente para calcular as palavras/tempo de leitura iniciais
+  
   if(window.innerWidth > 768) { setTimeout(()=>document.getElementById('f-title').focus(),100); }
 }
 
@@ -928,7 +985,7 @@ function clearImg() {
 async function savePost() {
   const title=document.getElementById('f-title').value.trim();
   const cat=document.getElementById('f-cat').value;
-  const read=document.getElementById('f-read').value.trim()||'3 min de leitura';
+  const read=document.getElementById('f-read').value.trim()||'1 min de leitura';
   const body=getHTML();
   if(!title){showToast('⚠ Preencha o título.');return;}
   if(!cat){showToast('⚠ Selecione uma categoria.');return;}
