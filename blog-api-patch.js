@@ -1,6 +1,3 @@
-// Este trecho substitui o bloco POSTS estático e as funções do blog.html
-// Cole no lugar do objeto POSTS e das funções filterPosts/openPost no blog.html
-
 const API = '/api';
 let ALL_POSTS = [];
 
