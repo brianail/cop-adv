@@ -220,6 +220,7 @@
     .dz-hint{font-size:.68rem;color:#d1d5db;margin-top:.25rem}
     
     #img-preview{display:none; animation: fadeIn 0.3s ease;}
+    /* NOVA ESTILIZAÇÃO PARA A PREVIEW DA IMAGEM MOSTRANDO CROP */
     .prev-img{max-height:180px; width:100%; margin:0 auto; object-fit:cover; object-position:center; display:block; border-radius:4px; border:1px solid var(--border);}
     .prev-name{font-size:.68rem;color:var(--muted);margin-top:.5rem;text-align:center}
     .btn-rm-img{display:block;margin:.35rem auto 0;font-size:.65rem;color:var(--red);font-weight:600;background:none;border:none;cursor:pointer;font-family:var(--sans); padding:.2rem .5rem; border-radius:2px; transition:background .15s}
@@ -293,7 +294,7 @@
       .sidebar{ top:auto; bottom:0; width:100%; height:65px; flex-direction:row; padding:0; z-index:40; border-right:none; border-top:1px solid var(--sborder); box-shadow:0 -2px 10px rgba(0,0,0,0.2); }
       .sb-logo, .sb-bottom, .sb-section, .sb-logo-sub { display:none; }
       .sb-nav { display:flex; flex-direction:row; width:100%; overflow-y:visible; padding:0; justify-content:space-around; align-items:center; }
-      .nav-item { flex-direction:column; gap:6px; padding:0.5rem 0; font-size:0.65rem; justify-content:center; text-align:center; width:20%; }
+      .nav-item { flex-direction:column; gap:6px; padding:0.5rem 0; font-size:0.65rem; justify-content:center; text-align:center; width:25%; }
       .nav-item svg { margin:0; }
       .nav-item.active { background:transparent; color:var(--red); }
       .nav-item.active::before { width:100%; height:3px; left:0; top:0; bottom:auto; }
@@ -362,13 +363,6 @@
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>Newsletter
         <span class="nav-badge" id="badge-nl">0</span>
       </button>
-      
-      <div class="sb-section" style="margin-top:.4rem">Institucional</div>
-      <button class="nav-item" aria-label="Aba Equipe" onclick="showPage('team',this)">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>Corpo Jurídico
-        <span class="nav-badge" id="badge-team" style="background:#555">0</span>
-      </button>
-
       <div class="sb-section" style="margin-top:.4rem">Ajuda</div>
       <button class="nav-item" aria-label="Aba Suporte" onclick="showPage('support',this)">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>Suporte
@@ -481,41 +475,6 @@
         </div>
       </div>
 
-      <div class="page" id="page-team">
-        <div class="sec-head">
-          <div><div class="sec-title">Corpo Jurídico</div><div class="sec-sub" id="team-sub">Gerencie os advogados exibidos no site</div></div>
-          <button class="btn-primary" onclick="openTeamForm(null)">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:4px"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            Adicionar Advogado
-          </button>
-        </div>
-
-        <div id="team-form-wrap" style="display:none; background:#fff; border:1px solid var(--border); padding:1.2rem; border-radius:4px; margin-bottom:1rem; animation: fadeIn 0.3s ease;">
-          <h3 id="tf-title" style="font-family:var(--serif); font-size:1.1rem; color:var(--dark); margin-bottom:1rem;">Novo Advogado</h3>
-          <div style="display:flex; gap:1rem; align-items:flex-end; flex-wrap:wrap;">
-            <div style="flex:1; min-width:200px;">
-              <label class="form-label" for="tf-name">Nome Completo *</label>
-              <input type="text" id="tf-name" class="form-input" placeholder="Ex: Andressa Dias Pizzutti" onkeydown="if(event.key==='Enter')saveTeamMember()">
-            </div>
-            <div style="display:flex; gap:.5rem;">
-              <button class="btn-secondary" onclick="closeTeamForm()">Cancelar</button>
-              <button class="btn-primary" id="btn-save-team" onclick="saveTeamMember()">Salvar</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="table-card">
-          <div style="overflow-x:auto">
-            <table>
-              <thead><tr><th>Nome</th><th style="width:120px; text-align:right">Ações</th></tr></thead>
-              <tbody id="team-tbody">
-                <tr><td colspan="2" style="text-align:center;padding:2rem;color:var(--muted);font-size:.8rem">Carregando...</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
       <div class="page" id="page-support">
         <div class="sec-head">
           <div><div class="sec-title">Suporte ao Cliente</div><div class="sec-sub">Precisa de ajuda com o painel? Entre em contato ou veja as dúvidas frequentes.</div></div>
@@ -616,6 +575,7 @@
             </div>
             
             <div id="img-preview" onclick="event.stopPropagation()">
+              <!-- A imagem simulando as proporções da tela do blog para preview de corte -->
               <img id="prev-el" src="" alt="" class="prev-img">
               <div class="prev-name" id="prev-name"></div>
               
@@ -704,7 +664,6 @@ const PER_PAGE = 20;
 let token = localStorage.getItem('cop_token');
 let adminPw = localStorage.getItem('cop_pw') || '';
 let allPosts = [], allEmails = [], filteredPosts = [], currentPage = 1;
-let allTeam = [], editTeamId = null; // Variaveis de equipe
 let currentId = null, uploadedUrl = null, ytVideoId = null, capaMode = 'img';
 let featOn = false, isDirty = false;
 let editor = null;
@@ -717,7 +676,7 @@ function boot() {
   initEditor(); buildFilters(); loadAll();
 }
 
-async function loadAll() { await Promise.all([loadPosts(), loadNewsletter(), loadTeam()]); }
+async function loadAll() { await Promise.all([loadPosts(), loadNewsletter()]); }
 
 // ── AUTH ──
 async function doLogin() {
@@ -739,105 +698,10 @@ function showPage(page, btn) {
   document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
   document.getElementById('page-'+page).classList.add('active');
   if (btn) btn.classList.add('active');
-  const titles={overview:'Visão Geral',posts:'Publicações',newsletter:'Newsletter',support:'Suporte',team:'Corpo Jurídico'};
+  const titles={overview:'Visão Geral',posts:'Publicações',newsletter:'Newsletter',support:'Suporte'};
   document.getElementById('topbar-title').textContent = titles[page]||page;
   document.getElementById('btn-new').classList.toggle('visible', page==='posts');
   if (page==='newsletter') renderNL(allEmails);
-}
-
-// ── EQUIPE / CORPO JURÍDICO ──
-async function loadTeam() {
-  try {
-    const r = await fetch(`${API}/team`, {headers: {Authorization: `Bearer ${token}`}});
-    if(r.ok) { allTeam = await r.json(); renderTeam(); }
-  } catch { console.error('Erro ao carregar equipe'); }
-}
-
-function renderTeam() {
-  const tbody = document.getElementById('team-tbody');
-  const badge = document.getElementById('badge-team');
-  
-  if(badge) badge.textContent = allTeam.length;
-  document.getElementById('team-sub').textContent = `${allTeam.length} advogado${allTeam.length !== 1 ? 's' : ''} cadastrado${allTeam.length !== 1 ? 's' : ''}`;
-  
-  if (!allTeam.length) { 
-    tbody.innerHTML = '<tr><td colspan="2" style="text-align:center;padding:2.5rem;color:var(--muted);font-size:.8rem">Nenhum advogado cadastrado.</td></tr>'; 
-    return; 
-  }
-
-  const sortedTeam = [...allTeam].sort((a,b) => a.name.localeCompare(b.name));
-
-  tbody.innerHTML = sortedTeam.map(t => `
-    <tr>
-      <td style="font-weight:500; color:var(--dark)">${t.name}</td>
-      <td style="text-align:right; display:flex; gap:0.5rem; justify-content:flex-end;">
-        <button class="btn-edit" aria-label="Editar" onclick="openTeamForm(${t.id}, '${t.name.replace(/'/g, "\\'")}')">
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-        </button>
-        <button class="btn-del-row" aria-label="Remover" onclick="confirmDeleteTeam(${t.id}, '${t.name.replace(/'/g, "\\'")}')">
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
-        </button>
-      </td>
-    </tr>
-  `).join('');
-}
-
-function openTeamForm(id, name = '') {
-  editTeamId = id;
-  document.getElementById('team-form-wrap').style.display = 'block';
-  document.getElementById('tf-title').textContent = id ? 'Editar Advogado' : 'Novo Advogado';
-  const input = document.getElementById('tf-name');
-  input.value = name;
-  input.focus();
-}
-
-function closeTeamForm() {
-  document.getElementById('team-form-wrap').style.display = 'none';
-  editTeamId = null;
-  document.getElementById('tf-name').value = '';
-}
-
-async function saveTeamMember() {
-  const name = document.getElementById('tf-name').value.trim();
-  if(!name) { showToast('⚠ Preencha o nome do advogado.'); return; }
-  
-  const btn = document.getElementById('btn-save-team');
-  btn.disabled = true; btn.innerHTML = '<span class="spin">↻</span>';
-
-  try {
-    const isEdit = editTeamId !== null;
-    const url = isEdit ? `${API}/team/${editTeamId}` : `${API}/team`;
-    const method = isEdit ? 'PUT' : 'POST';
-    
-    const r = await fetch(url, {
-      method, 
-      headers: {'Content-Type': 'application/json', Authorization: `Bearer ${token}`},
-      body: JSON.stringify({ name })
-    });
-    
-    if(!r.ok) throw new Error();
-    
-    showToast(isEdit ? '✓ Advogado atualizado!' : '✓ Advogado adicionado!');
-    closeTeamForm();
-    await loadTeam();
-  } catch {
-    showToast('✗ Erro ao salvar.');
-  } finally {
-    btn.disabled = false; btn.textContent = 'Salvar';
-  }
-}
-
-function confirmDeleteTeam(id, name) {
-  openConfirm('Remover Advogado', `Deseja remover ${name} do site?`, 'Remover', async () => {
-    try {
-      const r = await fetch(`${API}/team/${id}`, {method: 'DELETE', headers: {Authorization: `Bearer ${token}`}});
-      if(!r.ok) throw new Error();
-      showToast('✓ Advogado removido.');
-      await loadTeam();
-    } catch {
-      showToast('✗ Erro ao remover.');
-    }
-  });
 }
 
 // ── POSTS ──
@@ -1035,6 +899,7 @@ function updateWords() {
   }
 }
 
+// NOVO: AJUSTE DE VISUALIZAÇÃO DA IMAGEM DA CAPA
 function updateImgPos() {
   const val = document.getElementById('f-img-pos').value;
   const img = document.getElementById('prev-el');
@@ -1045,9 +910,10 @@ function updateImgPos() {
       img.style.objectPosition = 'center';
   } else {
       img.style.objectFit = 'cover';
-      img.style.objectPosition = val; 
+      img.style.objectPosition = val; // Aceita top, center, bottom
   }
   
+  // Se existir uma imagem carregada, marca o post como alterado para salvar
   if(uploadedUrl) markDirty();
 }
 
@@ -1096,7 +962,7 @@ function openEditor(id) {
     const tctr=document.getElementById('title-ctr'); if(tctr){tctr.textContent='0/150';tctr.className='ctr';}
     setHTML(''); setFeat(false);
     document.getElementById('f-img-pos').value = 'center';
-    updateImgPos(); 
+    updateImgPos(); // Reseta para o padrão
     document.getElementById('btn-del').style.display='none';
     document.getElementById('save-lbl').textContent='Publicar';
   } else {
@@ -1113,7 +979,7 @@ function openEditor(id) {
       document.getElementById('yt-preview').style.display='block';
     } else if (p.img) {
       uploadedUrl=p.img; 
-      document.getElementById('f-img-pos').value = p.img_pos || 'center'; 
+      document.getElementById('f-img-pos').value = p.img_pos || 'center'; // Carrega configuração do backend (se houver)
       updateImgPos();
       showPrev(p.img,'imagem atual');
     }
@@ -1123,7 +989,7 @@ function openEditor(id) {
   
   const overlay = document.getElementById('editor-overlay');
   overlay.style.display = 'flex';
-  setTimeout(()=> overlay.classList.add('open'), 10); 
+  setTimeout(()=> overlay.classList.add('open'), 10); // Trigger animation
   document.body.style.overflow='hidden';
   updateWords(); 
   
@@ -1137,7 +1003,7 @@ function tryClose() {
 function closeEditor() { 
   const overlay = document.getElementById('editor-overlay');
   overlay.classList.remove('open'); 
-  setTimeout(()=> { overlay.style.display = 'none'; document.body.style.overflow=''; clearDirty(); }, 300); 
+  setTimeout(()=> { overlay.style.display = 'none'; document.body.style.overflow=''; clearDirty(); }, 300); // match transition
 }
 
 function handleFile(input) { if(input.files[0]) uploadFile(input.files[0]); }
@@ -1197,7 +1063,7 @@ async function savePost() {
   const title=document.getElementById('f-title').value.trim();
   const cat=document.getElementById('f-cat').value;
   const read=document.getElementById('f-read').value.trim()||'1 min de leitura';
-  const imgPos=document.getElementById('f-img-pos').value; 
+  const imgPos=document.getElementById('f-img-pos').value; // Pega o ajuste da imagem
   const body=getHTML();
 
   if(!title){showToast('⚠ Preencha o título.');return;}
@@ -1211,7 +1077,7 @@ async function savePost() {
   const payload={
     title, cat, read_time:read, body, featured:featOn,
     img:      capaMode==='img' ? uploadedUrl : null,
-    img_pos:  capaMode==='img' ? imgPos      : null, 
+    img_pos:  capaMode==='img' ? imgPos      : null, // Nova propriedade enviada para a API
     yt_id:    capaMode==='yt'  ? ytVideoId   : null,
   };
 
