@@ -1,5 +1,5 @@
-import { sql } from '../lib/db'; 
-import { authMiddleware } from '../lib/auth'; // Ajuste se o nome da sua função for diferente
+import { sql } from '../lib/db.js'; 
+import { authMiddleware } from '../lib/auth.js'; // Ajuste se o nome da sua função for diferente
 
 export default async function handler(req, res) {
   // GET: Público (lista os advogados no site principal e no painel)
