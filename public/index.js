@@ -311,36 +311,3 @@ faqButtons.forEach(button => {
   }
 
 })();
-
-document.addEventListener("DOMContentLoaded", async () => {
-  const teamList = document.getElementById('team-list');
-  if (!teamList) return;
-
-  try {
-    // IMPORTANTE: Se o seu site e a API estiverem no mesmo domínio, '/api/team' funciona.
-    // Se a API estiver em outro domínio (ex: api.seusite.com), coloque a URL completa.
-    const response = await fetch('/api/team');
-    
-    if (!response.ok) throw new Error('Falha ao carregar a equipe');
-    
-    const team = await response.json();
-    
-    if (team.length === 0) {
-      teamList.innerHTML = '<li class="text-[#666666] text-sm">Nenhum advogado cadastrado no momento.</li>';
-      return;
-    }
-
-    // Injeta os advogados na tela mantendo EXATAMENTE suas classes originais
-    teamList.innerHTML = team.map(adv => `
-      <li class="break-inside-avoid text-[#444444] font-light text-sm tracking-wide border-b border-gray-200 pb-2 hover:text-[#C8102E] hover:border-[#C8102E] transition-colors cursor-default flex items-center">
-        <span class="w-1 h-1 bg-gray-300 rounded-full mr-3"></span>
-        ${adv.name}
-      </li>
-    `).join('');
-
-  } catch (error) {
-    console.error("Erro ao carregar a equipe de advogados:", error);
-    // Em caso de erro na API, você pode decidir se exibe uma mensagem ou se deixa silencioso
-    teamList.innerHTML = '<li class="text-[#666666] text-sm">Erro ao carregar a lista de advogados.</li>';
-  }
-});

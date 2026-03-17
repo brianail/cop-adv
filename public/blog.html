@@ -464,18 +464,10 @@
                 renderFeatured();
                 renderGrid(ALL_POSTS);
             } catch (e) {
-                console.warn('API não encontrada, carregando dados de demonstração para os filtros funcionarem...');
-                // Fallback com dados mockados para que os filtros funcionem perfeitamente sem a API
-                ALL_POSTS = [
-                    { id: 1, title: 'Nova Reforma Trabalhista: O que muda para o empregado?', cat: 'Trabalhista', date: '10 Out 2023', excerpt: 'Entenda os principais pontos da nova reforma trabalhista e como ela afeta sua rotina e seus direitos.', featured: true, img: 'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=800&auto=format&fit=crop', body: '<p>A nova reforma traz mudanças substanciais...</p>' },
-                    { id: 2, title: 'Regras da Aposentadoria em 2024', cat: 'Previdenciário', date: '05 Out 2023', excerpt: 'Um guia completo sobre as regras de transição para quem está próximo da aposentadoria.', img: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=800&auto=format&fit=crop', body: '<p>O planejamento previdenciário nunca foi tão importante...</p>' },
-                    { id: 3, title: 'Defesa em Processos Administrativos Disciplinares', cat: 'Administrativo', date: '28 Set 2023', excerpt: 'A importância de uma boa defesa técnica em processos administrativos para servidores públicos.', img: 'https://images.unsplash.com/photo-1505664177941-ac66b57900b8?q=80&w=800&auto=format&fit=crop', body: '<p>Servidores públicos frequentemente enfrentam...</p>' },
-                    { id: 4, title: 'Acordos Coletivos e Sindicatos', cat: 'Sindical', date: '15 Set 2023', excerpt: 'Como as negociações coletivas impactam diretamente no seu salário e nos seus benefícios.', img: 'https://images.unsplash.com/photo-1556761175-5973dc0f32f7?q=80&w=800&auto=format&fit=crop', body: '<p>O papel do sindicato é fundamental...</p>' },
-                    { id: 5, title: 'Atraso em Voos e Direitos do Consumidor', cat: 'Cível', date: '10 Set 2023', excerpt: 'Saiba exatamente o que fazer e como ser indenizado em caso de problemas com companhias aéreas.', img: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?q=80&w=800&auto=format&fit=crop', body: '<p>Companhias aéreas possuem responsabilidade objetiva...</p>' },
-                    { id: 6, title: 'COP Advogados celebra 20 anos', cat: 'Institucional', date: '01 Set 2023', excerpt: 'Nossa trajetória na defesa incansável dos direitos dos trabalhadores do Rio Grande do Sul.', img: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=800&auto=format&fit=crop', body: '<p>É com muito orgulho que celebramos...</p>' }
-                ];
-                renderFeatured();
-                renderGrid(ALL_POSTS);
+                console.error('Erro ao carregar posts:', e);
+                document.getElementById('featured-card').innerHTML = 
+                    '<div class="bg-gray-50 border border-dashed border-gray-200 p-12 text-center rounded-sm"><p class="text-gray-400 text-sm font-light">Nenhuma publicação disponível no momento.</p></div>';
+                document.getElementById('posts-grid').innerHTML = '';
             }
         }
 
@@ -494,7 +486,7 @@
             const thumb = getPostThumb(p);
             // Evitar erro se body vier nulo
             const safeBody = p.body ? p.body.replace(/<[^>]+>/g, '') : '';
-            const excerpt = p.excerpt || (safeBody.slice(0, 220) + (safeBody.length > 220 ? '…' : ''));
+            const excerpt = safeBody.slice(0, 220) + (safeBody.length > 220 ? '…' : '');
             
             el.innerHTML = `
                 <article class="post-card grid grid-cols-1 md:grid-cols-2 border border-gray-100 shadow-[0_8px_40px_-12px_rgba(0,0,0,0.15)] group cursor-pointer bg-white" data-cat="${p.cat}" onclick="openPost(${p.id})">
@@ -537,21 +529,20 @@
         }
 
         // ── Render: Grid de Posts ────────────────────────────────────────────────
-        // Novo Parâmetro (isFiltered) para mostrar tudo quando usamos os filtros do topo
-        function renderGrid(posts, isFiltered = false) {
+        function renderGrid(posts) {
             const featured = ALL_POSTS.find(x => x.featured) || ALL_POSTS[0];
             const grid = document.getElementById('posts-grid');
             
-            // Se estivermos visualizando todos, tiramos o post em destaque da lista secundária
-            // Se o usuário filtrou algo (ex: Trabalhista), não removemos o post Trabalhista para a lista não ficar vazia
-            const list = isFiltered ? posts : posts.filter(p => !featured || p.id !== featured.id);
+            // Remove o post em destaque do grid apenas se for a view geral,
+            // ou obedece ao filtro do usuário mantendo exatamente a lógica original.
+            const list = posts.filter(p => !featured || p.id !== featured.id);
             
             grid.innerHTML = '';
             
             list.forEach(p => {
                 const thumb = getPostThumb(p, 'mqdefault');
                 const safeBody = p.body ? p.body.replace(/<[^>]+>/g, '') : '';
-                const excerpt = p.excerpt || (safeBody.slice(0, 120) + (safeBody.length > 120 ? '…' : ''));
+                const excerpt = safeBody.slice(0, 120) + (safeBody.length > 120 ? '…' : '');
                 
                 const a = document.createElement('article');
                 a.className = 'post-card bg-white group cursor-pointer flex flex-col h-full border-r border-b border-gray-100 sm:border-r-0 lg:border-r';
@@ -595,17 +586,10 @@
         function filterPosts(cat, btn) {
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            
-            // FIX: Normalizar a string removendo acentos para que categorias como 'Previdenciário' batam com 'previdenciario'
-            const normalizeString = (str) => {
-                return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-            };
-
             const filtered = cat === 'todos'
                 ? ALL_POSTS
-                : ALL_POSTS.filter(p => normalizeString(p.cat) === cat);
-                
-            renderGrid(filtered, cat !== 'todos');
+                : ALL_POSTS.filter(p => p.cat.toLowerCase() === cat);
+            renderGrid(filtered);
             
             // Scroll suave caso o usuário esteja muito em baixo
             const sectionPos = document.getElementById('section-featured').offsetTop - 100;
@@ -617,18 +601,9 @@
         // ── Abrir Artigo (Modal) ──────────────────────────────────────────────────
         async function openPost(id) {
             try {
-                // Aqui podemos mockar também caso a API não exista, utilizando dados locais do ALL_POSTS
-                let p = ALL_POSTS.find(post => post.id === id);
-                
-                // Tenta puxar da API real, se der erro, usa os de fallback que encontramos acima
-                try {
-                    const r = await fetch(API + '/posts/' + id);
-                    if (r.ok) p = await r.json();
-                } catch (apiErr) {
-                    console.log("Usando dados locais para o post modal.");
-                }
-
-                if (!p) throw new Error("Post não encontrado");
+                const r = await fetch(API + '/posts/' + id);
+                if (!r.ok) throw new Error();
+                const p = await r.json();
 
                 document.getElementById('m-cat').textContent = p.cat;
                 document.getElementById('m-date').textContent = p.date;
