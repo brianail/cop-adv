@@ -310,4 +310,26 @@ faqButtons.forEach(button => {
     loadHomePosts();
   }
 
+  let currentSlide = 0;
+
+  function goSlide(index) {
+    const track = document.getElementById("pilares-track");
+    const dots = document.querySelectorAll(".dot");
+
+    currentSlide = index;
+    track.style.transform = `translateX(-${index * 100}%)`;
+
+    dots.forEach(dot => dot.classList.remove("bg-[#C8102E]"));
+    dots.forEach(dot => dot.classList.add("bg-gray-300"));
+
+    dots[index].classList.remove("bg-gray-300");
+    dots[index].classList.add("bg-[#C8102E]");
+  }
+
+  // AUTO (opcional)
+  setInterval(() => {
+    currentSlide = (currentSlide + 1) % 3;
+    goSlide(currentSlide);
+  }, 6000);
+
 })();
