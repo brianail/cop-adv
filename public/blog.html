@@ -118,47 +118,58 @@
     <div id="page-transition" class="fixed inset-0 bg-[#111111] z-[9999] scale-y-0 origin-top transition-transform duration-700 ease-in-out"></div>
     <div id="read-bar"></div>
 
-    <nav id="navbar" class="fixed w-full z-50 transition-all duration-500 bg-transparent py-6">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 flex justify-between items-center">
-            <a href="index.html" class="flex items-center gap-4 focus:outline-none focus:ring-2 focus:ring-[#C8102E] rounded">
-                <div class="flex-shrink-0 flex items-center cursor-pointer group" onclick="scrollToSection('home')">
-                    <div class="flex items-center gap-4">
-                        <img id="site-logo" src="/assets/logos/logo.png" alt="Logo COP Advogados" class="h-12 w-auto object-contain transition-all duration-300">
-                        <div class="flex flex-col border-l-2 border-[#C8102E] pl-4">
-                            <span id="logo-main" class="text-3xl font-serif font-bold tracking-tight leading-none text-white transition-colors">
-                                COP<span class="text-[#C8102E]">.</span>
-                            </span>
-                            <span id="logo-sub" class="text-[0.65rem] font-bold tracking-[0.3em] uppercase mt-1 text-gray-300 transition-colors">
-                                Advogados
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </a>
-            <div class="hidden lg:flex space-x-8 items-center">
-                <a href="index.html" class="nav-link hover-line text-sm font-medium tracking-wide text-gray-200 hover:text-white transition-colors">Home</a>
-                <a href="index.html" class="nav-link hover-line text-sm font-medium tracking-wide text-gray-200 hover:text-white transition-colors">Quem Somos</a>
-                <a href="index.html" class="nav-link hover-line text-sm font-medium tracking-wide text-gray-200 hover:text-white transition-colors">Áreas de Atuação</a>
-                <a href="clientes.html" class="nav-link hover-line text-sm font-medium tracking-wide text-gray-200 hover:text-white transition-colors">Clientes</a>
-                <span class="text-sm font-semibold text-[#C8102E] border-b border-[#C8102E] pb-0.5 cursor-default">Blog</span>
-                <a href="#contato" class="nav-link hover-line text-sm font-medium tracking-wide text-gray-200 hover:text-white transition-colors">Contato</a>
-            </div>
-            <button id="mob-btn" aria-label="Abrir menu mobile" class="lg:hidden text-white hover:text-[#C8102E] transition-colors focus:outline-none">
-                <i data-lucide="menu" id="icon-menu" class="w-8 h-8 stroke-[1.5]"></i>
-                <i data-lucide="x" id="icon-x" class="w-8 h-8 stroke-[1.5] hidden"></i>
-            </button>
+<nav id="navbar" class="fixed w-full z-50 transition-all duration-500 bg-transparent py-6 top-0 sm:top-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
+    <div class="flex justify-between items-center">
+
+      <div class="flex-shrink-0 flex items-center cursor-pointer group focus-visible:ring-2 focus-visible:ring-[#C8102E]" tabindex="0" onclick="window.location.href='index.html'" onkeydown="if(event.key==='Enter')window.location.href='index.html'">
+        <div class="flex items-center gap-4">
+          <img id="site-logo" src="/public/assets/logos/logo.png" alt="Logo COP Advogados" class="h-12 w-auto object-contain transition-all duration-300">
+          <div class="flex flex-col border-l-2 border-[#C8102E] pl-4">
+            <span id="logo-main" class="text-3xl font-serif font-bold tracking-tight leading-none text-white transition-colors">
+              COP<span class="text-[#C8102E]">.</span>
+            </span>
+            <span id="logo-sub" class="text-[0.65rem] font-bold tracking-[0.3em] uppercase mt-1 text-gray-300 transition-colors">
+              Advogados
+            </span>
+          </div>
         </div>
-        
-        <div id="mob-menu" class="hidden lg:hidden bg-white border-t border-gray-100 shadow-xl absolute w-full top-full left-0 origin-top transition-all">
-            <div class="px-6 py-6 space-y-1">
-                <a href="index.html" class="mob-link block text-lg font-serif text-[#2C2C2C] hover:text-[#C8102E] transition-colors py-2 border-b border-gray-50">Home</a>
-                <a href="index.html" class="mob-link block text-lg font-serif text-[#2C2C2C] hover:text-[#C8102E] transition-colors py-2 border-b border-gray-50">Quem Somos</a>
-                <a href="index.html" class="mob-link block text-lg font-serif text-[#2C2C2C] hover:text-[#C8102E] transition-colors py-2 border-b border-gray-50">Áreas de Atuação</a>
-                <a href="clientes.html" class="mob-link block text-lg font-serif text-[#2C2C2C] hover:text-[#C8102E] transition-colors py-2 border-b border-gray-50">Clientes</a>
-                <a href="#contato" class="mob-link block text-lg font-serif text-[#2C2C2C] hover:text-[#C8102E] transition-colors py-2">Contato</a>
-            </div>
-        </div>
-    </nav>
+      </div>
+
+      <div class="hidden lg:flex space-x-8 items-center">
+        <a href="index.html" class="inline-block nav-link text-sm font-medium tracking-wide transition-colors duration-300 hover-underline-animation text-gray-200 hover:text-white">Home</a>
+        <a href="index.html#quem-somos" class="inline-block nav-link text-sm font-medium tracking-wide transition-colors duration-300 hover-underline-animation text-gray-200 hover:text-white">Quem Somos</a>
+        <a href="index.html#areas-de-atuacao" class="inline-block nav-link text-sm font-medium tracking-wide transition-colors duration-300 hover-underline-animation text-gray-200 hover:text-white">Áreas de Atuação</a>
+        <a href="clientes.html" class="inline-block nav-link text-sm font-medium tracking-wide transition-colors duration-300 hover-underline-animation text-gray-200 hover:text-white">Clientes</a>
+        <a href="index.html#contato" class="inline-block nav-link text-sm font-medium tracking-wide transition-colors duration-300 hover-underline-animation text-gray-200 hover:text-white">Contato</a>
+        <span class="text-sm font-semibold text-[#C8102E] border-b border-[#C8102E] pb-0.5 cursor-default">Blog</span>
+      </div>
+
+      <div class="lg:hidden flex items-center">
+        <button id="menu-toggle-btn" aria-label="Alternar menu de navegação" class="text-white hover:text-[#C8102E] focus:outline-none transition-colors">
+          <span id="icon-menu"><i data-lucide="menu" class="w-8 h-8 stroke-[1.5]"></i></span>
+          <span id="icon-x" class="hidden"><i data-lucide="x" class="w-8 h-8 stroke-[1.5]"></i></span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="mobile-menu" class="hidden lg:hidden bg-white border-t border-gray-100 shadow-2xl absolute w-full top-full left-0">
+    <div class="px-6 py-8 space-y-4">
+      <a href="index.html" class="block w-full text-left text-lg font-serif text-[#2C2C2C] hover:text-[#C8102E] transition-colors py-2 border-b border-gray-50">Home</a>
+      <a href="index.html#quem-somos" class="block w-full text-left text-lg font-serif text-[#2C2C2C] hover:text-[#C8102E] transition-colors py-2 border-b border-gray-50">Quem Somos</a>
+      <a href="index.html#areas-de-atuacao" class="block w-full text-left text-lg font-serif text-[#2C2C2C] hover:text-[#C8102E] transition-colors py-2 border-b border-gray-50">Áreas de Atuação</a>
+      <a href="clientes.html" class="block w-full text-left text-lg font-serif text-[#2C2C2C] hover:text-[#C8102E] transition-colors py-2 border-b border-gray-50">Clientes</a>
+      <a href="index.html#contato" class="block w-full text-left text-lg font-serif text-[#2C2C2C] hover:text-[#C8102E] transition-colors py-2 border-b border-gray-50">Contato</a>
+      <span class="block w-full text-left text-lg font-serif text-[#C8102E] transition-colors py-2 border-b border-gray-50">Blog</span>
+      <div class="pt-4">
+        <a href="https://wa.me/5551981915878" target="_blank" rel="noreferrer" class="flex items-center text-sm font-bold text-[#C8102E] tracking-widest uppercase">
+          <i data-lucide="message-circle" class="w-5 h-5 mr-3"></i> Fale via WhatsApp
+        </a>
+      </div>
+    </div>
+  </div>
+</nav>
 
     <section class="relative h-[60vh] min-h-[440px] flex items-end overflow-hidden">
         <div class="absolute inset-0 bg-cover bg-center z-0" style="background-image:url('https://images.unsplash.com/photo-1495020689067-958852a7765e?q=80&w=2069&auto=format&fit=crop')"></div>
@@ -354,69 +365,88 @@
         lucide.createIcons();
         document.getElementById('yr').textContent = new Date().getFullYear();
 
-        // ── Navbar Scroll & Sombra da Barra de Filtro ──────────────────────────────
-        const nb = document.getElementById('navbar');
-        const fb = document.getElementById('filter-bar');
-        const lm = document.getElementById('logo-main');
-        const ls = document.getElementById('logo-sub');
-        const sl = document.getElementById('site-logo');
+    // ── Navbar Scroll & Sombra da Barra de Filtro ──────────────────────────────
+const nb = document.getElementById('navbar');
+const fb = document.getElementById('filter-bar');
+const lm = document.getElementById('logo-main');
+const ls = document.getElementById('logo-sub');
+const sl = document.getElementById('site-logo');
 
-        window.addEventListener('scroll', () => {
-            const s = window.scrollY > 50;
-            nb.classList.toggle('bg-white', s);
-            nb.classList.toggle('shadow-[0_4px_20px_-10px_rgba(0,0,0,0.1)]', s);
-            nb.classList.toggle('py-4', s);
-            nb.classList.toggle('bg-transparent', !s);
-            nb.classList.toggle('py-6', !s);
-            lm.classList.toggle('text-[#1A1A1A]', s);
-            lm.classList.toggle('text-white', !s);
-            ls.classList.toggle('text-[#666666]', s);
-            ls.classList.toggle('text-gray-300', !s);
-            
-            if (sl) sl.src = s ? '/assets/logos/logovermelho.png' : '/assets/logos/logo.png';
-            
-            document.querySelectorAll('.nav-link').forEach(l => {
-                l.classList.toggle('text-[#2C2C2C]', s);
-                l.classList.toggle('text-gray-200', !s);
-                l.classList.toggle('hover:text-[#C8102E]', s);
-                l.classList.toggle('hover:text-white', !s);
-            });
+window.addEventListener('scroll', () => {
+    const s = window.scrollY > 50;
+    
+    // Altera o fundo e o padding do Navbar
+    if (nb) {
+        nb.classList.toggle('bg-white', s);
+        nb.classList.toggle('shadow-[0_4px_20px_-10px_rgba(0,0,0,0.1)]', s);
+        nb.classList.toggle('py-4', s);
+        nb.classList.toggle('bg-transparent', !s);
+        nb.classList.toggle('py-6', !s);
+    }
 
-            // Sombra condicional para a barra de filtros
-            if(fb) {
-                const fbTop = fb.getBoundingClientRect().top;
-                if(fbTop <= 0) {
-                    fb.classList.add('shadow-md');
-                } else {
-                    fb.classList.remove('shadow-md');
-                }
-            }
-        });
+    // Altera as cores da Logo
+    if (lm) {
+        lm.classList.toggle('text-[#1A1A1A]', s);
+        lm.classList.toggle('text-white', !s);
+    }
+    if (ls) {
+        ls.classList.toggle('text-[#666666]', s);
+        ls.classList.toggle('text-gray-300', !s);
+    }
+    if (sl) {
+        sl.src = s ? '/assets/logos/logovermelho.png' : '/assets/logos/logo.png';
+    }
+    
+    // Altera as cores dos links do Menu Desktop
+    document.querySelectorAll('.nav-link').forEach(l => {
+        l.classList.toggle('text-[#2C2C2C]', s);
+        l.classList.toggle('text-gray-200', !s);
+        l.classList.toggle('hover:text-[#C8102E]', s);
+        l.classList.toggle('hover:text-white', !s);
+    });
 
-        // ── Mobile Menu Inteligente ────────────────────────────────────────────────
-        let mobOpen = false;
-        const mobBtn = document.getElementById('mob-btn');
-        const mobMenu = document.getElementById('mob-menu');
-        const iMenu = document.getElementById('icon-menu');
-        const iX = document.getElementById('icon-x');
-
-        function toggleMenu() {
-            mobOpen = !mobOpen;
-            mobMenu.classList.toggle('hidden', !mobOpen);
-            if (iMenu) iMenu.classList.toggle('hidden', mobOpen);
-            if (iX) iX.classList.toggle('hidden', !mobOpen);
+    // Sombra condicional para a barra de filtros (Específico do Blog)
+    if(fb) {
+        const fbTop = fb.getBoundingClientRect().top;
+        if(fbTop <= 0) {
+            fb.classList.add('shadow-md');
+        } else {
+            fb.classList.remove('shadow-md');
         }
+    }
+});
 
-        if (mobBtn) {
-            mobBtn.addEventListener('click', toggleMenu);
-        }
+// ── Mobile Menu Inteligente (Padronizado) ──────────────────────────────────
+let mobOpen = false;
 
-        // Fechar menu mobile ao clicar num link ou fazer scroll
-        document.querySelectorAll('.mob-link').forEach(link => {
-            link.addEventListener('click', () => { if(mobOpen) toggleMenu(); });
-        });
-        window.addEventListener('scroll', () => { if(mobOpen) toggleMenu(); }, { passive: true });
+// IDs atualizados para acompanhar o novo HTML padronizado
+const menuToggleBtn = document.getElementById('menu-toggle-btn');
+const mobileMenu = document.getElementById('mobile-menu');
+const iconMenu = document.getElementById('icon-menu');
+const iconX = document.getElementById('icon-x');
 
+function toggleMenu() {
+    mobOpen = !mobOpen;
+    if (mobileMenu) mobileMenu.classList.toggle('hidden', !mobOpen);
+    if (iconMenu) iconMenu.classList.toggle('hidden', mobOpen);
+    if (iconX) iconX.classList.toggle('hidden', !mobOpen);
+}
+
+if (menuToggleBtn) {
+    menuToggleBtn.addEventListener('click', toggleMenu);
+}
+
+// Fechar menu mobile ao clicar num link/botão interno ou fazer scroll
+const mobileLinks = document.querySelectorAll('#mobile-menu a, #mobile-menu button');
+mobileLinks.forEach(link => {
+    link.addEventListener('click', () => { 
+        if(mobOpen) toggleMenu(); 
+    });
+});
+
+window.addEventListener('scroll', () => { 
+    if(mobOpen) toggleMenu(); 
+}, { passive: true });
 
         // ── API & Skeletons (Melhoria de UI) ─────────────────────────────────────
         const API = '/api';

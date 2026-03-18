@@ -182,86 +182,58 @@
     class="fixed inset-0 bg-[#111111] z-[9999] scale-y-0 origin-top transition-transform duration-700 ease-in-out">
   </div>
 
-  <nav id="navbar" class="fixed w-full z-50 transition-all duration-500 bg-transparent py-6 top-0 sm:top-8">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
-      <div class="flex justify-between items-center">
+<nav id="navbar" class="fixed w-full z-50 transition-all duration-500 bg-transparent py-6 top-0 sm:top-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
+    <div class="flex justify-between items-center">
 
-        <div
-          class="flex-shrink-0 flex items-center cursor-pointer group focus-visible:ring-2 focus-visible:ring-[#C8102E]"
-          tabindex="0" onclick="scrollToSection('home')" onkeydown="if(event.key==='Enter')scrollToSection('home')">
-          <div class="flex items-center gap-4">
-            <img id="site-logo" src="/assets/logos/logo.png" alt="Logo COP Advogados"
-              class="h-12 w-auto object-contain transition-all duration-300">
-            <div class="flex flex-col border-l-2 border-[#C8102E] pl-4">
-              <span id="logo-main"
-                class="text-3xl font-serif font-bold tracking-tight leading-none text-white transition-colors">
-                COP<span class="text-[#C8102E]">.</span>
-              </span>
-              <span id="logo-sub"
-                class="text-[0.65rem] font-bold tracking-[0.3em] uppercase mt-1 text-gray-300 transition-colors">
-                Advogados
-              </span>
-            </div>
+      <div class="flex-shrink-0 flex items-center cursor-pointer group focus-visible:ring-2 focus-visible:ring-[#C8102E]" tabindex="0" onclick="scrollToSection('home')" onkeydown="if(event.key==='Enter')scrollToSection('home')">
+        <div class="flex items-center gap-4">
+         <img id="site-logo" src="/public/assets/logos/logo.png" alt="Logo COP Advogados" class="h-12 w-auto object-contain transition-all duration-300">
+          <div class="flex flex-col border-l-2 border-[#C8102E] pl-4">
+            <span id="logo-main" class="text-3xl font-serif font-bold tracking-tight leading-none text-white transition-colors">
+              COP<span class="text-[#C8102E]">.</span>
+            </span>
+            <span id="logo-sub" class="text-[0.65rem] font-bold tracking-[0.3em] uppercase mt-1 text-gray-300 transition-colors">
+              Advogados
+            </span>
           </div>
         </div>
+      </div>
 
-        <div class="hidden lg:flex space-x-8 items-center">
-          <button onclick="scrollToSection('quem-somos')"
-            class="nav-link text-sm font-medium tracking-wide transition-colors duration-300 hover-underline-animation text-gray-200 hover:text-white">Quem
-            Somos</button>
-          <button onclick="scrollToSection('areas-de-atuacao')"
-            class="nav-link text-sm font-medium tracking-wide transition-colors duration-300 hover-underline-animation text-gray-200 hover:text-white">Áreas
-            de Atuação</button>
-          <button onclick="scrollToSection('equipe')"
-            class="nav-link text-sm font-medium tracking-wide transition-colors duration-300 hover-underline-animation text-gray-200 hover:text-white">Equipe</button>
-          <a href="clientes.html"
-            class="inline-block nav-link text-sm font-medium tracking-wide transition-colors duration-300 hover-underline-animation text-gray-200 hover:text-white">Clientes</a>
-          <button onclick="scrollToSection('contato')"
-            class="nav-link text-sm font-medium tracking-wide transition-colors duration-300 hover-underline-animation text-gray-200 hover:text-white">Contato</button>
-          <a href="blog.html"
-            class="inline-block nav-link text-sm font-medium tracking-wide transition-colors duration-300 hover-underline-animation text-gray-200 hover:text-white">Blog</a>
-        </div>
+      <div class="hidden lg:flex space-x-8 items-center">
+        <button onclick="scrollToSection('quem-somos')" class="nav-link text-sm font-medium tracking-wide transition-colors duration-300 hover-underline-animation text-gray-200 hover:text-white">Quem Somos</button>
+        <button onclick="scrollToSection('areas-de-atuacao')" class="nav-link text-sm font-medium tracking-wide transition-colors duration-300 hover-underline-animation text-gray-200 hover:text-white">Áreas de Atuação</button>
+        <button onclick="scrollToSection('equipe')" class="nav-link text-sm font-medium tracking-wide transition-colors duration-300 hover-underline-animation text-gray-200 hover:text-white">Equipe</button>
+        <a href="clientes.html" class="inline-block nav-link text-sm font-medium tracking-wide transition-colors duration-300 hover-underline-animation text-gray-200 hover:text-white">Clientes</a>
+        <a href="blog.html" class="inline-block nav-link text-sm font-medium tracking-wide transition-colors duration-300 hover-underline-animation text-gray-200 hover:text-white">Blog</a>
+        <button onclick="scrollToSection('contato')" class="nav-link text-sm font-medium tracking-wide transition-colors duration-300 hover-underline-animation text-gray-200 hover:text-white">Contato</button>
+      </div>
 
-        <div class="lg:hidden flex items-center">
-          <button id="menu-toggle-btn" aria-label="Alternar menu de navegação"
-            class="text-white hover:text-[#C8102E] focus:outline-none transition-colors">
-            <span id="icon-menu"><i data-lucide="menu" class="w-8 h-8 stroke-[1.5]"></i></span>
-            <span id="icon-x" class="hidden"><i data-lucide="x" class="w-8 h-8 stroke-[1.5]"></i></span>
-          </button>
-        </div>
+      <div class="lg:hidden flex items-center">
+        <button id="menu-toggle-btn" aria-label="Alternar menu de navegação" class="text-white hover:text-[#C8102E] focus:outline-none transition-colors">
+          <span id="icon-menu"><i data-lucide="menu" class="w-8 h-8 stroke-[1.5]"></i></span>
+          <span id="icon-x" class="hidden"><i data-lucide="x" class="w-8 h-8 stroke-[1.5]"></i></span>
+        </button>
       </div>
     </div>
+  </div>
 
-    <div id="mobile-menu"
-      class="hidden lg:hidden bg-white border-t border-gray-100 shadow-2xl absolute w-full top-full left-0">
-      <div class="px-6 py-8 space-y-4">
-        <button onclick="scrollToSection('quem-somos')"
-          class="block w-full text-left text-lg font-serif text-[#2C2C2C] hover:text-[#C8102E] transition-colors py-2 border-b border-gray-50">Quem
-          Somos</button>
-        <button onclick="scrollToSection('areas-de-atuacao')"
-          class="block w-full text-left text-lg font-serif text-[#2C2C2C] hover:text-[#C8102E] transition-colors py-2 border-b border-gray-50">Áreas
-          de Atuação</button>
-        <button onclick="scrollToSection('equipe')"
-          class="block w-full text-left text-lg font-serif text-[#2C2C2C] hover:text-[#C8102E] transition-colors py-2 border-b border-gray-50">Equipe</button>
-        <a href="clientes.html"
-          class="block w-full text-left text-lg font-serif text-[#2C2C2C] hover:text-[#C8102E] transition-colors py-2 border-b border-gray-50">Clientes</a>
-        <button onclick="scrollToSection('blog')"
-          class="block w-full text-left text-lg font-serif text-[#2C2C2C] hover:text-[#C8102E] transition-colors py-2 border-b border-gray-50">Blog
-          & Novidades</button>
-        <button onclick="scrollToSection('faq')"
-          class="block w-full text-left text-lg font-serif text-[#2C2C2C] hover:text-[#C8102E] transition-colors py-2 border-b border-gray-50">Perguntas
-          Frequentes</button>
-        <button onclick="scrollToSection('contato')"
-          class="block w-full text-left text-lg font-serif text-[#2C2C2C] hover:text-[#C8102E] transition-colors py-2 border-b border-gray-50">Contato</button>
-        <div class="pt-4">
-          <a href="https://wa.me/5551981915878" target="_blank" rel="noreferrer"
-            class="flex items-center text-sm font-bold text-[#C8102E] tracking-widest uppercase">
-            <i data-lucide="message-circle" class="w-5 h-5 mr-3"></i> Fale via WhatsApp
-          </a>
-        </div>
+  <div id="mobile-menu" class="hidden lg:hidden bg-white border-t border-gray-100 shadow-2xl absolute w-full top-full left-0">
+    <div class="px-6 py-8 space-y-4">
+      <button onclick="scrollToSection('quem-somos')" class="block w-full text-left text-lg font-serif text-[#2C2C2C] hover:text-[#C8102E] transition-colors py-2 border-b border-gray-50">Quem Somos</button>
+      <button onclick="scrollToSection('areas-de-atuacao')" class="block w-full text-left text-lg font-serif text-[#2C2C2C] hover:text-[#C8102E] transition-colors py-2 border-b border-gray-50">Áreas de Atuação</button>
+      <button onclick="scrollToSection('equipe')" class="block w-full text-left text-lg font-serif text-[#2C2C2C] hover:text-[#C8102E] transition-colors py-2 border-b border-gray-50">Equipe</button>
+      <a href="clientes.html" class="block w-full text-left text-lg font-serif text-[#2C2C2C] hover:text-[#C8102E] transition-colors py-2 border-b border-gray-50">Clientes</a>
+      <a href="blog.html" class="block w-full text-left text-lg font-serif text-[#2C2C2C] hover:text-[#C8102E] transition-colors py-2 border-b border-gray-50">Blog</a>
+      <button onclick="scrollToSection('contato')" class="block w-full text-left text-lg font-serif text-[#2C2C2C] hover:text-[#C8102E] transition-colors py-2 border-b border-gray-50">Contato</button>
+      <div class="pt-4">
+        <a href="https://wa.me/5551981915878" target="_blank" rel="noreferrer" class="flex items-center text-sm font-bold text-[#C8102E] tracking-widest uppercase">
+          <i data-lucide="message-circle" class="w-5 h-5 mr-3"></i> Fale via WhatsApp
+        </a>
       </div>
     </div>
-  </nav>
+  </div>
+</nav>
 
   <section id="home" class="relative h-[100vh] min-h-[700px] flex items-center overflow-hidden z-0">
     <div class="absolute inset-0 bg-cover bg-center z-0"
@@ -300,8 +272,10 @@
     </div>
 
     <div
-      class="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center animate-bounce opacity-60 z-20 pointer-events-none">
-      <span class="text-xs text-white tracking-widest mb-2 uppercase font-light">Deslize</span>
+      class="hidden md:flex absolute bottom-10 left-1/2 -translate-x-1/2 flex-col items-center animate-bounce opacity-60 z-20 pointer-events-none">
+      <span class="text-xs text-white tracking-widest mb-2 uppercase font-light">
+        Deslize
+      </span>
       <div class="w-px h-8 bg-gradient-to-b from-white to-transparent"></div>
     </div>
   </section>

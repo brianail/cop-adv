@@ -65,69 +65,59 @@
     </div>  
 
     <!-- Navegação -->
-    <nav id="navbar" class="fixed w-full z-50 transition-all duration-500 bg-transparent py-6 top-0">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
-            <div class="flex justify-between items-center">
+<nav id="navbar" class="fixed w-full z-50 transition-all duration-500 bg-transparent py-6 top-0 sm:top-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
+    <div class="flex justify-between items-center">
 
-                <!-- Logo -->
-                <div class="flex-shrink-0 flex items-center cursor-pointer group" onclick="window.location.href='index.html'">
-                    <div class="flex items-center gap-4">
-                        <img id="site-logo" src="/assets/logos/logo.png" alt="LOGO" class="h-12 w-auto object-contain transition-all duration-300">
-                        <div class="flex flex-col border-l-2 border-[#C8102E] pl-4">
-                            <span id="logo-main" class="text-3xl font-serif font-bold tracking-tight leading-none text-white transition-colors">
-                                COP<span class="text-[#C8102E]">.</span>
-                            </span>
-                            <span id="logo-sub" class="text-[0.65rem] font-bold tracking-[0.3em] uppercase mt-1 text-gray-300 transition-colors">
-                                Advogados
-                            </span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Desktop Menu -->
-                <div class="hidden lg:flex space-x-8 items-center">
-                    <a href="index.html" class="nav-link text-sm font-medium tracking-wide text-gray-200 hover:text-white transition-colors hover-underline-animation">Home</a>
-                    <a href="index.html#quem-somos" class="nav-link text-sm font-medium tracking-wide text-gray-200 hover:text-white transition-colors hover-underline-animation">Quem Somos</a>
-                    <a href="index.html#areas-de-atuacao" class="nav-link text-sm font-medium tracking-wide text-gray-200 hover:text-white transition-colors hover-underline-animation">Áreas de Atuação</a>
-                    <a href="clientes.html" class="text-sm font-medium tracking-wide text-[#C8102E] border-b border-[#C8102E] transition-colors">Clientes</a>
-                    <a href="blog.html" class="nav-link text-sm font-medium tracking-wide text-gray-200 hover:text-white transition-colors hover-underline-animation">Blog</a>
-                    <a href="index.html#contato" class="nav-link text-sm font-medium tracking-wide text-gray-200 hover:text-white transition-colors hover-underline-animation">Contato</a>
-                </div>
-
-                <!-- Mobile Button -->
-                <div class="lg:hidden flex items-center">
-                    <button id="menu-toggle-btn" class="text-white hover:text-[#C8102E] transition-colors">
-                        <span id="icon-menu">
-                            <i data-lucide="menu" class="w-8 h-8 stroke-[1.5]"></i>
-                        </span>
-                        <span id="icon-x" class="hidden">
-                            <i data-lucide="x" class="w-8 h-8 stroke-[1.5]"></i>
-                        </span>
-                    </button>
-                </div>
-
-            </div>
+      <div class="flex-shrink-0 flex items-center cursor-pointer group focus-visible:ring-2 focus-visible:ring-[#C8102E]" tabindex="0" onclick="window.location.href='index.html'" onkeydown="if(event.key==='Enter')window.location.href='index.html'">
+        <div class="flex items-center gap-4">
+          <img id="site-logo" src="/public/assets/logos/logo.png" alt="Logo COP Advogados" class="h-12 w-auto object-contain transition-all duration-300">
+          <div class="flex flex-col border-l-2 border-[#C8102E] pl-4">
+            <span id="logo-main" class="text-3xl font-serif font-bold tracking-tight leading-none text-white transition-colors">
+              COP<span class="text-[#C8102E]">.</span>
+            </span>
+            <span id="logo-sub" class="text-[0.65rem] font-bold tracking-[0.3em] uppercase mt-1 text-gray-300 transition-colors">
+              Advogados
+            </span>
+          </div>
         </div>
+      </div>
 
-        <!-- Mobile Menu -->
-        <div id="mobile-menu" class="hidden lg:hidden bg-white border-t border-gray-100 shadow-2xl absolute w-full top-full left-0">
-            <div class="px-6 py-8 space-y-6">
-                <a href="index.html" class="block text-sm font-medium tracking-wide text-gray-800 hover:text-[#C8102E] transition-colors">Home</a>
-                <a href="index.html#quem-somos" class="block text-sm font-medium tracking-wide text-gray-800 hover:text-[#C8102E] transition-colors">Quem Somos</a>
-                <a href="index.html#areas-de-atuacao" class="block text-sm font-medium tracking-wide text-gray-800 hover:text-[#C8102E] transition-colors">Áreas de Atuação</a>
-                <a href="index.html#equipe" class="block text-sm font-medium tracking-wide text-gray-800 hover:text-[#C8102E] transition-colors">Equipe</a>
-                <a href="clientes.html" class="block text-sm font-medium tracking-wide text-[#C8102E] transition-colors">Clientes</a>
-                <a href="blog.html" class="block text-sm font-medium tracking-wide text-gray-800 hover:text-[#C8102E] transition-colors">Blog</a>
-                <a href="index.html#contato" class="block text-sm font-medium tracking-wide text-gray-800 hover:text-[#C8102E] transition-colors">Contato</a>
+      <div class="hidden lg:flex space-x-8 items-center">
+        <a href="index.html" class="inline-block nav-link text-sm font-medium tracking-wide transition-colors duration-300 hover-underline-animation text-gray-200 hover:text-white">Home</a>
+        <a href="index.html#quem-somos" class="inline-block nav-link text-sm font-medium tracking-wide transition-colors duration-300 hover-underline-animation text-gray-200 hover:text-white">Quem Somos</a>
+        <a href="index.html#areas-de-atuacao" class="inline-block nav-link text-sm font-medium tracking-wide transition-colors duration-300 hover-underline-animation text-gray-200 hover:text-white">Áreas de Atuação</a>
+        <span class="text-sm font-semibold text-[#C8102E] border-b border-[#C8102E] pb-0.5 cursor-default">Clientes</span>
+        <a href="index.html#contato" class="inline-block nav-link text-sm font-medium tracking-wide transition-colors duration-300 hover-underline-animation text-gray-200 hover:text-white">Contato</a>
+        <a href="blog.html" class="inline-block nav-link text-sm font-medium tracking-wide transition-colors duration-300 hover-underline-animation text-gray-200 hover:text-white">Blog</a>
+      </div>
 
-                <div class="pt-4 border-t border-gray-200">
-                    <a href="https://wa.me/5551981915878" target="_blank" rel="noreferrer" class="flex items-center text-sm font-bold text-[#C8102E] tracking-widest uppercase">
-                        <i data-lucide="message-circle" class="w-5 h-5 mr-3"></i> Fale via WhatsApp
-                    </a>
-                </div>
-            </div>
-        </div>
-    </nav>
+      <div class="lg:hidden flex items-center">
+        <button id="menu-toggle-btn" aria-label="Alternar menu de navegação" class="text-white hover:text-[#C8102E] focus:outline-none transition-colors">
+          <span id="icon-menu"><i data-lucide="menu" class="w-8 h-8 stroke-[1.5]"></i></span>
+          <span id="icon-x" class="hidden"><i data-lucide="x" class="w-8 h-8 stroke-[1.5]"></i></span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="mobile-menu" class="hidden lg:hidden bg-white border-t border-gray-100 shadow-2xl absolute w-full top-full left-0">
+    <div class="px-6 py-8 space-y-4">
+      <a href="index.html" class="block w-full text-left text-lg font-serif text-[#2C2C2C] hover:text-[#C8102E] transition-colors py-2 border-b border-gray-50">Home</a>
+      <a href="index.html#quem-somos" class="block w-full text-left text-lg font-serif text-[#2C2C2C] hover:text-[#C8102E] transition-colors py-2 border-b border-gray-50">Quem Somos</a>
+      <a href="index.html#areas-de-atuacao" class="block w-full text-left text-lg font-serif text-[#2C2C2C] hover:text-[#C8102E] transition-colors py-2 border-b border-gray-50">Áreas de Atuação</a>
+      <a href="index.html#equipe" class="block w-full text-left text-lg font-serif text-[#2C2C2C] hover:text-[#C8102E] transition-colors py-2 border-b border-gray-50">Equipe</a>
+      <span class="block w-full text-left text-lg font-serif text-[#C8102E] transition-colors py-2 border-b border-gray-50">Clientes</span>
+      <a href="blog.html" class="block w-full text-left text-lg font-serif text-[#2C2C2C] hover:text-[#C8102E] transition-colors py-2 border-b border-gray-50">Blog</a>
+      <a href="index.html#contato" class="block w-full text-left text-lg font-serif text-[#2C2C2C] hover:text-[#C8102E] transition-colors py-2 border-b border-gray-50">Contato</a>
+      <div class="pt-4">
+        <a href="https://wa.me/5551981915878" target="_blank" rel="noreferrer" class="flex items-center text-sm font-bold text-[#C8102E] tracking-widest uppercase">
+          <i data-lucide="message-circle" class="w-5 h-5 mr-3"></i> Fale via WhatsApp
+        </a>
+      </div>
+    </div>
+  </div>
+</nav>
 
     <!-- Header da Página -->
     <header class="bg-[#1A1A1A] pt-24 pb-32 relative overflow-hidden">
