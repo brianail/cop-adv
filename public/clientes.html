@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR" class="scroll-smooth">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -28,19 +29,34 @@
 
     <style>
         @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
+
         .animate-fade-in-up {
             animation: fadeInUp 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
         }
-        .delay-100 { animation-delay: 100ms; }
-        .delay-200 { animation-delay: 200ms; }
-        
+
+        .delay-100 {
+            animation-delay: 100ms;
+        }
+
+        .delay-200 {
+            animation-delay: 200ms;
+        }
+
         .hover-underline-animation {
             display: inline-block;
             position: relative;
         }
+
         .hover-underline-animation::after {
             content: '';
             position: absolute;
@@ -53,83 +69,117 @@
             transform-origin: bottom right;
             transition: transform 0.4s cubic-bezier(0.86, 0, 0.07, 1);
         }
+
         .hover-underline-animation:hover::after {
             transform: scaleX(1);
             transform-origin: bottom left;
         }
     </style>
 </head>
+
 <body class="font-sans text-[#2C2C2C] bg-[#F9F9F9] min-h-screen selection:bg-[#C8102E] selection:text-white">
     <div id="page-transition"
-      class="fixed inset-0 bg-[#111111] z-[9999] scale-y-0 origin-top transition-transform duration-700 ease-in-out">
-    </div>  
+        class="fixed inset-0 bg-[#111111] z-[9999] scale-y-0 origin-top transition-transform duration-700 ease-in-out">
+    </div>
 
     <!-- Navegação -->
-<nav id="navbar" class="fixed w-full z-50 transition-all duration-500 bg-transparent py-6 top-0 sm:top-8">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
-    <div class="flex justify-between items-center">
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-500 bg-transparent py-6 top-0 sm:top-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
+            <div class="flex justify-between items-center">
 
-      <div class="flex-shrink-0 flex items-center cursor-pointer group focus-visible:ring-2 focus-visible:ring-[#C8102E]" tabindex="0" onclick="window.location.href='index.html'" onkeydown="if(event.key==='Enter')window.location.href='index.html'">
-        <div class="flex items-center gap-4">
-          <img id="site-logo" src="/public/assets/logos/logo.png" alt="Logo COP Advogados" class="h-12 w-auto object-contain transition-all duration-300">
-          <div class="flex flex-col border-l-2 border-[#C8102E] pl-4">
-            <span id="logo-main" class="text-3xl font-serif font-bold tracking-tight leading-none text-white transition-colors">
-              COP<span class="text-[#C8102E]">.</span>
-            </span>
-            <span id="logo-sub" class="text-[0.65rem] font-bold tracking-[0.3em] uppercase mt-1 text-gray-300 transition-colors">
-              Advogados
-            </span>
-          </div>
+                <div class="flex-shrink-0 flex items-center cursor-pointer group focus-visible:ring-2 focus-visible:ring-[#C8102E]"
+                    tabindex="0" onclick="window.location.href='index.html'"
+                    onkeydown="if(event.key==='Enter')window.location.href='index.html'">
+                    <div class="flex items-center gap-4">
+                        <img id="site-logo" src="/public/assets/logos/logo.png" alt="Logo COP Advogados"
+                            class="h-12 w-auto object-contain transition-all duration-300">
+                        <div class="flex flex-col border-l-2 border-[#C8102E] pl-4">
+                            <span id="logo-main"
+                                class="text-3xl font-serif font-bold tracking-tight leading-none text-white transition-colors">
+                                COP<span class="text-[#C8102E]">.</span>
+                            </span>
+                            <span id="logo-sub"
+                                class="text-[0.65rem] font-bold tracking-[0.3em] uppercase mt-1 text-gray-300 transition-colors">
+                                Advogados
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hidden lg:flex space-x-8 items-center">
+                    <a href="index.html"
+                        class="inline-block nav-link text-sm font-medium tracking-wide transition-colors duration-300 hover-underline-animation text-gray-200 hover:text-white">Home</a>
+                    <a href="index.html#quem-somos"
+                        class="inline-block nav-link text-sm font-medium tracking-wide transition-colors duration-300 hover-underline-animation text-gray-200 hover:text-white">Quem
+                        Somos</a>
+                    <a href="index.html#areas-de-atuacao"
+                        class="inline-block nav-link text-sm font-medium tracking-wide transition-colors duration-300 hover-underline-animation text-gray-200 hover:text-white">Áreas
+                        de Atuação</a>
+                    <span
+                        class="text-sm font-semibold text-[#C8102E] border-b border-[#C8102E] pb-0.5 cursor-default">Clientes</span>
+                    <a href="index.html#contato"
+                        class="inline-block nav-link text-sm font-medium tracking-wide transition-colors duration-300 hover-underline-animation text-gray-200 hover:text-white">Contato</a>
+                    <a href="blog.html"
+                        class="inline-block nav-link text-sm font-medium tracking-wide transition-colors duration-300 hover-underline-animation text-gray-200 hover:text-white">Blog</a>
+                </div>
+
+                <div class="lg:hidden flex items-center">
+                    <button id="menu-toggle-btn" aria-label="Alternar menu de navegação"
+                        class="text-white hover:text-[#C8102E] focus:outline-none transition-colors">
+                        <span id="icon-menu"><i data-lucide="menu" class="w-8 h-8 stroke-[1.5]"></i></span>
+                        <span id="icon-x" class="hidden"><i data-lucide="x" class="w-8 h-8 stroke-[1.5]"></i></span>
+                    </button>
+                </div>
+            </div>
         </div>
-      </div>
 
-      <div class="hidden lg:flex space-x-8 items-center">
-        <a href="index.html" class="inline-block nav-link text-sm font-medium tracking-wide transition-colors duration-300 hover-underline-animation text-gray-200 hover:text-white">Home</a>
-        <a href="index.html#quem-somos" class="inline-block nav-link text-sm font-medium tracking-wide transition-colors duration-300 hover-underline-animation text-gray-200 hover:text-white">Quem Somos</a>
-        <a href="index.html#areas-de-atuacao" class="inline-block nav-link text-sm font-medium tracking-wide transition-colors duration-300 hover-underline-animation text-gray-200 hover:text-white">Áreas de Atuação</a>
-        <span class="text-sm font-semibold text-[#C8102E] border-b border-[#C8102E] pb-0.5 cursor-default">Clientes</span>
-        <a href="index.html#contato" class="inline-block nav-link text-sm font-medium tracking-wide transition-colors duration-300 hover-underline-animation text-gray-200 hover:text-white">Contato</a>
-        <a href="blog.html" class="inline-block nav-link text-sm font-medium tracking-wide transition-colors duration-300 hover-underline-animation text-gray-200 hover:text-white">Blog</a>
-      </div>
-
-      <div class="lg:hidden flex items-center">
-        <button id="menu-toggle-btn" aria-label="Alternar menu de navegação" class="text-white hover:text-[#C8102E] focus:outline-none transition-colors">
-          <span id="icon-menu"><i data-lucide="menu" class="w-8 h-8 stroke-[1.5]"></i></span>
-          <span id="icon-x" class="hidden"><i data-lucide="x" class="w-8 h-8 stroke-[1.5]"></i></span>
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <div id="mobile-menu" class="hidden lg:hidden bg-white border-t border-gray-100 shadow-2xl absolute w-full top-full left-0">
-    <div class="px-6 py-8 space-y-4">
-      <a href="index.html" class="block w-full text-left text-lg font-serif text-[#2C2C2C] hover:text-[#C8102E] transition-colors py-2 border-b border-gray-50">Home</a>
-      <a href="index.html#quem-somos" class="block w-full text-left text-lg font-serif text-[#2C2C2C] hover:text-[#C8102E] transition-colors py-2 border-b border-gray-50">Quem Somos</a>
-      <a href="index.html#areas-de-atuacao" class="block w-full text-left text-lg font-serif text-[#2C2C2C] hover:text-[#C8102E] transition-colors py-2 border-b border-gray-50">Áreas de Atuação</a>
-      <a href="index.html#equipe" class="block w-full text-left text-lg font-serif text-[#2C2C2C] hover:text-[#C8102E] transition-colors py-2 border-b border-gray-50">Equipe</a>
-      <span class="block w-full text-left text-lg font-serif text-[#C8102E] transition-colors py-2 border-b border-gray-50">Clientes</span>
-      <a href="blog.html" class="block w-full text-left text-lg font-serif text-[#2C2C2C] hover:text-[#C8102E] transition-colors py-2 border-b border-gray-50">Blog</a>
-      <a href="index.html#contato" class="block w-full text-left text-lg font-serif text-[#2C2C2C] hover:text-[#C8102E] transition-colors py-2 border-b border-gray-50">Contato</a>
-      <div class="pt-4">
-        <a href="https://wa.me/5551981915878" target="_blank" rel="noreferrer" class="flex items-center text-sm font-bold text-[#C8102E] tracking-widest uppercase">
-          <i data-lucide="message-circle" class="w-5 h-5 mr-3"></i> Fale via WhatsApp
-        </a>
-      </div>
-    </div>
-  </div>
-</nav>
+        <div id="mobile-menu"
+            class="hidden lg:hidden bg-white border-t border-gray-100 shadow-2xl absolute w-full top-full left-0">
+            <div class="px-6 py-8 space-y-4">
+                <a href="index.html"
+                    class="block w-full text-left text-lg font-serif text-[#2C2C2C] hover:text-[#C8102E] transition-colors py-2 border-b border-gray-50">Home</a>
+                <a href="index.html#quem-somos"
+                    class="block w-full text-left text-lg font-serif text-[#2C2C2C] hover:text-[#C8102E] transition-colors py-2 border-b border-gray-50">Quem
+                    Somos</a>
+                <a href="index.html#areas-de-atuacao"
+                    class="block w-full text-left text-lg font-serif text-[#2C2C2C] hover:text-[#C8102E] transition-colors py-2 border-b border-gray-50">Áreas
+                    de Atuação</a>
+                <a href="index.html#equipe"
+                    class="block w-full text-left text-lg font-serif text-[#2C2C2C] hover:text-[#C8102E] transition-colors py-2 border-b border-gray-50">Equipe</a>
+                <span
+                    class="block w-full text-left text-lg font-serif text-[#C8102E] transition-colors py-2 border-b border-gray-50">Clientes</span>
+                <a href="blog.html"
+                    class="block w-full text-left text-lg font-serif text-[#2C2C2C] hover:text-[#C8102E] transition-colors py-2 border-b border-gray-50">Blog</a>
+                <a href="index.html#contato"
+                    class="block w-full text-left text-lg font-serif text-[#2C2C2C] hover:text-[#C8102E] transition-colors py-2 border-b border-gray-50">Contato</a>
+                <div class="pt-4">
+                    <a href="https://wa.me/5551981915878" target="_blank" rel="noreferrer"
+                        class="flex items-center text-sm font-bold text-[#C8102E] tracking-widest uppercase">
+                        <i data-lucide="message-circle" class="w-5 h-5 mr-3"></i> Fale via WhatsApp
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
 
     <!-- Header da Página -->
     <header class="bg-[#1A1A1A] pt-24 pb-32 relative overflow-hidden">
-        <div class="absolute inset-0 opacity-10 bg-[url('https://images.unsplash.com/photo-1699665235382-a6666f77a60e?q=80&w=2072&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')] bg-cover bg-center"></div>
+        <div
+            class="absolute inset-0 opacity-10 bg-[url('https://images.unsplash.com/photo-1699665235382-a6666f77a60e?q=80&w=2072&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')] bg-cover bg-center">
+        </div>
         <div class="absolute inset-0 bg-gradient-to-b from-transparent to-[#1A1A1A]"></div>
 
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 relative z-10">
             <div class="max-w-4xl mx-auto text-center">
-                <h1 class="text-xs font-bold tracking-[0.2em] text-[#C8102E] uppercase mb-6 animate-fade-in-up">Parceiros de Luta</h1>
-                <h2 class="text-4xl md:text-5xl lg:text-6xl font-serif text-white mb-8 leading-tight animate-fade-in-up delay-100">Entidades de Classe e Associações</h2>
+                <h1 class="text-xs font-bold tracking-[0.2em] text-[#C8102E] uppercase mb-6 animate-fade-in-up">
+                    Parceiros de Luta</h1>
+                <h2
+                    class="text-4xl md:text-5xl lg:text-6xl font-serif text-white mb-8 leading-tight animate-fade-in-up delay-100">
+                    Entidades de Classe e Associações</h2>
                 <p class="text-lg text-gray-300 font-light leading-relaxed animate-fade-in-up delay-200">
-                    O escritório Castro, Osório, Pedrassani & Advogados Associados representa trabalhadores em geral, segurados da Previdência Social e aposentados da Administração Pública, além das entidades de classe dentre as quais destacamos abaixo.
+                    O escritório Castro, Osório, Pedrassani & Advogados Associados representa trabalhadores em geral,
+                    segurados da Previdência Social e aposentados da Administração Pública, além das entidades de classe
+                    dentre as quais destacamos abaixo.
                 </p>
             </div>
         </div>
@@ -149,8 +199,10 @@
     <section class="py-24 bg-white border-t border-gray-200">
         <div class="max-w-4xl mx-auto text-center px-4 sm:px-6">
             <h3 class="text-3xl font-serif text-[#1A1A1A] mb-6">A sua entidade também precisa de representação?</h3>
-            <p class="text-[#666666] font-light mb-10 text-lg">Oferecemos assessoria jurídica completa, desde negociações coletivas a defesas judiciais complexas.</p>
-            <a href="index.html#contato" class="inline-flex items-center justify-center bg-[#C8102E] text-white px-8 py-4 text-xs font-bold tracking-[0.15em] uppercase hover:bg-[#1A1A1A] transition-colors duration-300 shadow-lg">
+            <p class="text-[#666666] font-light mb-10 text-lg">Oferecemos assessoria jurídica completa, desde
+                negociações coletivas a defesas judiciais complexas.</p>
+            <a href="index.html#contato"
+                class="inline-flex items-center justify-center bg-[#C8102E] text-white px-8 py-4 text-xs font-bold tracking-[0.15em] uppercase hover:bg-[#1A1A1A] transition-colors duration-300 shadow-lg">
                 Fale com os nossos time
             </a>
         </div>
@@ -163,7 +215,8 @@
                 <!-- Branding & Socials -->
                 <div class="flex flex-col">
                     <span class="text-4xl font-serif font-bold text-white tracking-tight leading-none mb-2">
-                        <img src="/assets/logos/logovermelho.png" alt="LOGO" class="h-12 w-auto object-contain transition-all duration-300">
+                        <img src="/assets/logos/logovermelho.png" alt="LOGO"
+                            class="h-12 w-auto object-contain transition-all duration-300">
                     </span>
                     <span class="text-[0.65rem] font-bold text-gray-500 tracking-[0.3em] uppercase mb-6">
                         Advogados Associados
@@ -172,13 +225,16 @@
                         Referência em Direito Social e na defesa dos trabalhadores há mais de 20 anos.
                     </p>
                     <div class="flex space-x-4">
-                        <a href="https://www.instagram.com/copadvogados/" class="w-10 h-10 rounded-full bg-gray-900 border border-gray-800 flex items-center justify-center hover:bg-[#C8102E] hover:text-white hover:border-[#C8102E] transition-all duration-300">
+                        <a href="https://www.instagram.com/copadvogados/"
+                            class="w-10 h-10 rounded-full bg-gray-900 border border-gray-800 flex items-center justify-center hover:bg-[#C8102E] hover:text-white hover:border-[#C8102E] transition-all duration-300">
                             <i data-lucide="instagram" class="w-4 h-4"></i>
                         </a>
-                        <a href="https://www.facebook.com/copadvogados" class="w-10 h-10 rounded-full bg-gray-900 border border-gray-800 flex items-center justify-center hover:bg-[#C8102E] hover:text-white hover:border-[#C8102E] transition-all duration-300">
+                        <a href="https://www.facebook.com/copadvogados"
+                            class="w-10 h-10 rounded-full bg-gray-900 border border-gray-800 flex items-center justify-center hover:bg-[#C8102E] hover:text-white hover:border-[#C8102E] transition-all duration-300">
                             <i data-lucide="facebook" class="w-4 h-4"></i>
                         </a>
-                        <a href="https://www.youtube.com/channel/UC9tAT0ujNYheikSqdrL_0wg" class="w-10 h-10 rounded-full bg-gray-900 border border-gray-800 flex items-center justify-center hover:bg-[#C8102E] hover:text-white hover:border-[#C8102E] transition-all duration-300">
+                        <a href="https://www.youtube.com/channel/UC9tAT0ujNYheikSqdrL_0wg"
+                            class="w-10 h-10 rounded-full bg-gray-900 border border-gray-800 flex items-center justify-center hover:bg-[#C8102E] hover:text-white hover:border-[#C8102E] transition-all duration-300">
                             <i data-lucide="youtube" class="w-4 h-4"></i>
                         </a>
                     </div>
@@ -189,16 +245,21 @@
                     <h4 class="text-xs font-bold tracking-[0.2em] text-white uppercase mb-6">Fale Connosco</h4>
                     <ul class="space-y-4 text-sm font-light">
                         <li class="flex items-center group cursor-default">
-                            <i data-lucide="phone" class="w-4 h-4 mr-3 text-[#C8102E] group-hover:text-white transition-colors"></i>
+                            <i data-lucide="phone"
+                                class="w-4 h-4 mr-3 text-[#C8102E] group-hover:text-white transition-colors"></i>
                             <span class="group-hover:text-white transition-colors">(51) 3212-7877 / 3300-6333</span>
                         </li>
                         <li class="flex items-center group cursor-pointer">
-                            <i data-lucide="message-circle" class="w-4 h-4 mr-3 text-[#C8102E] group-hover:text-[#25D366] transition-colors"></i>
-                            <a href="https://wa.me/5551981915878" target="_blank" class="group-hover:text-white transition-colors">WhatsApp: (51) 98191-5878</a>
+                            <i data-lucide="message-circle"
+                                class="w-4 h-4 mr-3 text-[#C8102E] group-hover:text-[#25D366] transition-colors"></i>
+                            <a href="https://wa.me/5551981915878" target="_blank"
+                                class="group-hover:text-white transition-colors">WhatsApp: (51) 98191-5878</a>
                         </li>
                         <li class="flex items-center group cursor-pointer">
-                            <i data-lucide="mail" class="w-4 h-4 mr-3 text-[#C8102E] group-hover:text-white transition-colors"></i>
-                            <a href="mailto:cop@copadvogados.com.br" class="hover:text-white transition-colors border-b border-transparent hover:border-white pb-0.5">cop@copadvogados.com.br</a>
+                            <i data-lucide="mail"
+                                class="w-4 h-4 mr-3 text-[#C8102E] group-hover:text-white transition-colors"></i>
+                            <a href="mailto:cop@copadvogados.com.br"
+                                class="hover:text-white transition-colors border-b border-transparent hover:border-white pb-0.5">cop@copadvogados.com.br</a>
                         </li>
                     </ul>
                 </div>
@@ -208,7 +269,8 @@
                     <h4 class="text-xs font-bold tracking-[0.2em] text-white uppercase mb-6">Sede Principal</h4>
                     <ul class="space-y-4 text-sm font-light">
                         <li class="flex items-start group">
-                            <i data-lucide="map-pin" class="w-4 h-4 mr-3 text-[#C8102E] mt-1 group-hover:text-white transition-colors"></i>
+                            <i data-lucide="map-pin"
+                                class="w-4 h-4 mr-3 text-[#C8102E] mt-1 group-hover:text-white transition-colors"></i>
                             <span class="leading-relaxed group-hover:text-white transition-colors">
                                 Rua Uruguai, 240 - Conjunto 801<br />
                                 Centro Histórico, Porto Alegre - RS<br />
@@ -222,10 +284,20 @@
                 <div>
                     <h4 class="text-xs font-bold tracking-[0.2em] text-white uppercase mb-6">Navegação</h4>
                     <ul class="space-y-3 text-sm font-light flex flex-col items-start">
-                        <li><a href="index.html" class="hover:text-[#C8102E] transition-colors flex items-center"><i data-lucide="chevron-right" class="w-3 h-3 mr-2 text-gray-700"></i> Início</a></li>
-                        <li><a href="index.html#quem-somos" class="hover:text-[#C8102E] transition-colors flex items-center"><i data-lucide="chevron-right" class="w-3 h-3 mr-2 text-gray-700"></i> Quem Somos</a></li>
-                        <li><a href="index.html#areas-de-atuacao" class="hover:text-[#C8102E] transition-colors flex items-center"><i data-lucide="chevron-right" class="w-3 h-3 mr-2 text-gray-700"></i> Áreas de Atuação</a></li>
-                        <li><a href="index.html#equipe" class="hover:text-[#C8102E] transition-colors flex items-center"><i data-lucide="chevron-right" class="w-3 h-3 mr-2 text-gray-700"></i> Corpo Jurídico</a></li>
+                        <li><a href="index.html" class="hover:text-[#C8102E] transition-colors flex items-center"><i
+                                    data-lucide="chevron-right" class="w-3 h-3 mr-2 text-gray-700"></i> Início</a></li>
+                        <li><a href="index.html#quem-somos"
+                                class="hover:text-[#C8102E] transition-colors flex items-center"><i
+                                    data-lucide="chevron-right" class="w-3 h-3 mr-2 text-gray-700"></i> Quem Somos</a>
+                        </li>
+                        <li><a href="index.html#areas-de-atuacao"
+                                class="hover:text-[#C8102E] transition-colors flex items-center"><i
+                                    data-lucide="chevron-right" class="w-3 h-3 mr-2 text-gray-700"></i> Áreas de
+                                Atuação</a></li>
+                        <li><a href="index.html#equipe"
+                                class="hover:text-[#C8102E] transition-colors flex items-center"><i
+                                    data-lucide="chevron-right" class="w-3 h-3 mr-2 text-gray-700"></i> Corpo
+                                Jurídico</a></li>
                     </ul>
                 </div>
             </div>
@@ -233,13 +305,15 @@
             <!-- Divisor -->
             <div class="w-full h-px bg-gray-900 mb-8"></div>
 
-            <div class="flex flex-col md:flex-row justify-between items-center text-xs font-light tracking-wide text-gray-600">
+            <div
+                class="flex flex-col md:flex-row justify-between items-center text-xs font-light tracking-wide text-gray-600">
                 <p class="mb-4 md:mb-0 text-center md:text-left">
                     &copy; <span id="current-year"></span> COP Advogados Associados. Todos os direitos reservados.
                 </p>
                 <p class="text-xs text-gray-500 text-center md:text-left font-light tracking-wide">
                     Criado por
-                    <a href="https://brian-ail-portfolio.netlify.app" target="_blank" class="hover:text-[#C8102E] transition-colors">
+                    <a href="https://brian-ail-portfolio.netlify.app" target="_blank"
+                        class="hover:text-[#C8102E] transition-colors">
                         Brian Ail - Desenvolvimento Web
                     </a>
                 </p>
@@ -270,16 +344,16 @@
                 // Background Branco com Sombra
                 navbar.classList.add('bg-white', 'shadow-[0_4px_20px_-10px_rgba(0,0,0,0.1)]', 'py-4');
                 navbar.classList.remove('bg-transparent', 'py-6');
-                
+
                 // Mudar a Imagem do Logo para a versão vermelha
                 siteLogo.src = '/assets/logos/logovermelho.png';
-                
+
                 // Cores do Logótipo (Escuras)
                 logoMain.classList.add('text-[#1A1A1A]');
                 logoMain.classList.remove('text-white');
                 logoSub.classList.add('text-[#666666]');
                 logoSub.classList.remove('text-gray-300');
-                
+
                 // Botão Menu Mobile (Escuro)
                 menuToggleBtn.classList.add('text-[#2C2C2C]');
                 menuToggleBtn.classList.remove('text-white');
@@ -293,16 +367,16 @@
                 // Voltar ao Topo (Transparente)
                 navbar.classList.remove('bg-white', 'shadow-[0_4px_20px_-10px_rgba(0,0,0,0.1)]', 'py-4');
                 navbar.classList.add('bg-transparent', 'py-6');
-                
+
                 // Voltar a Imagem do Logo Original (Branca)
                 siteLogo.src = '/assets/logos/logo.png';
-                
+
                 // Cores do Logótipo (Claras)
                 logoMain.classList.remove('text-[#1A1A1A]');
                 logoMain.classList.add('text-white');
                 logoSub.classList.remove('text-[#666666]');
                 logoSub.classList.add('text-gray-300');
-                
+
                 // Botão Menu Mobile (Claro)
                 menuToggleBtn.classList.remove('text-[#2C2C2C]');
                 menuToggleBtn.classList.add('text-white');
@@ -381,4 +455,5 @@
 
     <script src="index.js"></script>
 </body>
+
 </html>
