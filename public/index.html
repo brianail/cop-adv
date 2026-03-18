@@ -182,58 +182,82 @@
     class="fixed inset-0 bg-[#111111] z-[9999] scale-y-0 origin-top transition-transform duration-700 ease-in-out">
   </div>
 
-<nav id="navbar" class="fixed w-full z-50 transition-all duration-500 bg-transparent py-6 top-0 sm:top-8">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
-    <div class="flex justify-between items-center">
+  <nav id="navbar" class="fixed w-full z-50 transition-all duration-500 bg-transparent py-6 top-0 sm:top-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
+      <div class="flex justify-between items-center">
 
-      <div class="flex-shrink-0 flex items-center cursor-pointer group focus-visible:ring-2 focus-visible:ring-[#C8102E]" tabindex="0" onclick="scrollToSection('home')" onkeydown="if(event.key==='Enter')scrollToSection('home')">
-        <div class="flex items-center gap-4">
-         <img id="site-logo" src="/public/assets/logos/logo.png" alt="Logo COP Advogados" class="h-12 w-auto object-contain transition-all duration-300">
-          <div class="flex flex-col border-l-2 border-[#C8102E] pl-4">
-            <span id="logo-main" class="text-3xl font-serif font-bold tracking-tight leading-none text-white transition-colors">
-              COP<span class="text-[#C8102E]">.</span>
-            </span>
-            <span id="logo-sub" class="text-[0.65rem] font-bold tracking-[0.3em] uppercase mt-1 text-gray-300 transition-colors">
-              Advogados
-            </span>
+        <div
+          class="flex-shrink-0 flex items-center cursor-pointer group focus-visible:ring-2 focus-visible:ring-[#C8102E]"
+          tabindex="0" onclick="scrollToSection('home')" onkeydown="if(event.key==='Enter')scrollToSection('home')">
+          <div class="flex items-center gap-4">
+            <img id="site-logo" src="/public/assets/logos/logo.png" alt="Logo COP Advogados"
+              class="h-12 w-auto object-contain transition-all duration-300">
+            <div class="flex flex-col border-l-2 border-[#C8102E] pl-4">
+              <span id="logo-main"
+                class="text-3xl font-serif font-bold tracking-tight leading-none text-white transition-colors">
+                COP<span class="text-[#C8102E]">.</span>
+              </span>
+              <span id="logo-sub"
+                class="text-[0.65rem] font-bold tracking-[0.3em] uppercase mt-1 text-gray-300 transition-colors">
+                Advogados
+              </span>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="hidden lg:flex space-x-8 items-center">
-        <button onclick="scrollToSection('quem-somos')" class="nav-link text-sm font-medium tracking-wide transition-colors duration-300 hover-underline-animation text-gray-200 hover:text-white">Quem Somos</button>
-        <button onclick="scrollToSection('areas-de-atuacao')" class="nav-link text-sm font-medium tracking-wide transition-colors duration-300 hover-underline-animation text-gray-200 hover:text-white">Áreas de Atuação</button>
-        <button onclick="scrollToSection('equipe')" class="nav-link text-sm font-medium tracking-wide transition-colors duration-300 hover-underline-animation text-gray-200 hover:text-white">Equipe</button>
-        <a href="clientes.html" class="inline-block nav-link text-sm font-medium tracking-wide transition-colors duration-300 hover-underline-animation text-gray-200 hover:text-white">Clientes</a>
-        <a href="blog.html" class="inline-block nav-link text-sm font-medium tracking-wide transition-colors duration-300 hover-underline-animation text-gray-200 hover:text-white">Blog</a>
-        <button onclick="scrollToSection('contato')" class="nav-link text-sm font-medium tracking-wide transition-colors duration-300 hover-underline-animation text-gray-200 hover:text-white">Contato</button>
-      </div>
+        <div class="hidden lg:flex space-x-8 items-center">
+          <button onclick="scrollToSection('quem-somos')"
+            class="nav-link text-sm font-medium tracking-wide transition-colors duration-300 hover-underline-animation text-gray-200 hover:text-white">Quem
+            Somos</button>
+          <button onclick="scrollToSection('areas-de-atuacao')"
+            class="nav-link text-sm font-medium tracking-wide transition-colors duration-300 hover-underline-animation text-gray-200 hover:text-white">Áreas
+            de Atuação</button>
+          <button onclick="scrollToSection('equipe')"
+            class="nav-link text-sm font-medium tracking-wide transition-colors duration-300 hover-underline-animation text-gray-200 hover:text-white">Equipe</button>
+          <a href="clientes.html"
+            class="inline-block nav-link text-sm font-medium tracking-wide transition-colors duration-300 hover-underline-animation text-gray-200 hover:text-white">Clientes</a>
+          <a href="blog.html"
+            class="inline-block nav-link text-sm font-medium tracking-wide transition-colors duration-300 hover-underline-animation text-gray-200 hover:text-white">Blog</a>
+          <button onclick="scrollToSection('contato')"
+            class="nav-link text-sm font-medium tracking-wide transition-colors duration-300 hover-underline-animation text-gray-200 hover:text-white">Contato</button>
+        </div>
 
-      <div class="lg:hidden flex items-center">
-        <button id="menu-toggle-btn" aria-label="Alternar menu de navegação" class="text-white hover:text-[#C8102E] focus:outline-none transition-colors">
-          <span id="icon-menu"><i data-lucide="menu" class="w-8 h-8 stroke-[1.5]"></i></span>
-          <span id="icon-x" class="hidden"><i data-lucide="x" class="w-8 h-8 stroke-[1.5]"></i></span>
-        </button>
+        <div class="lg:hidden flex items-center">
+          <button id="menu-toggle-btn" aria-label="Alternar menu de navegação"
+            class="text-white hover:text-[#C8102E] focus:outline-none transition-colors">
+            <span id="icon-menu"><i data-lucide="menu" class="w-8 h-8 stroke-[1.5]"></i></span>
+            <span id="icon-x" class="hidden"><i data-lucide="x" class="w-8 h-8 stroke-[1.5]"></i></span>
+          </button>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div id="mobile-menu" class="hidden lg:hidden bg-white border-t border-gray-100 shadow-2xl absolute w-full top-full left-0">
-    <div class="px-6 py-8 space-y-4">
-      <button onclick="scrollToSection('quem-somos')" class="block w-full text-left text-lg font-serif text-[#2C2C2C] hover:text-[#C8102E] transition-colors py-2 border-b border-gray-50">Quem Somos</button>
-      <button onclick="scrollToSection('areas-de-atuacao')" class="block w-full text-left text-lg font-serif text-[#2C2C2C] hover:text-[#C8102E] transition-colors py-2 border-b border-gray-50">Áreas de Atuação</button>
-      <button onclick="scrollToSection('equipe')" class="block w-full text-left text-lg font-serif text-[#2C2C2C] hover:text-[#C8102E] transition-colors py-2 border-b border-gray-50">Equipe</button>
-      <a href="clientes.html" class="block w-full text-left text-lg font-serif text-[#2C2C2C] hover:text-[#C8102E] transition-colors py-2 border-b border-gray-50">Clientes</a>
-      <a href="blog.html" class="block w-full text-left text-lg font-serif text-[#2C2C2C] hover:text-[#C8102E] transition-colors py-2 border-b border-gray-50">Blog</a>
-      <button onclick="scrollToSection('contato')" class="block w-full text-left text-lg font-serif text-[#2C2C2C] hover:text-[#C8102E] transition-colors py-2 border-b border-gray-50">Contato</button>
-      <div class="pt-4">
-        <a href="https://wa.me/5551981915878" target="_blank" rel="noreferrer" class="flex items-center text-sm font-bold text-[#C8102E] tracking-widest uppercase">
-          <i data-lucide="message-circle" class="w-5 h-5 mr-3"></i> Fale via WhatsApp
-        </a>
+    <div id="mobile-menu"
+      class="hidden lg:hidden bg-white border-t border-gray-100 shadow-2xl absolute w-full top-full left-0">
+      <div class="px-6 py-8 space-y-4">
+        <button onclick="scrollToSection('quem-somos')"
+          class="block w-full text-left text-lg font-serif text-[#2C2C2C] hover:text-[#C8102E] transition-colors py-2 border-b border-gray-50">Quem
+          Somos</button>
+        <button onclick="scrollToSection('areas-de-atuacao')"
+          class="block w-full text-left text-lg font-serif text-[#2C2C2C] hover:text-[#C8102E] transition-colors py-2 border-b border-gray-50">Áreas
+          de Atuação</button>
+        <button onclick="scrollToSection('equipe')"
+          class="block w-full text-left text-lg font-serif text-[#2C2C2C] hover:text-[#C8102E] transition-colors py-2 border-b border-gray-50">Equipe</button>
+        <a href="clientes.html"
+          class="block w-full text-left text-lg font-serif text-[#2C2C2C] hover:text-[#C8102E] transition-colors py-2 border-b border-gray-50">Clientes</a>
+        <a href="blog.html"
+          class="block w-full text-left text-lg font-serif text-[#2C2C2C] hover:text-[#C8102E] transition-colors py-2 border-b border-gray-50">Blog</a>
+        <button onclick="scrollToSection('contato')"
+          class="block w-full text-left text-lg font-serif text-[#2C2C2C] hover:text-[#C8102E] transition-colors py-2 border-b border-gray-50">Contato</button>
+        <div class="pt-4">
+          <a href="https://wa.me/5551981915878" target="_blank" rel="noreferrer"
+            class="flex items-center text-sm font-bold text-[#C8102E] tracking-widest uppercase">
+            <i data-lucide="message-circle" class="w-5 h-5 mr-3"></i> Fale via WhatsApp
+          </a>
+        </div>
       </div>
     </div>
-  </div>
-</nav>
+  </nav>
 
   <section id="home" class="relative h-[100vh] min-h-[700px] flex items-center overflow-hidden z-0">
     <div class="absolute inset-0 bg-cover bg-center z-0"
@@ -310,53 +334,53 @@
               trabalhista e social.</p>
           </div>
 
-         <div class="mt-12 max-w-3xl">
+          <div class="mt-12 max-w-3xl">
 
-  <!-- SLIDER -->
-  <div class="overflow-hidden relative">
+            <!-- SLIDER -->
+            <div class="overflow-hidden relative">
 
-    <div id="pilares-track"
-      class="flex transition-transform duration-500 ease-in-out">
+              <div id="pilares-track" class="flex transition-transform duration-500 ease-in-out">
 
-      <!-- MISSÃO -->
-      <div class="min-w-full p-8 bg-[#F9F9F9] border-l-2 border-[#C8102E] rounded-r-sm">
-        <i data-lucide="quote" class="w-8 h-8 text-[#C8102E] opacity-20 mb-4"></i>
-        <h4 class="text-[#1A1A1A] font-serif text-2xl mb-3">Nossa Missão</h4>
-        <p class="text-[#666666] font-light leading-relaxed italic">
-          "Prestar serviços jurídicos com qualidade e ética, com foco na defesa do direito, do trabalho e da cidadania, na busca da justiça social."
-        </p>
-      </div>
+                <!-- MISSÃO -->
+                <div class="min-w-full p-8 bg-[#F9F9F9] border-l-2 border-[#C8102E] rounded-r-sm">
+                  <i data-lucide="quote" class="w-8 h-8 text-[#C8102E] opacity-20 mb-4"></i>
+                  <h4 class="text-[#1A1A1A] font-serif text-2xl mb-3">Nossa Missão</h4>
+                  <p class="text-[#666666] font-light leading-relaxed italic">
+                    "Prestar serviços jurídicos com qualidade e ética, com foco na defesa do direito, do trabalho e da
+                    cidadania, na busca da justiça social."
+                  </p>
+                </div>
 
-      <!-- VISÃO -->
-      <div class="min-w-full p-8 bg-[#F9F9F9] border-l-2 border-[#C8102E] rounded-r-sm">
-        <i data-lucide="eye" class="w-8 h-8 text-[#C8102E] opacity-20 mb-4"></i>
-        <h4 class="text-[#1A1A1A] font-serif text-2xl mb-3">Nossa Visão</h4>
-        <p class="text-[#666666] font-light leading-relaxed italic">
-          "Ser referência na advocacia, reconhecida pela excelência técnica, ética e resultados consistentes."
-        </p>
-      </div>
+                <!-- VISÃO -->
+                <div class="min-w-full p-8 bg-[#F9F9F9] border-l-2 border-[#C8102E] rounded-r-sm">
+                  <i data-lucide="eye" class="w-8 h-8 text-[#C8102E] opacity-20 mb-4"></i>
+                  <h4 class="text-[#1A1A1A] font-serif text-2xl mb-3">Nossa Visão</h4>
+                  <p class="text-[#666666] font-light leading-relaxed italic">
+                    "Ser referência na advocacia, reconhecida pela excelência técnica, ética e resultados consistentes."
+                  </p>
+                </div>
 
-      <!-- VALORES -->
-      <div class="min-w-full p-8 bg-[#F9F9F9] border-l-2 border-[#C8102E] rounded-r-sm">
-        <i data-lucide="scale" class="w-8 h-8 text-[#C8102E] opacity-20 mb-4"></i>
-        <h4 class="text-[#1A1A1A] font-serif text-2xl mb-3">Nossos Valores</h4>
-        <p class="text-[#666666] font-light leading-relaxed italic">
-          "Ética, transparência, compromisso com o cliente e atuação firme na busca da justiça."
-        </p>
-      </div>
+                <!-- VALORES -->
+                <div class="min-w-full p-8 bg-[#F9F9F9] border-l-2 border-[#C8102E] rounded-r-sm">
+                  <i data-lucide="scale" class="w-8 h-8 text-[#C8102E] opacity-20 mb-4"></i>
+                  <h4 class="text-[#1A1A1A] font-serif text-2xl mb-3">Nossos Valores</h4>
+                  <p class="text-[#666666] font-light leading-relaxed italic">
+                    "Ética, transparência, compromisso com o cliente e atuação firme na busca da justiça."
+                  </p>
+                </div>
 
-    </div>
+              </div>
 
-  </div>
+            </div>
 
-  <!-- INDICADORES -->
-  <div class="flex gap-2 mt-6">
-    <button onclick="goSlide(0)" class="dot w-6 h-[2px] bg-[#C8102E]"></button>
-    <button onclick="goSlide(1)" class="dot w-6 h-[2px] bg-gray-300"></button>
-    <button onclick="goSlide(2)" class="dot w-6 h-[2px] bg-gray-300"></button>
-  </div>
+            <!-- INDICADORES -->
+            <div class="flex gap-2 mt-6">
+              <button onclick="goSlide(0)" class="dot w-6 h-[2px] bg-[#C8102E]"></button>
+              <button onclick="goSlide(1)" class="dot w-6 h-[2px] bg-gray-300"></button>
+              <button onclick="goSlide(2)" class="dot w-6 h-[2px] bg-gray-300"></button>
+            </div>
 
-</div>
+          </div>
         </div>
 
       </div>
@@ -460,136 +484,134 @@
     </div>
   </section>
 
-<section id="blog" class="py-32 bg-white relative overflow-hidden">
+  <section id="blog" class="py-32 bg-white relative overflow-hidden">
 
-  <!-- FUNDO -->
-  <div class="absolute top-0 right-0 w-72 h-72 bg-[#C8102E]/5 rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
+    <!-- FUNDO -->
+    <div
+      class="absolute top-0 right-0 w-72 h-72 bg-[#C8102E]/5 rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none">
+    </div>
 
-  <div class="max-w-7xl mx-auto px-6 lg:px-12">
+    <div class="max-w-7xl mx-auto px-6 lg:px-12">
 
-    <!-- HEADER -->
-    <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-8 mb-20">
+      <!-- HEADER -->
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-8 mb-20">
 
-      <div>
-        <div class="flex items-center mb-4">
-          <div class="h-px w-10 bg-[#C8102E] mr-4"></div>
-          <span class="text-[#C8102E] text-xs font-semibold tracking-[.25em] uppercase">
-            Conhecimento & Atualidade
-          </span>
+        <div>
+          <div class="flex items-center mb-4">
+            <div class="h-px w-10 bg-[#C8102E] mr-4"></div>
+            <span class="text-[#C8102E] text-xs font-semibold tracking-[.25em] uppercase">
+              Conhecimento & Atualidade
+            </span>
+          </div>
+
+          <h2 class="text-4xl md:text-5xl font-serif text-[#111] leading-tight">
+            Últimas<br>
+            <span class="italic font-light text-[#777]">Publicações</span>
+          </h2>
         </div>
 
-        <h2 class="text-4xl md:text-5xl font-serif text-[#111] leading-tight">
-          Últimas<br>
-          <span class="italic font-light text-[#777]">Publicações</span>
-        </h2>
-      </div>
-
-      <a href="blog.html"
-        class="group inline-flex items-center gap-3 text-xs font-bold tracking-[.18em] uppercase text-[#1A1A1A]
+        <a href="blog.html" class="group inline-flex items-center gap-3 text-xs font-bold tracking-[.18em] uppercase text-[#1A1A1A]
                border-b border-[#1A1A1A] pb-1 hover:text-[#C8102E] hover:border-[#C8102E]
                transition-all duration-300 self-start md:self-auto whitespace-nowrap">
-        Ver todas
-        <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition"></i>
-      </a>
+          Ver todas
+          <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition"></i>
+        </a>
 
-    </div>
+      </div>
 
-    <!-- GRID -->
-    <div id="home-posts-grid"
-      class="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
+      <!-- GRID -->
+      <div id="home-posts-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
 
-      <!-- CARD -->
-      <div class="bg-white border border-gray-100 rounded-sm overflow-hidden 
+        <!-- CARD -->
+        <div class="bg-white border border-gray-100 rounded-sm overflow-hidden 
                   group hover:shadow-xl hover:-translate-y-1 
                   transition-all duration-300 
                   flex flex-col h-full">
 
-        <!-- IMAGE -->
-        <div class="h-52 bg-gray-100 animate-pulse shrink-0"></div>
+          <!-- IMAGE -->
+          <div class="h-52 bg-gray-100 animate-pulse shrink-0"></div>
 
-        <!-- CONTENT -->
-        <div class="p-8 flex flex-col flex-1">
+          <!-- CONTENT -->
+          <div class="p-8 flex flex-col flex-1">
 
-          <div class="h-3 w-20 bg-gray-200 animate-pulse rounded mb-4"></div>
+            <div class="h-3 w-20 bg-gray-200 animate-pulse rounded mb-4"></div>
 
-          <div class="h-5 bg-gray-200 animate-pulse rounded mb-2"></div>
-          <div class="h-5 w-3/4 bg-gray-200 animate-pulse rounded mb-4"></div>
+            <div class="h-5 bg-gray-200 animate-pulse rounded mb-2"></div>
+            <div class="h-5 w-3/4 bg-gray-200 animate-pulse rounded mb-4"></div>
 
-          <!-- FOOTER ALIGN -->
-          <div class="mt-auto h-3 w-1/3 bg-gray-200 animate-pulse rounded"></div>
+            <!-- FOOTER ALIGN -->
+            <div class="mt-auto h-3 w-1/3 bg-gray-200 animate-pulse rounded"></div>
+
+          </div>
+
+        </div>
+
+        <!-- CARD -->
+        <div class="bg-white border border-gray-100 rounded-sm overflow-hidden 
+                  group hover:shadow-xl hover:-translate-y-1 
+                  transition-all duration-300 
+                  flex flex-col h-full">
+
+          <div class="h-52 bg-gray-100 animate-pulse shrink-0"></div>
+
+          <div class="p-8 flex flex-col flex-1">
+
+            <div class="h-3 w-24 bg-gray-200 animate-pulse rounded mb-4"></div>
+
+            <div class="h-5 bg-gray-200 animate-pulse rounded mb-2"></div>
+            <div class="h-5 w-2/3 bg-gray-200 animate-pulse rounded mb-4"></div>
+
+            <div class="mt-auto h-3 w-1/4 bg-gray-200 animate-pulse rounded"></div>
+
+          </div>
+
+        </div>
+
+        <!-- CARD -->
+        <div class="bg-white border border-gray-100 rounded-sm overflow-hidden 
+                  group hover:shadow-xl hover:-translate-y-1 
+                  transition-all duration-300 
+                  flex flex-col h-full">
+
+          <div class="h-52 bg-gray-100 animate-pulse shrink-0"></div>
+
+          <div class="p-8 flex flex-col flex-1">
+
+            <div class="h-3 w-16 bg-gray-200 animate-pulse rounded mb-4"></div>
+
+            <div class="h-5 bg-gray-200 animate-pulse rounded mb-2"></div>
+            <div class="h-5 w-4/5 bg-gray-200 animate-pulse rounded mb-4"></div>
+
+            <div class="mt-auto h-3 w-1/3 bg-gray-200 animate-pulse rounded"></div>
+
+          </div>
 
         </div>
 
       </div>
 
-      <!-- CARD -->
-      <div class="bg-white border border-gray-100 rounded-sm overflow-hidden 
-                  group hover:shadow-xl hover:-translate-y-1 
-                  transition-all duration-300 
-                  flex flex-col h-full">
-
-        <div class="h-52 bg-gray-100 animate-pulse shrink-0"></div>
-
-        <div class="p-8 flex flex-col flex-1">
-
-          <div class="h-3 w-24 bg-gray-200 animate-pulse rounded mb-4"></div>
-
-          <div class="h-5 bg-gray-200 animate-pulse rounded mb-2"></div>
-          <div class="h-5 w-2/3 bg-gray-200 animate-pulse rounded mb-4"></div>
-
-          <div class="mt-auto h-3 w-1/4 bg-gray-200 animate-pulse rounded"></div>
-
-        </div>
-
+      <!-- EMPTY -->
+      <div id="home-posts-empty" class="hidden text-center py-20">
+        <p class="text-gray-400 font-light text-sm">
+          Nenhuma publicação disponível no momento.
+        </p>
       </div>
 
-      <!-- CARD -->
-      <div class="bg-white border border-gray-100 rounded-sm overflow-hidden 
-                  group hover:shadow-xl hover:-translate-y-1 
-                  transition-all duration-300 
-                  flex flex-col h-full">
-
-        <div class="h-52 bg-gray-100 animate-pulse shrink-0"></div>
-
-        <div class="p-8 flex flex-col flex-1">
-
-          <div class="h-3 w-16 bg-gray-200 animate-pulse rounded mb-4"></div>
-
-          <div class="h-5 bg-gray-200 animate-pulse rounded mb-2"></div>
-          <div class="h-5 w-4/5 bg-gray-200 animate-pulse rounded mb-4"></div>
-
-          <div class="mt-auto h-3 w-1/3 bg-gray-200 animate-pulse rounded"></div>
-
-        </div>
-
-      </div>
-
-    </div>
-
-    <!-- EMPTY -->
-    <div id="home-posts-empty" class="hidden text-center py-20">
-      <p class="text-gray-400 font-light text-sm">
-        Nenhuma publicação disponível no momento.
-      </p>
-    </div>
-
-    <!-- CTA -->
-    <div class="mt-16 text-center">
-      <a href="blog.html"
-        class="inline-flex items-center gap-3 bg-[#111] text-white px-10 py-4 text-xs font-bold tracking-widest uppercase
+      <!-- CTA -->
+      <div class="mt-16 text-center">
+        <a href="blog.html" class="inline-flex items-center gap-3 bg-[#111] text-white px-10 py-4 text-xs font-bold tracking-widest uppercase
                hover:bg-[#C8102E] transition-all duration-300 group shadow-xl">
 
-        Acessar Blog
+          Acessar Blog
 
-        <i data-lucide="arrow-right"
-          class="w-4 h-4 group-hover:translate-x-1 transition"></i>
+          <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition"></i>
 
-      </a>
+        </a>
+      </div>
+
     </div>
 
-  </div>
-
-</section>
+  </section>
 
   <section id="equipe" class="py-32 bg-[#F9F9F9] border-b border-gray-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
