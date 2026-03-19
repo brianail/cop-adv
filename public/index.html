@@ -523,18 +523,21 @@
       </div>
 
       <!-- GRID -->
-      <div id="home-posts-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
+    <div id="home-posts-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
 
-        <!-- CARD -->
+        <!-- CARD 1 -->
         <div class="bg-white border border-gray-100 rounded-sm overflow-hidden 
                   group hover:shadow-xl hover:-translate-y-1 
                   transition-all duration-700 hover:duration-300 
                   flex flex-col h-full js-scroll opacity-0 translate-y-12" data-delay="100">
 
-          <!-- IMAGE -->
-          <div class="h-52 bg-gray-100 animate-pulse shrink-0"></div>
+          <!-- IMAGE: aspect-video (16:9) + object-contain garante a imagem 100% visível sem cortes -->
+          <div class="aspect-video w-full bg-gray-50 relative shrink-0 flex items-center justify-center border-b border-gray-100 overflow-hidden">
+            <!-- A tag img onde a API vai injetar o src -->
+            <img src="" alt="" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500">
+          </div>
 
-          <!-- CONTENT -->
+          <!-- CONTENT (Pronto para receber os textos da API) -->
           <div class="p-8 flex flex-col flex-1">
 
             <div class="h-3 w-20 bg-gray-200 animate-pulse rounded mb-4"></div>
@@ -549,13 +552,15 @@
 
         </div>
 
-        <!-- CARD -->
+        <!-- CARD 2 -->
         <div class="bg-white border border-gray-100 rounded-sm overflow-hidden 
                   group hover:shadow-xl hover:-translate-y-1 
                   transition-all duration-700 hover:duration-300 
                   flex flex-col h-full js-scroll opacity-0 translate-y-12" data-delay="200">
 
-          <div class="h-52 bg-gray-100 animate-pulse shrink-0"></div>
+          <div class="aspect-video w-full bg-gray-50 relative shrink-0 flex items-center justify-center border-b border-gray-100 overflow-hidden">
+            <img src="" alt="" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500">
+          </div>
 
           <div class="p-8 flex flex-col flex-1">
 
@@ -570,13 +575,15 @@
 
         </div>
 
-        <!-- CARD -->
+        <!-- CARD 3 -->
         <div class="bg-white border border-gray-100 rounded-sm overflow-hidden 
                   group hover:shadow-xl hover:-translate-y-1 
                   transition-all duration-700 hover:duration-300 
                   flex flex-col h-full js-scroll opacity-0 translate-y-12" data-delay="300">
 
-          <div class="h-52 bg-gray-100 animate-pulse shrink-0"></div>
+          <div class="aspect-video w-full bg-gray-50 relative shrink-0 flex items-center justify-center border-b border-gray-100 overflow-hidden">
+            <img src="" alt="" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500">
+          </div>
 
           <div class="p-8 flex flex-col flex-1">
 
