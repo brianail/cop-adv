@@ -173,7 +173,8 @@
     .cal-title{font-family:var(--serif);font-size:1.1rem;font-weight:700;color:var(--dark);min-width:140px;text-align:center}
     .cal-nav-btn{background:none;border:1px solid var(--border);border-radius:4px;color:var(--muted);cursor:pointer;padding:.3rem .5rem;transition:all .15s}
     .cal-nav-btn:hover{color:var(--dark);border-color:var(--dark)}
-    .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);background:var(--border);gap:1px;border:1px solid var(--border);border-radius:0 0 4px 4px;overflow:hidden}
+    .cal-wrapper{overflow-x:auto;border:1px solid var(--border);border-top:none;border-radius:0 0 4px 4px;background:var(--border)}
+    .cal-grid{display:grid;grid-template-columns:repeat(7,minmax(100px,1fr));background:var(--border);gap:1px;min-width:100%}
     .cal-day-head{background:#fafafa;padding:.5rem;text-align:center;font-size:.65rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
     .cal-cell{background:#fff;min-height:90px;padding:.4rem;cursor:pointer;transition:background .15s;display:flex;flex-direction:column;gap:.25rem}
     .cal-cell:hover{background:#fafafa}
@@ -333,9 +334,9 @@
       .pr-meta { width:100%; }
       .post-row { flex-wrap:wrap; }
 
-      #editor-overlay { padding: 0; align-items:flex-end; }
+      #editor-overlay, #event-overlay { padding: 0; align-items:flex-end; }
       .e-panel { height: 95vh; display:flex; flex-direction:column; max-width:100%; border-radius:12px 12px 0 0; transform:translateY(100%); transition:transform .3s cubic-bezier(0.2, 0.8, 0.2, 1); }
-      #editor-overlay.open .e-panel { transform:translateY(0); }
+      #editor-overlay.open .e-panel, #event-overlay.open .e-panel { transform:translateY(0); }
       #unsaved-banner { border-radius:12px 12px 0 0; }
       .e-body { padding: 1.25rem; overflow-y:auto; flex:1; }
       .e-header { padding: 1.25rem; }
@@ -503,8 +504,10 @@
              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
           </button>
         </div>
-        <div class="cal-grid" id="calendar-grid">
-           <!-- Renderizado pelo JS -->
+        <div class="cal-wrapper">
+          <div class="cal-grid" id="calendar-grid">
+             <!-- Renderizado pelo JS -->
+          </div>
         </div>
 
         <div class="empty" id="events-empty">
