@@ -11,7 +11,11 @@ export default async function handler(req, res) {
   try {
     if (req.method === 'GET') {
       const showDrafts = optionalAuth(req);
-      const { cat } = req.query;
+      const { cat, page, limit } = req.query;
+      
+      const p = Math.max(1, parseInt(page) || 1);
+      const lim = Math.max(1, Math.min(100, parseInt(limit) || 9));
+      const off = (p - 1) * lim;
 
       if (cat && cat !== 'todos') {
         const c = String(cat).trim().toLowerCase();
@@ -23,11 +27,13 @@ export default async function handler(req, res) {
               SELECT * FROM posts
               WHERE LOWER(cat) = LOWER(${c})
               ORDER BY created_at DESC
+              LIMIT ${lim} OFFSET ${off}
             `
           : await sql`
               SELECT * FROM posts
               WHERE LOWER(cat) = LOWER(${c}) AND COALESCE(status, 'published') = 'published'
               ORDER BY created_at DESC
+              LIMIT ${lim} OFFSET ${off}
             `;
         return res.status(200).json(result.rows);
       }
@@ -36,11 +42,13 @@ export default async function handler(req, res) {
         ? await sql`
             SELECT * FROM posts
             ORDER BY featured DESC, created_at DESC
+            LIMIT ${lim} OFFSET ${off}
           `
         : await sql`
             SELECT * FROM posts
             WHERE COALESCE(status, 'published') = 'published'
             ORDER BY featured DESC, created_at DESC
+            LIMIT ${lim} OFFSET ${off}
           `;
       return res.status(200).json(result.rows);
     }

@@ -1457,7 +1457,7 @@
     </div>
   </footer>
 
-  <div id="home-post-modal-overlay" class="fixed inset-0 z-[245] hidden bg-neutral-900/70 backdrop-blur-md items-end sm:items-center justify-center p-0 sm:p-6 md:p-12 transition-all duration-500" onclick="closeHomePostModal(event)">
+  <div id="home-post-modal-overlay" class="fixed inset-0 z-[245] hidden bg-neutral-900/70 backdrop-blur-md items-end sm:items-center justify-center p-0 sm:p-6 md:p-12 transition-all duration-500" onclick="closeHomePostModal(event)" role="dialog" aria-modal="true" aria-labelledby="home-post-modal-title">
     <div id="home-post-modal-panel" class="relative bg-[#F8F9FA] w-full max-w-4xl h-[100dvh] sm:h-auto sm:max-h-[90vh] flex flex-col shadow-[0_20px_60px_-15px_rgba(0,0,0,0.4)] sm:rounded-2xl overflow-hidden">
       
       <!-- PROGRESS BAR -->
@@ -1519,7 +1519,7 @@
     </div>
   </div>
 
-  <div id="event-modal-overlay" class="fixed inset-0 z-[250] hidden bg-black/70 backdrop-blur-sm items-end sm:items-center justify-center p-0 sm:p-6" onclick="closeEventModal(event)">
+  <div id="event-modal-overlay" class="fixed inset-0 z-[250] hidden bg-black/70 backdrop-blur-sm items-end sm:items-center justify-center p-0 sm:p-6" onclick="closeEventModal(event)" role="dialog" aria-modal="true" aria-labelledby="event-modal-title">
     <div id="event-modal-panel" class="relative bg-white w-full max-w-4xl h-[100dvh] sm:h-auto sm:max-h-[90vh] flex flex-col overflow-hidden rounded-none sm:rounded-2xl shadow-2xl">
       <button onclick="closeEventModal(event)" aria-label="Fechar evento" class="absolute top-4 right-4 z-20 w-10 h-10 bg-white/85 rounded-full flex items-center justify-center border border-gray-200">
         <i data-lucide="x" class="w-5 h-5"></i>

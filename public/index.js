@@ -188,6 +188,56 @@ faqButtons.forEach(button => {
       .replace(/'/g, '&#39;');
   }
 
+  // Acessibilidade: Focus Trap Variables
+  let currentFocusTrap = null;
+  let previousFocusElement = null;
+
+  function setupFocusTrap(modalElement) {
+      if (currentFocusTrap) document.removeEventListener('keydown', currentFocusTrap);
+      previousFocusElement = document.activeElement;
+      
+      const focusableSelectors = 'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, [tabindex="0"], [contenteditable]';
+      
+      currentFocusTrap = function(e) {
+          if (e.key !== 'Tab') return;
+          const focusableElements = Array.from(modalElement.querySelectorAll(focusableSelectors)).filter(
+              el => !el.hasAttribute('disabled') && el.offsetWidth > 0 && el.offsetHeight > 0
+          );
+          if (focusableElements.length === 0) return;
+          
+          const firstElement = focusableElements[0];
+          const lastElement = focusableElements[focusableElements.length - 1];
+          
+          if (e.shiftKey) { // Shift + Tab
+              if (document.activeElement === firstElement || !modalElement.contains(document.activeElement)) {
+                  lastElement.focus();
+                  e.preventDefault();
+              }
+          } else { // Tab
+              if (document.activeElement === lastElement || !modalElement.contains(document.activeElement)) {
+                  firstElement.focus();
+                  e.preventDefault();
+              }
+          }
+      };
+      
+      document.addEventListener('keydown', currentFocusTrap);
+      setTimeout(() => {
+          const firstFocus = modalElement.querySelector(focusableSelectors);
+          if (firstFocus) firstFocus.focus();
+      }, 50);
+  }
+
+  function releaseFocusTrap() {
+      if (currentFocusTrap) {
+          document.removeEventListener('keydown', currentFocusTrap);
+          currentFocusTrap = null;
+      }
+      if (previousFocusElement && previousFocusElement.focus) {
+          setTimeout(() => previousFocusElement.focus(), 50);
+      }
+  }
+
   function closeHomePostModal(ev) {
     if (ev && ev.currentTarget && ev.currentTarget.id === 'home-post-modal-overlay' && ev.target !== ev.currentTarget) {
       return;
@@ -197,6 +247,7 @@ faqButtons.forEach(button => {
     ov.classList.add('hidden');
     ov.classList.remove('flex');
     document.body.style.overflow = '';
+    releaseFocusTrap();
   }
 
   async function openHomePostModal(id) {
@@ -265,6 +316,7 @@ faqButtons.forEach(button => {
       ov.classList.add('flex');
       document.body.style.overflow = 'hidden';
       lucide.createIcons();
+      setupFocusTrap(ov);
     } catch {
       // silêncio para não quebrar home
     }
@@ -416,6 +468,7 @@ faqButtons.forEach(button => {
     ov.classList.add('hidden');
     ov.classList.remove('flex');
     document.body.style.overflow = '';
+    releaseFocusTrap();
   }
 
   async function openEventModalById(id) {
@@ -439,6 +492,7 @@ faqButtons.forEach(button => {
       ov.classList.add('flex');
       document.body.style.overflow = 'hidden';
       lucide.createIcons();
+      setupFocusTrap(ov);
     } catch {
       // silêncio para não quebrar home
     }

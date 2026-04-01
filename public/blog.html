@@ -444,6 +444,12 @@
                 class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-gray-100 border border-gray-100">
             </div>
 
+            <div id="load-more-container" class="hidden flex justify-center mt-16 mb-8">
+                <button id="load-more-btn" onclick="loadMorePosts()" class="inline-flex items-center justify-center gap-3 bg-white text-[#1A1A1A] px-10 py-3.5 rounded-sm border border-gray-200 text-xs font-bold tracking-[.18em] hover:text-[#C8102E] hover:border-[#C8102E]/60 transition-colors uppercase">
+                    Carregar mais artigos <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                </button>
+            </div>
+
             <div id="empty-state" class="hidden text-center py-24">
                 <i data-lucide="file-search" class="w-12 h-12 text-gray-200 mx-auto mb-4"></i>
                 <p class="text-gray-400 font-light text-sm">Nenhuma publicação encontrada nesta categoria.</p>
@@ -559,7 +565,7 @@
     <!-- OVERLAY: Blur mais intenso e fundo um pouco mais escuro para focar no conteúdo -->
     <div id="modal-overlay"
         class="fixed inset-0 z-[200] hidden bg-neutral-900/70 backdrop-blur-md items-end sm:items-center justify-center p-0 sm:p-6 md:p-12 transition-all duration-500"
-        onclick="handleOverlayClick(event)">
+        onclick="handleOverlayClick(event)" role="dialog" aria-modal="true" aria-labelledby="m-title">
 
         <!-- MODAL PANEL: Mais largo (max-w-4xl), cantos mais arredondados no desktop, 100% no mobile -->
         <div id="modal-panel"
@@ -818,8 +824,12 @@
         }, { passive: true });
 
         // ── API & Skeletons (Melhoria de UI) ─────────────────────────────────────
+        // ── API & Skeletons (Melhoria de UI) ─────────────────────────────────────
         const API = '/api';
         let ALL_POSTS = [];
+        let CURRENT_PAGE = 1;
+        let CURRENT_CAT = 'todos';
+        const POSTS_PER_PAGE = 9;
 
         function renderSkeletons() {
             // Skeleton do Destaque
@@ -851,28 +861,68 @@
                 </div>`).join('');
         }
 
+        async function fetchPostsData(cat, page) {
+            const r = await fetch(API + `/posts?cat=${cat}&page=${page}&limit=${POSTS_PER_PAGE}`);
+            if (!r.ok) {
+                let hint = '';
+                try { const j = await r.json(); if (j.error) hint = ' ' + j.error; } catch (x) { /* */ }
+                throw new Error('API ' + r.status + hint);
+            }
+            return await r.json();
+        }
+
+        function toggleLoadMoreBtn(returnedLength) {
+            const container = document.getElementById('load-more-container');
+            if (returnedLength < POSTS_PER_PAGE) {
+                container.classList.add('hidden');
+                container.classList.remove('flex');
+            } else {
+                container.classList.remove('hidden');
+                container.classList.add('flex');
+            }
+        }
+
         async function initBlog() {
-            renderSkeletons(); // Mostra visual de carregamento
+            renderSkeletons();
+            CURRENT_PAGE = 1;
             try {
-                const r = await fetch(API + '/posts');
-                if (!r.ok) {
-                    let hint = '';
-                    try { const j = await r.json(); if (j.error) hint = ' ' + j.error; } catch (x) { /* */ }
-                    throw new Error('API ' + r.status + hint);
-                }
-                const data = await r.json();
+                const data = await fetchPostsData(CURRENT_CAT, CURRENT_PAGE);
                 if (!Array.isArray(data)) throw new Error('Resposta inválida');
                 ALL_POSTS = data;
 
                 if (ALL_POSTS.length === 0) throw new Error('Sem posts');
 
-                renderFeatured();
-                renderGrid(ALL_POSTS);
+                renderFeatured(ALL_POSTS[0]);
+                renderGrid(ALL_POSTS, false);
+                toggleLoadMoreBtn(ALL_POSTS.length);
             } catch (e) {
                 console.error('Erro ao carregar posts:', e);
                 document.getElementById('featured-card').innerHTML =
                     '<div class="bg-gray-50 border border-dashed border-gray-200 p-12 text-center rounded-sm"><p class="text-gray-400 text-sm font-light mb-3">Não foi possível carregar as publicações agora.</p><button type="button" onclick="location.reload()" class="text-xs font-bold tracking-widest uppercase text-[#C8102E] border border-[#C8102E] px-4 py-2 rounded-sm hover:bg-[#C8102E] hover:text-white transition-colors">Tentar novamente</button></div>';
                 document.getElementById('posts-grid').innerHTML = '';
+            }
+        }
+
+        async function loadMorePosts() {
+            const btn = document.getElementById('load-more-btn');
+            const originalHtml = btn.innerHTML;
+            btn.innerHTML = 'Carregando...';
+            btn.disabled = true;
+
+            try {
+                CURRENT_PAGE++;
+                const data = await fetchPostsData(CURRENT_CAT, CURRENT_PAGE);
+                if (data.length > 0) {
+                    ALL_POSTS = ALL_POSTS.concat(data); // maintain global array 
+                    renderGrid(data, true);
+                }
+                toggleLoadMoreBtn(data.length);
+            } catch (e) {
+                console.error(e);
+            } finally {
+                btn.innerHTML = originalHtml;
+                btn.disabled = false;
+                lucide.createIcons();
             }
         }
 
@@ -883,8 +933,7 @@
         }
 
         // ── Render: Card Destaque ────────────────────────────────────────────────
-        function renderFeatured() {
-            const p = ALL_POSTS.find(x => x.featured) || ALL_POSTS[0];
+        function renderFeatured(p) {
             const el = document.getElementById('featured-card');
             if (!p || !el) return;
 
@@ -936,15 +985,16 @@
         }
 
         // ── Render: Grid de Posts ────────────────────────────────────────────────
-        function renderGrid(posts) {
-            const featured = ALL_POSTS.find(x => x.featured) || ALL_POSTS[0];
+        function renderGrid(posts, isAppend = false) {
+            let featuredId = ALL_POSTS[0] ? ALL_POSTS[0].id : null;
+            
+            let list = posts;
+            if (!isAppend) {
+                list = list.filter(p => !featuredId || p.id !== featuredId);
+            }
+
             const grid = document.getElementById('posts-grid');
-
-            // Remove o post em destaque do grid apenas se for a view geral,
-            // ou obedece ao filtro do usuário mantendo exatamente a lógica original.
-            const list = posts.filter(p => !featured || p.id !== featured.id);
-
-            grid.innerHTML = '';
+            if (!isAppend) grid.innerHTML = '';
 
             list.forEach(p => {
                 const thumb = getPostThumb(p, 'mqdefault');
@@ -985,25 +1035,88 @@
             });
 
             const empty = document.getElementById('empty-state');
-            empty.classList.toggle('hidden', list.length > 0);
-            grid.classList.toggle('hidden', list.length === 0);
+            empty.classList.toggle('hidden', ALL_POSTS.length > 0);
+            grid.classList.toggle('hidden', ALL_POSTS.length === 0);
 
             lucide.createIcons();
         }
 
         // ── Filtros ──────────────────────────────────────────────────────────────
-        function filterPosts(cat, btn) {
+        async function filterPosts(cat, btn) {
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            const filtered = cat === 'todos'
-                ? ALL_POSTS
-                : ALL_POSTS.filter(p => p.cat.toLowerCase() === cat);
-            renderGrid(filtered);
+            
+            CURRENT_CAT = cat;
+            CURRENT_PAGE = 1;
+            
+            const grid = document.getElementById('posts-grid');
+            grid.style.opacity = '0.5';
 
-            // Scroll suave caso o usuário esteja muito em baixo
-            const sectionPos = document.getElementById('section-featured').offsetTop - 100;
-            if (window.scrollY > sectionPos) {
-                window.scrollTo({ top: sectionPos, behavior: 'smooth' });
+            try {
+                const data = await fetchPostsData(CURRENT_CAT, CURRENT_PAGE);
+                ALL_POSTS = data;
+                grid.style.opacity = '1';
+                
+                renderFeatured(ALL_POSTS[0]);
+                renderGrid(ALL_POSTS, false);
+                toggleLoadMoreBtn(ALL_POSTS.length);
+
+                const sectionPos = document.getElementById('section-featured').offsetTop - 100;
+                if (window.scrollY > sectionPos) {
+                    window.scrollTo({ top: sectionPos, behavior: 'smooth' });
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        // ── Acessibilidade: Focus Trap Variables ─────────────────────────────────
+        let currentFocusTrap = null;
+        let previousFocusElement = null;
+
+        function setupFocusTrap(modalElement) {
+            if (currentFocusTrap) document.removeEventListener('keydown', currentFocusTrap);
+            previousFocusElement = document.activeElement;
+            
+            const focusableSelectors = 'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, [tabindex="0"], [contenteditable]';
+            
+            currentFocusTrap = function(e) {
+                if (e.key !== 'Tab') return;
+                const focusableElements = Array.from(modalElement.querySelectorAll(focusableSelectors)).filter(
+                    el => !el.hasAttribute('disabled') && el.offsetWidth > 0 && el.offsetHeight > 0
+                );
+                if (focusableElements.length === 0) return;
+                
+                const firstElement = focusableElements[0];
+                const lastElement = focusableElements[focusableElements.length - 1];
+                
+                if (e.shiftKey) { // Shift + Tab
+                    if (document.activeElement === firstElement || !modalElement.contains(document.activeElement)) {
+                        lastElement.focus();
+                        e.preventDefault();
+                    }
+                } else { // Tab
+                    if (document.activeElement === lastElement || !modalElement.contains(document.activeElement)) {
+                        firstElement.focus();
+                        e.preventDefault();
+                    }
+                }
+            };
+            
+            document.addEventListener('keydown', currentFocusTrap);
+            setTimeout(() => {
+                const firstFocus = modalElement.querySelector(focusableSelectors);
+                if (firstFocus) firstFocus.focus();
+            }, 50);
+        }
+
+        function releaseFocusTrap() {
+            if (currentFocusTrap) {
+                document.removeEventListener('keydown', currentFocusTrap);
+                currentFocusTrap = null;
+            }
+            if (previousFocusElement && previousFocusElement.focus) {
+                setTimeout(() => previousFocusElement.focus(), 50);
             }
         }
 
@@ -1109,6 +1222,7 @@
                 // Previne scroll do body de fundo para melhorar UX mobile
                 document.body.style.overflow = 'hidden';
                 lucide.createIcons();
+                setupFocusTrap(ov);
             } catch (e) {
                 console.error('Erro ao abrir post:', e);
                 showToast('✗ Erro ao carregar o artigo. Tente novamente.');
@@ -1161,6 +1275,7 @@
                 metaDescEl.setAttribute('content',
                     'Artigos, notícias e análises jurídicas em Direito do Trabalho, Previdência, contencioso administrativo e sindical, pela equipe COP Advogados em Porto Alegre.');
             }
+            releaseFocusTrap();
 
             // Pausa o vídeo limpando o iframe
             setTimeout(() => {
