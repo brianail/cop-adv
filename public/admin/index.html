@@ -334,9 +334,11 @@
       .pr-meta { width:100%; }
       .post-row { flex-wrap:wrap; }
 
-      #editor-overlay, #event-overlay { padding: 0; align-items:flex-end; }
+      #editor-overlay, #event-overlay, #video-overlay { padding: 0; align-items:flex-end; }
       .e-panel { height: 95vh; display:flex; flex-direction:column; max-width:100%; border-radius:12px 12px 0 0; transform:translateY(100%); transition:transform .3s cubic-bezier(0.2, 0.8, 0.2, 1); }
       #editor-overlay.open .e-panel, #event-overlay.open .e-panel { transform:translateY(0); }
+      #video-overlay .e-panel { transform:translateY(100%); }
+      #video-overlay.open .e-panel { transform:translateY(0); }
       #unsaved-banner { border-radius:12px 12px 0 0; }
       .e-body { padding: 1.25rem; overflow-y:auto; flex:1; }
       .e-header { padding: 1.25rem; }
