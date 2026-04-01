@@ -473,19 +473,26 @@ faqButtons.forEach(button => {
         const thumb = `https://img.youtube.com/vi/${v.yt_id}/maxresdefault.jpg`;
         const titleEsc = escHtml(v.title || 'Vídeo COP Advogados');
         const d = document.createElement('article');
-        d.className = `group relative aspect-video bg-neutral-900 rounded-lg md:rounded-2xl overflow-hidden cursor-pointer shadow-xl shrink-0 snap-center w-[85vw] sm:w-[45vw] lg:w-[30vw] max-w-[400px]`;
+        d.className = `group relative aspect-video bg-neutral-900 rounded-lg md:rounded-2xl overflow-hidden cursor-pointer shadow-[0_10px_30px_rgba(0,0,0,0.5)] hover:shadow-[0_15px_50px_rgba(200,16,46,0.35)] shrink-0 snap-center w-[85vw] sm:w-[45vw] lg:w-[30vw] max-w-[420px] transition-all duration-500 hover:-translate-y-2 border border-white/5 hover:border-[#C8102E]/40 z-10 relative`;
         
         d.onclick = () => openVideoModal(v.yt_id);
         
         d.innerHTML = `
-          <img src="${thumb}" alt="${titleEsc}" class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 opacity-80 group-hover:opacity-100" onerror="this.src='https://img.youtube.com/vi/${v.yt_id}/hqdefault.jpg'" />
-          <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-10">
-             <div class="w-14 h-14 md:w-16 md:h-16 bg-[#C8102E]/90 text-white rounded-full flex items-center justify-center backdrop-blur-md shadow-[0_8px_30px_rgb(200,16,46,0.3)] transform scale-100 md:scale-95 group-hover:scale-100 transition-all duration-500">
-                <i data-lucide="play" class="w-5 h-5 md:w-6 md:h-6 ml-1 filter drop-shadow-md"></i>
+          <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
+          <img src="${thumb}" alt="${titleEsc}" class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110 opacity-80 group-hover:opacity-100" onerror="this.src='https://img.youtube.com/vi/${v.yt_id}/hqdefault.jpg'" />
+          <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-20">
+             <div class="relative flex items-center justify-center">
+                 <!-- Efeito de Pulso -->
+                 <div class="absolute inset-0 bg-[#C8102E] rounded-full opacity-0 group-hover:animate-ping" style="animation-duration: 1.5s;"></div>
+                 
+                 <!-- Botão de Play Central -->
+                 <div class="w-14 h-14 md:w-16 md:h-16 bg-[#C8102E] text-white rounded-full flex items-center justify-center backdrop-blur-md shadow-[0_8px_30px_rgb(200,16,46,0.5)] transform scale-95 group-hover:scale-110 transition-all duration-300 relative z-30 ring-4 ring-white/10">
+                    <i data-lucide="play" class="w-5 h-5 md:w-6 md:h-6 ml-1 filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]"></i>
+                 </div>
              </div>
           </div>
-          <div class="absolute inset-0 bg-gradient-to-t from-[#1A1A1A]/95 via-[#1A1A1A]/30 to-transparent flex flex-col justify-end p-5 md:p-6 opacity-90 group-hover:opacity-100 transition-opacity z-10">
-            <h4 class="text-white font-serif text-base md:text-xl leading-snug line-clamp-2 drop-shadow-lg">${titleEsc}</h4>
+          <div class="absolute inset-0 bg-gradient-to-t from-[#000000]/95 via-[#000000]/40 to-transparent flex flex-col justify-end p-5 md:p-6 opacity-95 group-hover:opacity-100 transition-opacity z-20">
+            <h4 class="text-white font-serif text-base md:text-xl leading-snug line-clamp-2 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">${titleEsc}</h4>
           </div>
         `;
         slider.appendChild(d);
@@ -639,6 +646,16 @@ faqButtons.forEach(button => {
   window.closeEventModal = closeEventModal;
   window.closeHomePostModal = closeHomePostModal;
   window.closeVideoModal = closeVideoModal;
+  
+  window.scrollVideoSlider = function(dir) {
+    const slider = document.getElementById('home-videos-slider');
+    if (!slider) return;
+    // O scroll vai saltar a largura de um card + gap. Usa um fallback
+    const card = slider.querySelector('article');
+    const width = card ? card.offsetWidth + 24 : 350;
+    slider.scrollBy({ left: dir * width, behavior: 'smooth' });
+  };
+  
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
       const lb = document.getElementById('lightbox');
