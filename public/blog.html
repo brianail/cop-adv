@@ -1011,8 +1011,28 @@
                         'w-full min-h-[220px] max-h-[min(75vh,560px)] sm:min-h-[260px] sm:max-h-[500px] bg-neutral-100 relative overflow-hidden flex items-center justify-center p-4 sm:p-8 box-border';
                     const imgSrc = p.img || 'https://via.placeholder.com/800x450';
                     const altText = (p.img_alt || p.title || 'Ilustração do artigo').replace(/"/g, '&quot;');
-                    mediaContainer.innerHTML =
-                        `<img src="${imgSrc}" alt="${altText}" class="max-w-full max-h-[min(65vh,480px)] w-auto h-auto object-contain" decoding="async">`;
+                    mediaContainer.innerHTML = `
+                        <div class="m-zoom-hit relative w-full min-h-[180px] flex items-center justify-center cursor-zoom-in group outline-none focus-visible:ring-2 focus-visible:ring-[#C8102E] focus-visible:ring-offset-2 rounded-sm"
+                            role="button" tabindex="0" aria-label="Ver imagem em tamanho real">
+                            <img src="${imgSrc}" alt="${altText}" class="max-w-full max-h-[min(65vh,480px)] w-auto h-auto object-contain pointer-events-none select-none" decoding="async">
+                            <div class="absolute inset-0 rounded-sm bg-black/0 group-hover:bg-black/25 transition-all duration-300 flex items-center justify-center pointer-events-none">
+                                <div class="bg-black/75 backdrop-blur-sm text-white px-5 py-2.5 rounded-full opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0 group-focus-visible:translate-y-0 duration-300 flex items-center gap-2 border border-white/10 shadow-lg">
+                                    <i data-lucide="zoom-in" class="w-4 h-4"></i>
+                                    <span class="text-xs font-bold tracking-widest uppercase">Ver tamanho real</span>
+                                </div>
+                            </div>
+                        </div>`;
+                    const hit = mediaContainer.querySelector('.m-zoom-hit');
+                    if (hit) {
+                        const openZ = () => openLightbox(imgSrc);
+                        hit.addEventListener('click', openZ);
+                        hit.addEventListener('keydown', (ev) => {
+                            if (ev.key === 'Enter' || ev.key === ' ') {
+                                ev.preventDefault();
+                                openZ();
+                            }
+                        });
+                    }
                 }
 
                 // Relacionados
