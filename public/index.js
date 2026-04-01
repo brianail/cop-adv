@@ -450,6 +450,93 @@ faqButtons.forEach(button => {
 
   }
 
+  async function loadHomeVideos() {
+    const slider = document.getElementById('home-videos-slider');
+    const empty = document.getElementById('home-videos-empty');
+    if (!slider) return;
+
+    try {
+      const r = await fetch('/api/videos?active=true&limit=15');
+      if (!r.ok) throw new Error();
+      const videos = await r.json();
+
+      slider.innerHTML = '';
+      if (!videos.length) {
+        slider.style.display = 'none';
+        if (empty) empty.classList.remove('hidden');
+        return;
+      }
+      
+      if (empty) empty.classList.add('hidden');
+
+      videos.forEach((v) => {
+        const thumb = `https://img.youtube.com/vi/${v.yt_id}/maxresdefault.jpg`;
+        const titleEsc = escHtml(v.title || 'Vídeo COP Advogados');
+        const d = document.createElement('article');
+        d.className = `group relative aspect-video bg-neutral-900 rounded-lg md:rounded-2xl overflow-hidden cursor-pointer shadow-xl shrink-0 snap-center w-[85vw] sm:w-[45vw] lg:w-[30vw] max-w-[400px]`;
+        
+        d.onclick = () => openVideoModal(v.yt_id);
+        
+        d.innerHTML = `
+          <img src="${thumb}" alt="${titleEsc}" class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 opacity-80 group-hover:opacity-100" onerror="this.src='https://img.youtube.com/vi/${v.yt_id}/hqdefault.jpg'" />
+          <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-10">
+             <div class="w-14 h-14 md:w-16 md:h-16 bg-[#C8102E]/90 text-white rounded-full flex items-center justify-center backdrop-blur-md shadow-[0_8px_30px_rgb(200,16,46,0.3)] transform scale-100 md:scale-95 group-hover:scale-100 transition-all duration-500">
+                <i data-lucide="play" class="w-5 h-5 md:w-6 md:h-6 ml-1 filter drop-shadow-md"></i>
+             </div>
+          </div>
+          <div class="absolute inset-0 bg-gradient-to-t from-[#1A1A1A]/95 via-[#1A1A1A]/30 to-transparent flex flex-col justify-end p-5 md:p-6 opacity-90 group-hover:opacity-100 transition-opacity z-10">
+            <h4 class="text-white font-serif text-base md:text-xl leading-snug line-clamp-2 drop-shadow-lg">${titleEsc}</h4>
+          </div>
+        `;
+        slider.appendChild(d);
+      });
+      lucide.createIcons();
+    } catch {
+      slider.style.display = 'none';
+      if (empty) empty.classList.remove('hidden');
+    }
+  }
+
+  function openVideoModal(yt_id) {
+    const modal = document.getElementById('home-video-modal-overlay');
+    if(!modal) return;
+    
+    const mediaContainer = document.getElementById('home-video-modal-media');
+    mediaContainer.innerHTML = `
+      <iframe class="w-full h-full" src="https://www.youtube.com/embed/${yt_id}?autoplay=1&rel=0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    `;
+
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    document.body.style.overflow = 'hidden';
+    
+    setTimeout(() => {
+      const panel = document.getElementById('home-video-modal-panel');
+      panel.classList.remove('scale-95', 'opacity-0');
+      panel.classList.add('scale-100', 'opacity-100');
+    }, 10);
+    
+    setupFocusTrap(modal);
+  }
+
+  function closeVideoModal(e) {
+    if (e && e.target.closest('#home-video-modal-panel') && !e.target.closest('button')) return;
+    const modal = document.getElementById('home-video-modal-overlay');
+    if (!modal) return;
+    
+    const panel = document.getElementById('home-video-modal-panel');
+    panel.classList.remove('scale-100', 'opacity-100');
+    panel.classList.add('scale-95', 'opacity-0');
+    
+    setTimeout(() => {
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      document.body.style.overflow = '';
+      document.getElementById('home-video-modal-media').innerHTML = ''; // Para o vídeo parar de tocar
+      releaseFocusTrap();
+    }, 300);
+  }
+
   function fmtEventDate(iso) {
     if (!iso) return 'Data não definida';
     try {
@@ -540,10 +627,12 @@ faqButtons.forEach(button => {
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
       loadHomePosts();
+      loadHomeVideos();
       loadHomeEvents();
     });
   } else {
     loadHomePosts();
+    loadHomeVideos();
     loadHomeEvents();
   }
 

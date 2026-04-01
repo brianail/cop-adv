@@ -60,7 +60,17 @@ export default async function handler(req, res) {
       )
     `;
 
-    return res.status(200).json({ ok: true, tables: ['posts', 'events', 'newsletter'] });
+    await sql`
+      CREATE TABLE IF NOT EXISTS videos (
+        id         SERIAL PRIMARY KEY,
+        yt_id      TEXT NOT NULL,
+        title      TEXT,
+        active     BOOLEAN DEFAULT true,
+        created_at TIMESTAMPTZ DEFAULT NOW()
+      )
+    `;
+
+    return res.status(200).json({ ok: true, tables: ['posts', 'events', 'newsletter', 'videos'] });
   } catch (err) {
     console.error('setup', err);
     return res.status(500).json({ error: 'Falha ao preparar o banco.' });

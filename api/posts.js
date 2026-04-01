@@ -11,11 +11,28 @@ export default async function handler(req, res) {
   try {
     if (req.method === 'GET') {
       const showDrafts = optionalAuth(req);
-      const { cat, page, limit } = req.query;
+      const { cat, page, limit, video } = req.query;
       
       const p = Math.max(1, parseInt(page) || 1);
       const lim = Math.max(1, Math.min(100, parseInt(limit) || 9));
       const off = (p - 1) * lim;
+
+      if (video === '1') {
+        const result = showDrafts
+          ? await sql`
+              SELECT * FROM posts
+              WHERE yt_id IS NOT NULL AND yt_id != ''
+              ORDER BY created_at DESC
+              LIMIT ${lim} OFFSET ${off}
+            `
+          : await sql`
+              SELECT * FROM posts
+              WHERE yt_id IS NOT NULL AND yt_id != '' AND COALESCE(status, 'published') = 'published'
+              ORDER BY created_at DESC
+              LIMIT ${lim} OFFSET ${off}
+            `;
+        return res.status(200).json(result.rows);
+      }
 
       if (cat && cat !== 'todos') {
         const c = String(cat).trim().toLowerCase();
