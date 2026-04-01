@@ -220,7 +220,36 @@ faqButtons.forEach(button => {
         ? `https://img.youtube.com/vi/${p.yt_id}/hqdefault.jpg`
         : (p.img || 'https://via.placeholder.com/1200x630?text=Publicação');
       const alt = escHtml(p.img_alt || p.title || 'Imagem da publicação');
-      media.innerHTML = `<img src="${thumb}" alt="${alt}" class="max-w-full max-h-[min(65vh,460px)] w-auto h-auto object-contain" loading="lazy" decoding="async">`;
+      
+      if (p.yt_id) {
+        media.className = 'w-full h-[min(56vh,320px)] sm:h-72 md:h-[420px] bg-black relative overflow-hidden flex items-center justify-center';
+        const vEsc = String(p.yt_id).replace(/[^A-Za-z0-9_-]/g, '');
+        media.innerHTML = `<iframe class="w-full h-full absolute inset-0" src="https://www.youtube.com/embed/${vEsc}?autoplay=1&mute=0" loading="lazy" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen title="Vídeo"></iframe>`;
+      } else {
+        media.className = 'w-full min-h-[220px] max-h-[min(75vh,560px)] sm:min-h-[260px] sm:max-h-[500px] bg-neutral-100 relative overflow-hidden flex items-center justify-center p-4 sm:p-8 box-border';
+        media.innerHTML = `
+          <div class="m-zoom-hit relative w-full min-h-[180px] flex items-center justify-center cursor-zoom-in group outline-none focus-visible:ring-2 focus-visible:ring-[#C8102E] focus-visible:ring-offset-2 rounded-sm"
+              role="button" tabindex="0" aria-label="Ver imagem em tamanho real">
+              <img src="${thumb}" alt="${alt}" class="max-w-full max-h-[min(65vh,480px)] w-auto h-auto object-contain pointer-events-none select-none" decoding="async">
+              <div class="absolute inset-0 rounded-sm bg-black/0 group-hover:bg-black/25 transition-all duration-300 flex items-center justify-center pointer-events-none">
+                  <div class="bg-black/75 backdrop-blur-sm text-white px-5 py-2.5 rounded-full opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0 group-focus-visible:translate-y-0 duration-300 flex items-center gap-2 border border-white/10 shadow-lg">
+                      <i data-lucide="zoom-in" class="w-4 h-4"></i>
+                      <span class="text-xs font-bold tracking-widest uppercase">Ver tamanho real</span>
+                  </div>
+              </div>
+          </div>`;
+        const hit = media.querySelector('.m-zoom-hit');
+        if (hit) {
+            const openZ = () => openLightbox(thumb);
+            hit.addEventListener('click', openZ);
+            hit.addEventListener('keydown', (ev) => {
+                if (ev.key === 'Enter' || ev.key === ' ') {
+                    ev.preventDefault();
+                    openZ();
+                }
+            });
+        }
+      }
 
       title.textContent = p.title || 'Publicação';
       cat.textContent = CAT_LABELS[p.cat] || p.cat || 'Notícia';
@@ -468,6 +497,11 @@ faqButtons.forEach(button => {
   window.closeHomePostModal = closeHomePostModal;
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
+      const lb = document.getElementById('lightbox');
+      if (lb && !lb.classList.contains('hidden')) {
+          closeLightbox();
+          return;
+      }
       const pov = document.getElementById('home-post-modal-overlay');
       if (pov && !pov.classList.contains('hidden')) {
         closeHomePostModal();
@@ -477,6 +511,56 @@ faqButtons.forEach(button => {
       if (ov && !ov.classList.contains('hidden')) closeEventModal();
     }
   });
+
+  // Lightbox e Progress Bar Functions
+  function openLightbox(src) {
+      if (!src) return;
+      const lb = document.getElementById('lightbox');
+      const lbImg = document.getElementById('lightbox-img');
+      if (!lb || !lbImg) return;
+      lbImg.src = src;
+      lb.classList.remove('hidden');
+      lb.classList.add('flex');
+      void lb.offsetWidth;
+      lb.classList.remove('opacity-0');
+      lb.classList.add('opacity-100');
+      lbImg.classList.remove('scale-95');
+      lbImg.classList.add('scale-100');
+  }
+
+  function closeLightbox(e) {
+      if (e) e.stopPropagation();
+      const lb = document.getElementById('lightbox');
+      const lbImg = document.getElementById('lightbox-img');
+      if (!lb || !lbImg) return;
+      
+      lb.classList.remove('opacity-100');
+      lb.classList.add('opacity-0');
+      lbImg.classList.remove('scale-100');
+      lbImg.classList.add('scale-95');
+
+      setTimeout(() => {
+          lb.classList.add('hidden');
+          lb.classList.remove('flex');
+          lbImg.src = '';
+      }, 300);
+  }
+
+  function updateHomeReadProgress(el) {
+      const pbar = document.getElementById('home-modal-progress');
+      if (!pbar) return;
+      const maxScroll = el.scrollHeight - el.clientHeight;
+      if (maxScroll <= 0) {
+          pbar.style.width = '100%';
+          return;
+      }
+      const pct = (el.scrollTop / maxScroll) * 100;
+      pbar.style.width = Math.min(pct, 100) + '%';
+  }
+
+  window.openLightbox = openLightbox;
+  window.closeLightbox = closeLightbox;
+  window.updateHomeReadProgress = updateHomeReadProgress;
 
   let currentSlide = 0;
 
