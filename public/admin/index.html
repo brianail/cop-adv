@@ -1166,7 +1166,7 @@ async function saveVideo() {
 }
 function confirmDeleteVideo() {
   closeVideoEditor();
-  showConfirm('Excluir Vídeo', 'Tem certeza que deseja apagar este vídeo? A tela inicial deixará de exibi-lo caso estivesse ativo.', () => {
+  openConfirm('Excluir Vídeo', 'Tem certeza que deseja apagar este vídeo? A tela inicial deixará de exibi-lo caso estivesse ativo.', 'Excluir', () => {
     deleteVideo(vidCurrentId);
   });
 }

@@ -638,11 +638,17 @@ faqButtons.forEach(button => {
 
   window.closeEventModal = closeEventModal;
   window.closeHomePostModal = closeHomePostModal;
+  window.closeVideoModal = closeVideoModal;
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
       const lb = document.getElementById('lightbox');
       if (lb && !lb.classList.contains('hidden')) {
           closeLightbox();
+          return;
+      }
+      const vmod = document.getElementById('home-video-modal-overlay');
+      if (vmod && !vmod.classList.contains('hidden')) {
+          closeVideoModal();
           return;
       }
       const pov = document.getElementById('home-post-modal-overlay');
