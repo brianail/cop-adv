@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard — COP Advogados</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
@@ -336,7 +336,7 @@
     <div class="l-card">
       <label class="f-label" for="l-pw">Senha de acesso</label>
       <input id="l-pw" type="password" class="l-input" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
-      <div id="l-err"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Senha incorreta.</div>
+      <div id="l-err"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span id="l-err-msg" class="msg">Senha incorreta.</span></div>
       <button class="l-btn" id="l-btn" onclick="doLogin()"><span id="l-lbl">Entrar</span></button>
     </div>
   </div>
@@ -662,7 +662,6 @@ const CATS = Object.keys(CAT_LABELS);
 const PER_PAGE = 20;
 
 let token = localStorage.getItem('cop_token');
-let adminPw = localStorage.getItem('cop_pw') || '';
 let allPosts = [], allEmails = [], filteredPosts = [], currentPage = 1;
 let currentId = null, uploadedUrl = null, ytVideoId = null, capaMode = 'img';
 let featOn = false, isDirty = false;
@@ -676,21 +675,38 @@ function boot() {
   initEditor(); buildFilters(); loadAll();
 }
 
-async function loadAll() { await Promise.all([loadPosts(), loadNewsletter()]); }
+async function ensureSchema() {
+  try {
+    await fetch(`${API}/setup`, { method: 'POST', headers: { Authorization: `Bearer ${token}` } });
+  } catch { /* idempotente */ }
+}
+
+async function loadAll() {
+  await ensureSchema();
+  await Promise.all([loadPosts(), loadNewsletter()]);
+}
 
 // ── AUTH ──
 async function doLogin() {
   const pw = document.getElementById('l-pw').value;
-  const err = document.getElementById('l-err'), btn = document.getElementById('l-btn'), lbl = document.getElementById('l-lbl');
+  const err = document.getElementById('l-err'), errMsg = document.getElementById('l-err-msg'), btn = document.getElementById('l-btn'), lbl = document.getElementById('l-lbl');
   err.style.display = 'none'; btn.disabled = true; lbl.innerHTML = '<span class="spin">↻</span>';
   try {
     const r = await fetch(`${API}/auth/login`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:pw})});
-    if (!r.ok) throw new Error();
-    const {token:t} = await r.json();
-    token = t; localStorage.setItem('cop_token',t); localStorage.setItem('cop_pw',pw); adminPw = pw; boot();
-  } catch { err.style.display='flex'; btn.disabled=false; lbl.textContent='Entrar'; }
+    const data = await r.json().catch(() => ({}));
+    if (!r.ok) {
+      errMsg.textContent = typeof data.error === 'string' ? data.error : 'Não foi possível entrar. Tente de novo.';
+      err.style.display='flex'; btn.disabled=false; lbl.textContent='Entrar'; return;
+    }
+    const t = data.token;
+    if (!t) { errMsg.textContent = 'Resposta inválida do servidor.'; err.style.display='flex'; btn.disabled=false; lbl.textContent='Entrar'; return; }
+    token = t; localStorage.setItem('cop_token',t); boot();
+  } catch {
+    errMsg.textContent = 'Sem conexão ou servidor indisponível.';
+    err.style.display='flex'; btn.disabled=false; lbl.textContent='Entrar';
+  }
 }
-function doLogout() { localStorage.removeItem('cop_token'); localStorage.removeItem('cop_pw'); location.reload(); }
+function doLogout() { localStorage.removeItem('cop_token'); location.reload(); }
 
 // ── NAV ──
 function showPage(page, btn) {
@@ -710,12 +726,20 @@ async function loadPosts() {
   try {
     const r = await fetch(`${API}/posts`,{headers:{Authorization:`Bearer ${token}`}});
     if (r.status===401) { doLogout(); return; }
-    allPosts = await r.json();
-    applyFilters(); 
+    if (!r.ok) {
+      let msg = 'Erro ao carregar publicações.';
+      try { const j = await r.json(); if (j.error) msg = j.error; } catch { /* */ }
+      document.getElementById('posts-list').innerHTML=`<div style="text-align:center;padding:2rem;color:var(--muted);font-size:.8rem">${msg}<br><button type="button" class="btn-secondary" style="margin-top:.75rem" onclick="loadPosts()">Tentar novamente</button></div>`;
+      return;
+    }
+    const data = await r.json();
+    if (!Array.isArray(data)) throw new Error('invalid');
+    allPosts = data;
+    applyFilters();
     renderOvPosts(allPosts.slice(0,5));
     updateStats();
   } catch {
-    document.getElementById('posts-list').innerHTML='<div style="text-align:center;padding:2rem;color:var(--muted);font-size:.8rem">Erro ao carregar.</div>';
+    document.getElementById('posts-list').innerHTML='<div style="text-align:center;padding:2rem;color:var(--muted);font-size:.8rem">Erro ao carregar.<br><button type="button" class="btn-secondary" style="margin-top:.75rem" onclick="loadPosts()">Tentar novamente</button></div>';
   }
 }
 
@@ -822,9 +846,13 @@ function exportPostsCSV() {
 // ── NEWSLETTER ──
 async function loadNewsletter() {
   try {
-    const r=await fetch(`${API}/newsletter?secret=${encodeURIComponent(adminPw)}`,{headers:{Authorization:`Bearer ${token}`}});
-    allEmails=r.ok?await r.json():[]; updateStats(); renderNL(allEmails);
-  } catch { allEmails=[]; }
+    const r = await fetch(`${API}/newsletter`, { headers: { Authorization: `Bearer ${token}` } });
+    if (r.status === 401) { doLogout(); return; }
+    allEmails = r.ok ? await r.json() : [];
+    if (!Array.isArray(allEmails)) allEmails = [];
+    updateStats();
+    renderNL(allEmails);
+  } catch { allEmails = []; updateStats(); renderNL(allEmails); }
 }
 function renderNL(list) {
   const tbody=document.getElementById('nl-tbody');
@@ -837,9 +865,14 @@ function filterEmails(q) { renderNL(allEmails.filter(e=>e.email.toLowerCase().in
 async function deleteEmail(email) {
   try {
     const r=await fetch(`${API}/newsletter`,{method:'DELETE',headers:{'Content-Type':'application/json',Authorization:`Bearer ${token}`},body:JSON.stringify({email})});
-    if (!r.ok) throw new Error();
+    if (r.status===401){doLogout();return;}
+    if (!r.ok){
+      let msg='Erro ao remover.';
+      try{const j=await r.json();if(j.error)msg=(j.error);}catch{/**/}
+      showToast('✗ '+msg); return;
+    }
     allEmails=allEmails.filter(e=>e.email!==email); renderNL(allEmails); updateStats(); showToast('✓ E-mail removido.');
-  } catch { showToast('✗ Erro ao remover.'); }
+  } catch { showToast('✗ Erro de rede ao remover.'); }
 }
 function exportCSV() {
   if (!allEmails.length) { showToast('⚠ Sem dados.'); return; }
@@ -1039,7 +1072,11 @@ async function uploadFile(file) {
   try {
     const r=await fetch(`${API}/upload?filename=${encodeURIComponent(webpFile.name)}`,{method:'POST',headers:{Authorization:`Bearer ${token}`,'Content-Type':webpFile.type},body:webpFile});
     clearInterval(tick);
-    if(!r.ok){const err=await r.json().catch(()=>{});throw new Error(err?.error||`Erro ${r.status}`);}
+    if(!r.ok){
+      let msg=`Erro ${r.status}`;
+      try{const j=await r.json();if(j.error)msg=j.error;}catch{/**/}
+      throw new Error(msg);
+    }
     const {url}=await r.json(); uploadedUrl=url; bar.style.width='100%'; lbl.textContent='✓ Enviado';
     showPrev(url,webpFile.name); markDirty(); setTimeout(()=>prog.classList.remove('active'),1500);
   } catch(e) { clearInterval(tick); prog.classList.remove('active'); showToast(`✗ ${e.message||'Erro ao enviar.'}`); clearImg(); }
@@ -1072,7 +1109,9 @@ async function savePost() {
   if(capaMode==='yt'&&!ytVideoId){showToast('⚠ Cole um link válido do YouTube.');return;}
   if(!body||body==='<p></p>'){showToast('⚠ Escreva o conteúdo.');return;}
 
-  const btn=document.getElementById('btn-save'); btn.disabled=true; btn.innerHTML='<span class="spin" style="font-size:1rem">↻</span>';
+  const btn=document.getElementById('btn-save'); const saveLbl = document.getElementById('save-lbl');
+  const prevLbl = saveLbl ? saveLbl.textContent : 'Publicar';
+  btn.disabled=true; btn.innerHTML='<span class="spin" style="font-size:1rem">↻</span>';
   
   const payload={
     title, cat, read_time:read, body, featured:featOn,
@@ -1084,19 +1123,33 @@ async function savePost() {
   try {
     const isEdit=currentId!==null;
     const r=await fetch(isEdit?`${API}/posts/${currentId}`:`${API}/posts`,{method:isEdit?'PUT':'POST',headers:{'Content-Type':'application/json',Authorization:`Bearer ${token}`},body:JSON.stringify(payload)});
-    if(r.status===401){doLogout();return;} if(!r.ok) throw new Error();
+    if(r.status===401){doLogout();return;}
+    if(!r.ok){
+      let msg='Erro ao salvar.';
+      try{const j=await r.json();if(j.error)msg=j.error;}catch{/**/}
+      showToast('✗ '+msg); return;
+    }
     clearDirty(); closeEditor();
     showToast(isEdit?'✓ Post atualizado!':'✓ Post publicado!');
     await loadPosts();
-  } catch { showToast('✗ Erro ao salvar.'); }
-  finally { btn.disabled=false; btn.innerHTML='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg><span id="save-lbl">Publicar</span>'; }
+  } catch { showToast('✗ Erro de rede ao salvar.'); }
+  finally {
+    btn.disabled=false;
+    btn.innerHTML='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg><span id="save-lbl">' + prevLbl + '</span>';
+  }
 }
 
 async function deletePost() {
   try {
     const r=await fetch(`${API}/posts/${currentId}`,{method:'DELETE',headers:{Authorization:`Bearer ${token}`}});
-    if(!r.ok) throw new Error(); closeEditor(); showToast('✓ Post excluído.'); await loadPosts();
-  } catch { showToast('✗ Erro ao excluir.'); }
+    if(r.status===401){doLogout();return;}
+    if(!r.ok){
+      let msg='Erro ao excluir.';
+      try{const j=await r.json();if(j.error)msg=j.error;}catch{/**/}
+      showToast('✗ '+msg); return;
+    }
+    closeEditor(); showToast('✓ Post excluído.'); await loadPosts();
+  } catch { showToast('✗ Erro de rede ao excluir.'); }
 }
 
 

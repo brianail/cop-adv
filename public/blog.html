@@ -4,7 +4,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog & Notícias | COP Advogados</title>
+    <title>Blog &amp; Notícias | COP Advogados</title>
+    <meta name="description"
+        content="Artigos, notícias e análises jurídicas em Direito do Trabalho, Previdência, contencioso administrativo e sindical, pela equipe COP Advogados em Porto Alegre.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="/blog.html">
+
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="pt_BR">
+    <meta property="og:site_name" content="COP Advogados">
+    <meta property="og:title" content="Blog &amp; Notícias | COP Advogados">
+    <meta property="og:description"
+        content="Atualizações jurídicas e conteúdos pela equipe COP Advogados — trabalhista, previdenciário, sindical e muito mais.">
+    <meta name="twitter:card" content="summary_large_image">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -33,6 +45,41 @@
         }
     </script>
     <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@id": "#org",
+          "@type": "Organization",
+          "name": "COP Advogados Associados",
+          "url": "https://www.copadvogados.com.br/",
+          "logo": "/public/assets/logos/logo.png",
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Rua Uruguai, 240, Conj. 801",
+            "addressLocality": "Porto Alegre",
+            "addressRegion": "RS",
+            "postalCode": "90010-140",
+            "addressCountry": "BR"
+          },
+          "sameAs": [
+            "https://www.instagram.com/copadvogados/",
+            "https://www.facebook.com/copadvogados",
+            "https://www.youtube.com/channel/UC9tAT0ujNYheikSqdrL_0wg"
+          ]
+        },
+        {
+          "@type": "WebSite",
+          "name": "COP Advogados — Blog",
+          "description": "Blog jurídico: trabalhista, previdenciário, sindical e institucional.",
+          "publisher": { "@id": "#org" },
+          "inLanguage": "pt-BR"
+        }
+      ]
+    }
+    </script>
 
     <style>
         /* Animações e Transições */
@@ -633,6 +680,15 @@
 
     <script>
         // ── Inicialização ──────────────────────────────────────────────────────────
+        const BLOG_LIST_TITLE = document.title;
+        const metaDescEl = document.querySelector('meta[name="description"]');
+
+        function thumbObjectStyle(p) {
+            const pos = (p && p.img_pos) ? String(p.img_pos) : 'center';
+            if (pos === 'contain') return 'object-fit:contain;object-position:center;';
+            return 'object-fit:cover;object-position:' + (pos === 'top' || pos === 'bottom' || pos === 'center' ? pos : 'center') + ';';
+        }
+
         lucide.createIcons();
         document.getElementById('yr').textContent = new Date().getFullYear();
 
@@ -766,8 +822,14 @@
             renderSkeletons(); // Mostra visual de carregamento
             try {
                 const r = await fetch(API + '/posts');
-                if (!r.ok) throw new Error('API error ' + r.status);
-                ALL_POSTS = await r.json();
+                if (!r.ok) {
+                    let hint = '';
+                    try { const j = await r.json(); if (j.error) hint = ' ' + j.error; } catch (x) { /* */ }
+                    throw new Error('API ' + r.status + hint);
+                }
+                const data = await r.json();
+                if (!Array.isArray(data)) throw new Error('Resposta inválida');
+                ALL_POSTS = data;
 
                 if (ALL_POSTS.length === 0) throw new Error('Sem posts');
 
@@ -776,7 +838,7 @@
             } catch (e) {
                 console.error('Erro ao carregar posts:', e);
                 document.getElementById('featured-card').innerHTML =
-                    '<div class="bg-gray-50 border border-dashed border-gray-200 p-12 text-center rounded-sm"><p class="text-gray-400 text-sm font-light">Nenhuma publicação disponível no momento.</p></div>';
+                    '<div class="bg-gray-50 border border-dashed border-gray-200 p-12 text-center rounded-sm"><p class="text-gray-400 text-sm font-light mb-3">Não foi possível carregar as publicações agora.</p><button type="button" onclick="location.reload()" class="text-xs font-bold tracking-widest uppercase text-[#C8102E] border border-[#C8102E] px-4 py-2 rounded-sm hover:bg-[#C8102E] hover:text-white transition-colors">Tentar novamente</button></div>';
                 document.getElementById('posts-grid').innerHTML = '';
             }
         }
@@ -798,10 +860,11 @@
             const safeBody = p.body ? p.body.replace(/<[^>]+>/g, '') : '';
             const excerpt = safeBody.slice(0, 220) + (safeBody.length > 220 ? '…' : '');
 
+            const fitStyle = thumbObjectStyle(p);
             el.innerHTML = `
                 <article class="post-card grid grid-cols-1 md:grid-cols-2 border border-gray-100 shadow-[0_8px_40px_-12px_rgba(0,0,0,0.15)] group cursor-pointer bg-white" data-cat="${p.cat}" onclick="openPost(${p.id})">
                     <div class="img-wrap overflow-hidden relative min-h-[280px] md:min-h-[420px]">
-                        <img class="img-zoom w-full h-full object-cover absolute inset-0" src="${thumb}" alt="${p.title}" loading="lazy">
+                        <img class="img-zoom w-full h-full absolute inset-0" style="${fitStyle}" src="${thumb}" alt="${p.title}" fetchpriority="high" decoding="async" loading="eager">
                         <div class="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent"></div>
                         <div class="absolute top-6 left-6">
                             <span class="bg-[#C8102E] text-white text-[10px] font-bold tracking-[.2em] uppercase px-3 py-1.5 shadow-md">
@@ -851,6 +914,7 @@
 
             list.forEach(p => {
                 const thumb = getPostThumb(p, 'mqdefault');
+                const fitStyle = thumbObjectStyle(p);
                 const safeBody = p.body ? p.body.replace(/<[^>]+>/g, '') : '';
                 const excerpt = safeBody.slice(0, 120) + (safeBody.length > 120 ? '…' : '');
 
@@ -860,7 +924,7 @@
                 a.onclick = () => openPost(p.id);
                 a.innerHTML = `
                     <div class="img-wrap overflow-hidden relative h-52 flex-shrink-0">
-                        <img class="img-zoom w-full h-full object-cover" src="${thumb}" alt="${p.title}" loading="lazy">
+                        <img class="img-zoom w-full h-full" style="${fitStyle}" src="${thumb}" alt="${p.title}" loading="lazy" decoding="async">
                         <div class="absolute top-4 left-4">
                             <span class="bg-[#1A1A1A] text-white text-[9px] font-bold tracking-[.2em] uppercase px-2.5 py-1">
                                 ${p.cat}
@@ -917,22 +981,33 @@
 
                 document.getElementById('m-cat').textContent = p.cat;
                 document.getElementById('m-date').textContent = p.date;
-                document.getElementById('m-read').textContent = p.read_time || 'Leitura rápida';
+                const readWrap = document.getElementById('m-read');
+                const readSpan = readWrap && readWrap.querySelector('.read-time-text');
+                if (readSpan) readSpan.textContent = p.read_time || 'Leitura rápida';
+                else if (readWrap) readWrap.textContent = p.read_time || 'Leitura rápida';
                 document.getElementById('m-title').textContent = p.title;
                 document.getElementById('m-body').innerHTML = p.body;
 
+                document.title = p.title + ' | COP Advogados · Blog';
+                if (metaDescEl) {
+                    const plain = (p.body || '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim().slice(0, 155);
+                    if (plain) metaDescEl.setAttribute('content', plain + (plain.length >= 155 ? '…' : ''));
+                }
+
                 const mediaContainer = document.getElementById('m-media');
+                const modalFit = thumbObjectStyle(p);
 
                 // Melhoria do tratamento de imagens vs videos
                 if (p.yt_id) {
-                    mediaContainer.innerHTML = `<iframe class="w-full h-full" src="https://www.youtube.com/embed/${p.yt_id}?autoplay=1&mute=0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+                    const vEsc = String(p.yt_id).replace(/[^A-Za-z0-9_-]/g, '');
+                    mediaContainer.innerHTML = `<iframe class="w-full h-full" src="https://www.youtube.com/embed/${vEsc}?autoplay=1&mute=0" loading="lazy" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen title="Vídeo do artigo"></iframe>`;
                 } else {
                     const imgSrc = p.img || 'https://via.placeholder.com/800x450';
-                    // Implementação do overlay de Zoom + troca de object-cover para object-contain
+                    const altAttr = String(p.title).replace(/"/g, '&quot;');
                     mediaContainer.innerHTML = `
-                        <div class="relative w-full h-full group cursor-zoom-in flex items-center justify-center bg-[#111]" onclick="openLightbox('${imgSrc}')">
-                            <img src="${imgSrc}" alt="${p.title}" class="w-full h-full object-contain">
-                            <div class="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all duration-300 flex items-center justify-center">
+                        <div class="zoom-hit relative w-full h-full group cursor-zoom-in flex items-center justify-center bg-[#111]" role="button" tabindex="0" aria-label="Ampliar imagem">
+                            <img src="${imgSrc}" alt="${altAttr}" class="w-full h-full" style="${modalFit}" decoding="async">
+                            <div class="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all duration-300 flex items-center justify-center pointer-events-none">
                                 <div class="bg-black/70 backdrop-blur-sm text-white px-5 py-2.5 rounded-full opacity-0 group-hover:opacity-100 transition-all transform translate-y-4 group-hover:translate-y-0 duration-300 flex items-center gap-2 border border-white/10">
                                     <i data-lucide="zoom-in" class="w-4 h-4"></i>
                                     <span class="text-xs font-bold tracking-widest uppercase">Ver tamanho real</span>
@@ -940,6 +1015,14 @@
                             </div>
                         </div>
                     `;
+                    const hit = mediaContainer.querySelector('.zoom-hit');
+                    if (hit) {
+                        const openZ = () => openLightbox(imgSrc);
+                        hit.addEventListener('click', openZ);
+                        hit.addEventListener('keydown', (ev) => {
+                            if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); openZ(); }
+                        });
+                    }
                 }
 
                 // Relacionados
@@ -1020,6 +1103,11 @@
             ov.classList.add('hidden');
             ov.classList.remove('flex');
             document.body.style.overflow = '';
+            document.title = BLOG_LIST_TITLE;
+            if (metaDescEl) {
+                metaDescEl.setAttribute('content',
+                    'Artigos, notícias e análises jurídicas em Direito do Trabalho, Previdência, contencioso administrativo e sindical, pela equipe COP Advogados em Porto Alegre.');
+            }
 
             // Pausa o vídeo limpando o iframe
             setTimeout(() => {
@@ -1072,11 +1160,16 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email })
                 });
-                if (!r.ok) throw new Error();
+                if (!r.ok) {
+                    let msg = 'Tente novamente.';
+                    try { const j = await r.json(); if (j.error) msg = j.error; } catch (x) { /* */ }
+                    showToast('✗ ' + msg);
+                    return;
+                }
                 showToast('✓ Inscrição realizada com sucesso!');
                 inp.value = '';
             } catch {
-                showToast('✗ Ocorreu um erro. Tente novamente.');
+                showToast('✗ Sem conexão. Tente novamente.');
             } finally {
                 btn.innerHTML = originalText;
                 btn.disabled = false;

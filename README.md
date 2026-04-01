@@ -53,18 +53,22 @@ No painel do projeto: **Settings → Environment Variables**
 | Variável | Valor |
 |---|---|
 | `ADMIN_PASSWORD` | Senha escolhida pelo cliente |
-| `JWT_SECRET` | String aleatória longa (ex: use https://randomkeygen.com) |
+| `JWT_SECRET` | String aleatória longa (mín. 16 caracteres; recomenda-se 32+) |
+| `ALLOWED_ORIGIN` | (Opcional) URL do site para restringir CORS; vazio = `*` |
+| `CLOUDINARY_*` | Credenciais Cloudinary para upload de imagens no painel |
 
 ### 6. Faça redeploy
 - **Deployments → ⋯ → Redeploy**
 
-### 7. Inicialize o banco (fazer apenas uma vez)
-Com o projeto no ar, faça uma requisição autenticada para criar a tabela:
+### 7. Inicialize o banco
+O endpoint `POST /api/setup` cria/atualiza tabelas e colunas e **exige JWT** (mesmo token do login).
+
+Após entrar no painel `/admin`, o próprio dashboard chama `/api/setup` automaticamente (idempotente). Também é possível via curl, após obter o token em `POST /api/auth/login`:
+
 ```bash
 curl -X POST https://seu-dominio.vercel.app/api/setup \
   -H "Authorization: Bearer SEU_TOKEN_JWT"
 ```
-Ou acesse o painel admin → faça login → o setup roda automaticamente na primeira publicação.
 
 ---
 
@@ -82,7 +86,9 @@ Acesse: `https://seu-dominio.vercel.app/blog.html`
 ---
 
 ## Segurança
-- O painel `/admin` exige senha
-- Todas as rotas de escrita (POST/PUT/DELETE) exigem token JWT válido
+- O painel `/admin` exige senha (comparação resistente a *timing attacks*)
+- Todas as rotas de escrita (posts, upload, newsletter admin, setup) exigem token JWT válido
+- A listagem de inscritos da newsletter (`GET /api/newsletter`) exige JWT — não use mais senha na query string
 - Tokens expiram em 8 horas
 - O banco só aceita conexões do servidor Vercel
+- Variável opcional `ALLOWED_ORIGIN` restringe o cabeçalho CORS ao domínio do site
