@@ -175,6 +175,8 @@
     /* EDITOR OVERLAY */
     #editor-overlay{display:none;position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);align-items:flex-start;justify-content:center;overflow-y:auto;padding:2rem 1rem; opacity:0; transition:opacity .25s ease}
     #editor-overlay.open{display:flex; opacity:1}
+    #event-overlay{display:none;position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);align-items:flex-start;justify-content:center;overflow-y:auto;padding:2rem 1rem; opacity:0; transition:opacity .25s ease}
+    #event-overlay.open{display:flex;opacity:1}
     .e-panel{background:#fff;width:100%;max-width:880px;box-shadow:0 30px 70px rgba(0,0,0,.3); flex-shrink:0; border-radius:6px; transform:translateY(20px); transition:transform .3s cubic-bezier(0.175, 0.885, 0.32, 1.275)}
     #editor-overlay.open .e-panel { transform:translateY(0) }
     
@@ -358,6 +360,10 @@
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Publicações
         <span class="nav-badge" id="badge-posts">0</span>
       </button>
+      <button class="nav-item" aria-label="Aba Eventos" onclick="showPage('events',this)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Eventos
+        <span class="nav-badge" id="badge-events">0</span>
+      </button>
       <div class="sb-section" style="margin-top:.4rem">Marketing</div>
       <button class="nav-item" aria-label="Aba Newsletter" onclick="showPage('newsletter',this)">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>Newsletter
@@ -457,6 +463,21 @@
           <button onclick="openEditor(null)">Criar a primeira →</button>
         </div>
         <div class="pagination" id="pagination"></div>
+      </div>
+
+      <div class="page" id="page-events">
+        <div class="sec-head">
+          <div><div class="sec-title">Próximos Eventos</div><div class="sec-sub" id="events-sub">Carregando...</div></div>
+          <button class="btn-primary" onclick="openEventEditor(null)">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Novo evento
+          </button>
+        </div>
+        <div class="post-list" id="events-list"></div>
+        <div class="empty" id="events-empty">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <p>Nenhum evento cadastrado.</p>
+          <button onclick="openEventEditor(null)">Criar o primeiro →</button>
+        </div>
       </div>
 
       <div class="page" id="page-newsletter">
@@ -671,6 +692,59 @@
   </div>
 </div>
 
+<div id="event-overlay">
+  <div class="e-panel">
+    <div class="e-header">
+      <div class="e-header-title" id="ev-title">Novo evento</div>
+      <button class="btn-close" aria-label="Fechar editor de evento" onclick="closeEventEditor()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="e-body">
+      <div>
+        <label class="form-label" for="ev-name">Título do evento *</label>
+        <input id="ev-name" type="text" class="form-input" maxlength="200" placeholder="Ex.: Seminário de Direito Previdenciário">
+      </div>
+      <div class="form-grid">
+        <div>
+          <label class="form-label" for="ev-date">Data *</label>
+          <input id="ev-date" type="date" class="form-input">
+        </div>
+        <div>
+          <label class="form-label" for="ev-time">Hora</label>
+          <input id="ev-time" type="time" class="form-input">
+        </div>
+      </div>
+      <div class="form-grid">
+        <div>
+          <label class="form-label" for="ev-local">Local</label>
+          <input id="ev-local" type="text" class="form-input" maxlength="200" placeholder="Auditório COP · Porto Alegre">
+        </div>
+        <div>
+          <label class="form-label" for="ev-status">Estado</label>
+          <select id="ev-status" class="form-input">
+            <option value="published">Publicado</option>
+            <option value="draft">Rascunho</option>
+          </select>
+        </div>
+      </div>
+      <div>
+        <label class="form-label" for="ev-img">Imagem de capa (URL)</label>
+        <input id="ev-img" type="url" class="form-input" placeholder="https://...">
+      </div>
+      <div>
+        <label class="form-label" for="ev-desc">Descrição do evento</label>
+        <textarea id="ev-desc" class="form-textarea" style="min-height:140px" placeholder="Informações do evento, público-alvo, inscrições, etc."></textarea>
+      </div>
+      <div class="e-actions">
+        <button class="btn-danger" id="ev-del" style="display:none" onclick="confirmDeleteEvent()">Excluir evento</button>
+        <div style="display:flex;gap:.45rem;margin-left:auto;flex-wrap:wrap;">
+          <button class="btn-secondary" onclick="closeEventEditor()">Cancelar</button>
+          <button class="btn-save" id="ev-save" onclick="saveEvent()">Salvar evento</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div id="confirm-overlay" role="dialog" aria-modal="true" aria-labelledby="cm-title">
   <div class="confirm-box">
     <div id="cm-title" style="font-family:var(--serif);font-size:1.15rem;font-weight:700;color:var(--dark);margin-bottom:.6rem">Confirmar</div>
@@ -691,8 +765,9 @@ const CATS = Object.keys(CAT_LABELS);
 const PER_PAGE = 20;
 
 let token = localStorage.getItem('cop_token');
-let allPosts = [], allEmails = [], filteredPosts = [], currentPage = 1;
+let allPosts = [], allEvents = [], allEmails = [], filteredPosts = [], currentPage = 1;
 let currentId = null, uploadedUrl = null, ytVideoId = null, capaMode = 'img';
+let currentEventId = null;
 let featOn = false, isDirty = false;
 let editor = null;
 
@@ -712,7 +787,7 @@ async function ensureSchema() {
 
 async function loadAll() {
   await ensureSchema();
-  await Promise.all([loadPosts(), loadNewsletter()]);
+  await Promise.all([loadPosts(), loadEvents(), loadNewsletter()]);
 }
 
 // ── AUTH ──
@@ -743,7 +818,7 @@ function showPage(page, btn) {
   document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
   document.getElementById('page-'+page).classList.add('active');
   if (btn) btn.classList.add('active');
-  const titles={overview:'Visão Geral',posts:'Publicações',newsletter:'Newsletter',support:'Suporte'};
+  const titles={overview:'Visão Geral',posts:'Publicações',events:'Eventos',newsletter:'Newsletter',support:'Suporte'};
   document.getElementById('topbar-title').textContent = titles[page]||page;
   document.getElementById('btn-new').classList.toggle('visible', page==='posts');
   if (page==='newsletter') renderNL(allEmails);
@@ -877,6 +952,65 @@ function exportPostsCSV() {
   showToast('✓ Backup de Posts exportado!');
 }
 
+// ── EVENTS ──
+async function loadEvents() {
+  const list = document.getElementById('events-list');
+  if (list) showSkeletons('events-list', 3);
+  try {
+    const r = await fetch(`${API}/events`, { headers: { Authorization: `Bearer ${token}` } });
+    if (r.status === 401) { doLogout(); return; }
+    allEvents = r.ok ? await r.json() : [];
+    if (!Array.isArray(allEvents)) allEvents = [];
+    renderEvents(allEvents);
+    updateStats();
+  } catch {
+    if (list) list.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--muted);font-size:.8rem">Erro ao carregar eventos.</div>';
+  }
+}
+
+function renderEvents(list) {
+  const el = document.getElementById('events-list');
+  const empty = document.getElementById('events-empty');
+  const sub = document.getElementById('events-sub');
+  if (!el || !empty || !sub) return;
+  el.innerHTML = '';
+  if (!list.length) {
+    empty.style.display = 'block';
+    sub.textContent = 'Nenhum evento';
+    return;
+  }
+  empty.style.display = 'none';
+  sub.textContent = `${list.length} evento${list.length === 1 ? '' : 's'}`;
+  list.forEach((ev) => {
+    const row = document.createElement('div');
+    row.className = 'post-row';
+    const statusBadge = (ev.status === 'draft') ? '<span class="badge badge-draft">Rascunho</span>' : '';
+    const when = fmtEventDate(ev.event_date, ev.event_time);
+    row.innerHTML = `
+      <img class="pr-thumb" src="${ev.img || ''}" alt="" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 50 50%22><rect width=%2250%22 height=%2250%22 fill=%22%23f3f4f6%22/></svg>'">
+      <div class="pr-meta">
+        <div class="pr-badges"><span class="badge badge-cat">Evento</span>${statusBadge}</div>
+        <div class="pr-title">${ev.title}</div>
+        <div class="pr-date">${when}${ev.location ? ' · ' + ev.location : ''}</div>
+      </div>
+      <button class="btn-edit" onclick="event.stopPropagation();openEventEditor(${ev.id})">Editar</button>
+    `;
+    row.querySelector('.pr-meta').onclick = () => openEventEditor(ev.id);
+    el.appendChild(row);
+  });
+}
+
+function fmtEventDate(isoDate, hhmm) {
+  try {
+    if (!isoDate) return 'Data não definida';
+    const d = new Date(`${isoDate}T00:00:00`);
+    const dateTxt = d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' });
+    return hhmm ? `${dateTxt} · ${hhmm}` : dateTxt;
+  } catch {
+    return isoDate || '—';
+  }
+}
+
 // ── NEWSLETTER ──
 async function loadNewsletter() {
   try {
@@ -921,6 +1055,7 @@ function updateStats() {
   document.getElementById('stat-nl').textContent=allEmails.length;
   document.getElementById('stat-feat').textContent=allPosts.filter(p=>p.featured).length;
   document.getElementById('badge-posts').textContent=allPosts.length;
+  const be=document.getElementById('badge-events'); if (be) be.textContent=allEvents.length;
   document.getElementById('badge-nl').textContent=allEmails.length;
 }
 
@@ -1231,6 +1366,114 @@ async function deletePost() {
   } catch { showToast('✗ Erro de rede ao excluir.'); }
 }
 
+function openEventEditor(id) {
+  currentEventId = id;
+  const ov = document.getElementById('event-overlay');
+  const saveBtn = document.getElementById('ev-save');
+  document.getElementById('ev-del').style.display = id == null ? 'none' : 'inline-flex';
+  document.getElementById('ev-title').textContent = id == null ? 'Novo evento' : 'Editar evento';
+  saveBtn.textContent = id == null ? 'Salvar evento' : 'Salvar alterações';
+
+  if (id == null) {
+    ['ev-name', 'ev-date', 'ev-time', 'ev-local', 'ev-img', 'ev-desc'].forEach((fid) => {
+      document.getElementById(fid).value = '';
+    });
+    document.getElementById('ev-status').value = 'published';
+  } else {
+    const ev = allEvents.find((x) => x.id === id);
+    if (!ev) return;
+    document.getElementById('ev-name').value = ev.title || '';
+    document.getElementById('ev-date').value = (ev.event_date || '').slice(0, 10);
+    document.getElementById('ev-time').value = ev.event_time || '';
+    document.getElementById('ev-local').value = ev.location || '';
+    document.getElementById('ev-img').value = ev.img || '';
+    document.getElementById('ev-desc').value = ev.description || '';
+    document.getElementById('ev-status').value = ev.status === 'draft' ? 'draft' : 'published';
+  }
+
+  ov.style.display = 'flex';
+  setTimeout(() => ov.classList.add('open'), 10);
+  document.body.style.overflow = 'hidden';
+}
+
+function closeEventEditor() {
+  const ov = document.getElementById('event-overlay');
+  ov.classList.remove('open');
+  setTimeout(() => {
+    ov.style.display = 'none';
+    document.body.style.overflow = '';
+  }, 250);
+}
+
+async function saveEvent() {
+  const payload = {
+    title: document.getElementById('ev-name').value.trim(),
+    event_date: document.getElementById('ev-date').value,
+    event_time: document.getElementById('ev-time').value || null,
+    location: document.getElementById('ev-local').value.trim() || null,
+    img: document.getElementById('ev-img').value.trim() || null,
+    description: document.getElementById('ev-desc').value.trim(),
+    status: document.getElementById('ev-status').value,
+  };
+
+  if (!payload.title) { showToast('⚠ Informe o título do evento.'); return; }
+  if (!payload.event_date) { showToast('⚠ Informe a data do evento.'); return; }
+
+  const saveBtn = document.getElementById('ev-save');
+  const prev = saveBtn.textContent;
+  saveBtn.disabled = true;
+  saveBtn.textContent = 'Salvando...';
+  try {
+    const isEdit = currentEventId != null;
+    const url = isEdit ? `${API}/events/${currentEventId}` : `${API}/events`;
+    const method = isEdit ? 'PUT' : 'POST';
+    const r = await fetch(url, {
+      method,
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify(payload),
+    });
+    if (r.status === 401) { doLogout(); return; }
+    if (!r.ok) {
+      let msg = 'Erro ao salvar evento.';
+      try { const j = await r.json(); if (j.error) msg = j.error; } catch { /* */ }
+      showToast(`✗ ${msg}`);
+      return;
+    }
+    closeEventEditor();
+    await loadEvents();
+    showToast(isEdit ? '✓ Evento atualizado!' : '✓ Evento criado!');
+  } catch {
+    showToast('✗ Erro de rede ao salvar evento.');
+  } finally {
+    saveBtn.disabled = false;
+    saveBtn.textContent = prev;
+  }
+}
+
+function confirmDeleteEvent() {
+  if (currentEventId == null) return;
+  openConfirm('Excluir evento', 'Esta ação é irreversível. Deseja excluir este evento?', 'Excluir', deleteEvent);
+}
+
+async function deleteEvent() {
+  if (currentEventId == null) return;
+  try {
+    const r = await fetch(`${API}/events/${currentEventId}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } });
+    if (r.status === 401) { doLogout(); return; }
+    if (!r.ok) {
+      let msg = 'Erro ao excluir evento.';
+      try { const j = await r.json(); if (j.error) msg = j.error; } catch { /* */ }
+      showToast(`✗ ${msg}`);
+      return;
+    }
+    closeEventEditor();
+    await loadEvents();
+    showToast('✓ Evento excluído.');
+  } catch {
+    showToast('✗ Erro de rede ao excluir evento.');
+  }
+}
+
 
 // ── CONFIRM MODAL ──
 let confirmCb = null;
@@ -1265,7 +1508,11 @@ function showSkeletons(id,n) {
 let toastTimer;
 function showToast(msg) { const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove('show'),3500); }
 document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'){ if(document.getElementById('confirm-overlay').classList.contains('open')){closeConfirm();return;} tryClose(); }
+  if(e.key==='Escape'){
+    if(document.getElementById('confirm-overlay').classList.contains('open')){closeConfirm();return;}
+    if(document.getElementById('event-overlay').classList.contains('open')){closeEventEditor();return;}
+    tryClose();
+  }
   if((e.ctrlKey||e.metaKey)&&e.key==='s'){ e.preventDefault(); if(document.getElementById('editor-overlay').classList.contains('open')) savePost(); }
 });
 </script>

@@ -303,11 +303,108 @@ faqButtons.forEach(button => {
 
   }
 
+  function fmtEventDate(iso) {
+    if (!iso) return 'Data não definida';
+    try {
+      return new Date(`${iso}T00:00:00`).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
+    } catch {
+      return iso;
+    }
+  }
+
+  function closeEventModal(ev) {
+    if (ev && ev.currentTarget && ev.currentTarget.id === 'event-modal-overlay' && ev.target !== ev.currentTarget) {
+      return;
+    }
+    const ov = document.getElementById('event-modal-overlay');
+    if (!ov) return;
+    ov.classList.add('hidden');
+    ov.classList.remove('flex');
+    document.body.style.overflow = '';
+  }
+
+  async function openEventModalById(id) {
+    try {
+      const r = await fetch(`/api/events/${id}`);
+      if (!r.ok) throw new Error();
+      const ev = await r.json();
+      const media = document.getElementById('event-modal-media');
+      const img = ev.img || 'https://via.placeholder.com/1200x630?text=Evento';
+      const alt = (ev.img_alt || ev.title || 'Imagem do evento').replace(/"/g, '&quot;');
+      media.innerHTML = `<img src="${img}" alt="${alt}" class="max-w-full max-h-[min(62vh,430px)] w-auto h-auto object-contain">`;
+      document.getElementById('event-modal-date').textContent = fmtEventDate(ev.event_date);
+      document.getElementById('event-modal-time').textContent = ev.event_time || 'Sem horário definido';
+      document.getElementById('event-modal-title').textContent = ev.title || 'Evento';
+      document.getElementById('event-modal-location').textContent = ev.location || 'Local a confirmar';
+      document.getElementById('event-modal-body').textContent = ev.description || 'Sem descrição.';
+      const sc = document.getElementById('event-modal-scroll');
+      if (sc) sc.scrollTop = 0;
+      const ov = document.getElementById('event-modal-overlay');
+      ov.classList.remove('hidden');
+      ov.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+      lucide.createIcons();
+    } catch {
+      // silêncio para não quebrar home
+    }
+  }
+
+  async function loadHomeEvents() {
+    const grid = document.getElementById('home-events-grid');
+    const empty = document.getElementById('home-events-empty');
+    if (!grid) return;
+    try {
+      const r = await fetch('/api/events?upcoming=1&limit=3');
+      if (!r.ok) throw new Error();
+      const events = await r.json();
+      grid.innerHTML = '';
+      if (!Array.isArray(events) || !events.length) {
+        grid.style.display = 'none';
+        if (empty) empty.classList.remove('hidden');
+        return;
+      }
+      if (empty) empty.classList.add('hidden');
+      grid.style.display = '';
+      events.forEach((ev) => {
+        const card = document.createElement('article');
+        card.className = 'bg-white border border-gray-100 rounded-2xl overflow-hidden hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.08)] transition-all duration-500 cursor-pointer';
+        const img = ev.img || 'https://via.placeholder.com/1200x630?text=Evento';
+        const alt = (ev.img_alt || ev.title || '').replace(/"/g, '&quot;');
+        const text = (ev.description || '').replace(/<[^>]+>/g, '').slice(0, 110);
+        card.innerHTML = `
+          <div class="h-52 bg-gray-100 overflow-hidden"><img src="${img}" alt="${alt}" class="w-full h-full object-cover"></div>
+          <div class="p-7">
+            <p class="text-[11px] tracking-[.15em] uppercase text-gray-500 mb-3">${fmtEventDate(ev.event_date)}${ev.event_time ? ' · ' + ev.event_time : ''}</p>
+            <h4 class="font-serif text-2xl text-[#1A1A1A] mb-2">${ev.title || ''}</h4>
+            <p class="text-sm text-[#C8102E] font-semibold mb-3">${ev.location || 'Local a confirmar'}</p>
+            <p class="text-sm text-gray-600 font-light leading-relaxed">${text}${text.length >= 110 ? '…' : ''}</p>
+          </div>`;
+        card.addEventListener('click', () => openEventModalById(ev.id));
+        grid.appendChild(card);
+      });
+    } catch {
+      grid.style.display = 'none';
+      if (empty) empty.classList.remove('hidden');
+    }
+  }
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', loadHomePosts);
+    document.addEventListener('DOMContentLoaded', () => {
+      loadHomePosts();
+      loadHomeEvents();
+    });
   } else {
     loadHomePosts();
+    loadHomeEvents();
   }
+
+  window.closeEventModal = closeEventModal;
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      const ov = document.getElementById('event-modal-overlay');
+      if (ov && !ov.classList.contains('hidden')) closeEventModal();
+    }
+  });
 
   let currentSlide = 0;
 

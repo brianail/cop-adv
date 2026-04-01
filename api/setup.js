@@ -35,6 +35,24 @@ export default async function handler(req, res) {
     await sql`CREATE UNIQUE INDEX IF NOT EXISTS posts_slug_unique ON posts (slug) WHERE slug IS NOT NULL`;
 
     await sql`
+      CREATE TABLE IF NOT EXISTS events (
+        id               SERIAL PRIMARY KEY,
+        title            TEXT NOT NULL,
+        event_date       DATE NOT NULL,
+        event_time       TEXT,
+        location         TEXT,
+        img              TEXT,
+        description      TEXT,
+        status           TEXT DEFAULT 'published',
+        slug             TEXT,
+        meta_description TEXT,
+        img_alt          TEXT,
+        created_at       TIMESTAMPTZ DEFAULT NOW()
+      )
+    `;
+    await sql`CREATE UNIQUE INDEX IF NOT EXISTS events_slug_unique ON events (slug) WHERE slug IS NOT NULL`;
+
+    await sql`
       CREATE TABLE IF NOT EXISTS newsletter (
         id         SERIAL PRIMARY KEY,
         email      TEXT NOT NULL UNIQUE,
@@ -42,7 +60,7 @@ export default async function handler(req, res) {
       )
     `;
 
-    return res.status(200).json({ ok: true, tables: ['posts', 'newsletter'] });
+    return res.status(200).json({ ok: true, tables: ['posts', 'events', 'newsletter'] });
   } catch (err) {
     console.error('setup', err);
     return res.status(500).json({ error: 'Falha ao preparar o banco.' });
