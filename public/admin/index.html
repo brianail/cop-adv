@@ -441,6 +441,11 @@
             <option value="az">Ordem alfabética (A-Z)</option>
             <option value="za">Ordem alfabética (Z-A)</option>
           </select>
+          <select class="posts-search" id="posts-status" aria-label="Filtrar por estado" style="width:auto; padding: .42rem .5rem;" onchange="applyFilters()">
+            <option value="all">Todos os estados</option>
+            <option value="published">Só publicados</option>
+            <option value="draft">Só rascunhos</option>
+          </select>
           <div class="filters" id="cat-filters">
             <button class="filter-btn active" onclick="filterCat('todos',this)">Todos</button>
           </div>
@@ -549,9 +554,22 @@
           <input id="f-read" type="text" class="form-input" placeholder="Automático ao digitar..." readonly title="Este campo é preenchido sozinho com base no texto do conteúdo.">
         </div>
       </div>
+      <div class="form-grid">
+        <div>
+          <label class="form-label" for="f-status">Estado</label>
+          <select id="f-status" class="form-input" onchange="syncFeatRowForStatus(); updateSaveLabel(); markDirty()">
+            <option value="published">Publicado (visível no blog)</option>
+            <option value="draft">Rascunho (só no painel)</option>
+          </select>
+        </div>
+        <div>
+          <label class="form-label" for="f-slug">Slug da URL <em>— opcional, minúsculas e hífens</em></label>
+          <input id="f-slug" type="text" class="form-input" placeholder="ex.: decisao-stj-trabalhista" maxlength="120" oninput="markDirty()" autocomplete="off">
+        </div>
+      </div>
       
       <div>
-        <label class="form-label">Capa *</label>
+        <label class="form-label">Capa <em>— obrigatória ao publicar</em></label>
         <div class="capa-tabs" role="tablist">
           <button class="capa-tab active" role="tab" id="tab-img" onclick="setCapaTab('img')">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>Imagem
@@ -611,7 +629,18 @@
         </div>
       </div>
 
-      <div class="toggle-row" onclick="toggleFeat()" role="switch" aria-checked="false" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ')toggleFeat()">
+      <div class="form-grid">
+        <div>
+          <label class="form-label" for="f-img-alt">Texto alternativo da capa <em>— acessibilidade / SEO</em></label>
+          <input id="f-img-alt" type="text" class="form-input" placeholder="Descreva a imagem para leitores de ecrã" maxlength="220" oninput="markDirty()">
+        </div>
+        <div>
+          <label class="form-label" for="f-meta">Resumo para redes (meta) <em>— opcional</em></label>
+          <textarea id="f-meta" class="form-textarea" style="min-height:72px" maxlength="320" placeholder="Breve descrição; usada como meta description ao abrir o artigo" oninput="markDirty()"></textarea>
+        </div>
+      </div>
+
+      <div class="toggle-row" id="feat-row" onclick="toggleFeat()" role="switch" aria-checked="false" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ')toggleFeat()">
         <div class="toggle" id="feat-toggle"></div>
         <div>
           <div class="toggle-lbl">Destacar no topo do blog</div>
@@ -804,11 +833,14 @@ function filterCat(cat,btn) {
 function applyFilters() {
   const q=document.getElementById('posts-search').value.toLowerCase();
   const sortMode=document.getElementById('posts-sort').value;
+  const stF=document.getElementById('posts-status').value;
   
   filteredPosts=allPosts.filter(p=>{
+    const stat=p.status||'published';
+    const stOk=stF==='all'||(stF==='draft'&&stat==='draft')||(stF==='published'&&stat!=='draft');
     const catOk=activeFilter==='todos'||p.cat===activeFilter;
     const qOk=!q||p.title.toLowerCase().includes(q);
-    return catOk&&qOk;
+    return stOk&&catOk&&qOk;
   });
   
   filteredPosts.sort((a,b) => {
@@ -828,12 +860,14 @@ function buildFilters() {
 
 function exportPostsCSV() {
   if (!allPosts.length) { showToast('⚠ Nenhuma publicação para exportar.'); return; }
-  const csv = 'ID,Título,Categoria,Tempo_Leitura,Destaque,Data\n' + 
+  const csv = 'ID,Título,Categoria,Estado,Tempo_Leitura,Destaque,Data,Slug\n' + 
     allPosts.map(p => {
       const safeTitle = p.title.replace(/"/g, '""');
       const catName = CAT_LABELS[p.cat] || p.cat;
       const feat = p.featured ? 'Sim' : 'Não';
-      return `"${p.id}","${safeTitle}","${catName}","${p.read_time||''}","${feat}","${p.date||''}"`;
+      const st = (p.status||'published')==='draft'?'Rascunho':'Publicado';
+      const slug = (p.slug||'').replace(/"/g,'""');
+      return `"${p.id}","${safeTitle}","${catName}","${st}","${p.read_time||''}","${feat}","${p.date||''}","${slug}"`;
     }).join('\n');
   
   Object.assign(document.createElement('a'), {
@@ -953,11 +987,39 @@ function updateImgPos() {
 function getHTML() { return editor.root.innerHTML; }
 function setHTML(html) { if(!editor) return; if(!html||html==='<p></p>'){editor.setContents([]);return;} editor.setContents(editor.clipboard.convert(html),'silent'); }
 function toggleFeat() { 
+  if (document.getElementById('f-status').value === 'draft') return;
   featOn=!featOn; 
   const toggle = document.getElementById('feat-toggle');
   toggle.classList.toggle('on',featOn); 
   toggle.parentElement.setAttribute('aria-checked', featOn);
   markDirty(); 
+}
+function syncFeatRowForStatus() {
+  const st = document.getElementById('f-status').value;
+  const row = document.getElementById('feat-row');
+  const isDraft = st === 'draft';
+  if (row) {
+    row.style.opacity = isDraft ? '0.45' : '1';
+    row.style.pointerEvents = isDraft ? 'none' : '';
+    row.setAttribute('aria-disabled', isDraft ? 'true' : 'false');
+  }
+  if (isDraft) setFeat(false);
+}
+function updateSaveLabel() {
+  const lbl = document.getElementById('save-lbl');
+  if (!lbl) return;
+  const st = document.getElementById('f-status').value;
+  if (currentId === null) {
+    lbl.textContent = st === 'draft' ? 'Guardar rascunho' : 'Publicar';
+  } else {
+    lbl.textContent = 'Salvar alterações';
+  }
+}
+function editorIsBodyEmpty() {
+  if (!editor) return true;
+  const t = editor.getText().replace(/\u00a0/g, ' ').trim();
+  const h = getHTML();
+  return !t.length || h === '<p></p>' || h === '<p><br></p>';
 }
 function setFeat(v)   { 
   featOn=!!v; 
@@ -991,20 +1053,24 @@ function openEditor(id) {
 
   if (id===null) {
     document.getElementById('e-title').textContent='Nova publicação';
-    ['f-title','f-cat','f-read'].forEach(fid=>{ document.getElementById(fid).value=''; });
+    ['f-title','f-cat','f-read','f-slug','f-meta','f-img-alt'].forEach(fid=>{ const el=document.getElementById(fid); if(el) el.value=''; });
+    document.getElementById('f-status').value='published';
     const tctr=document.getElementById('title-ctr'); if(tctr){tctr.textContent='0/150';tctr.className='ctr';}
     setHTML(''); setFeat(false);
     document.getElementById('f-img-pos').value = 'center';
     updateImgPos(); // Reseta para o padrão
     document.getElementById('btn-del').style.display='none';
-    document.getElementById('save-lbl').textContent='Publicar';
   } else {
     const p=allPosts.find(x=>x.id===id); if(!p) return;
     document.getElementById('e-title').textContent='Editar publicação';
     document.getElementById('f-title').value=p.title;
     document.getElementById('f-cat').value=p.cat;
+    document.getElementById('f-status').value = (p.status==='draft') ? 'draft' : 'published';
+    document.getElementById('f-slug').value = p.slug || '';
+    document.getElementById('f-meta').value = p.meta_description || '';
+    document.getElementById('f-img-alt').value = p.img_alt || '';
     document.getElementById('title-ctr').textContent=`${p.title.length}/150`;
-    setHTML(p.body); setFeat(p.featured);
+    setHTML(p.body); setFeat(!!p.featured && p.status!=='draft');
     if (p.yt_id) {
       setCapaTab('yt'); ytVideoId=p.yt_id;
       document.getElementById('f-yt-url').value=`https://youtube.com/watch?v=${p.yt_id}`;
@@ -1017,8 +1083,9 @@ function openEditor(id) {
       showPrev(p.img,'imagem atual');
     }
     document.getElementById('btn-del').style.display='flex';
-    document.getElementById('save-lbl').textContent='Salvar alterações';
   }
+  syncFeatRowForStatus();
+  updateSaveLabel();
   
   const overlay = document.getElementById('editor-overlay');
   overlay.style.display = 'flex';
@@ -1102,21 +1169,32 @@ async function savePost() {
   const read=document.getElementById('f-read').value.trim()||'1 min de leitura';
   const imgPos=document.getElementById('f-img-pos').value; // Pega o ajuste da imagem
   const body=getHTML();
+  const status=document.getElementById('f-status').value;
+  const slug=document.getElementById('f-slug').value.trim();
+  const meta_description=document.getElementById('f-meta').value.trim();
+  const img_alt=document.getElementById('f-img-alt').value.trim();
 
   if(!title){showToast('⚠ Preencha o título.');return;}
   if(!cat){showToast('⚠ Selecione uma categoria.');return;}
-  if(capaMode==='img'&&!uploadedUrl){showToast('⚠ Adicione uma imagem de capa.');return;}
-  if(capaMode==='yt'&&!ytVideoId){showToast('⚠ Cole um link válido do YouTube.');return;}
-  if(!body||body==='<p></p>'){showToast('⚠ Escreva o conteúdo.');return;}
+  if(status==='published'){
+    if(capaMode==='img'&&!uploadedUrl){showToast('⚠ Adicione uma imagem de capa.');return;}
+    if(capaMode==='yt'&&!ytVideoId){showToast('⚠ Cole um link válido do YouTube.');return;}
+    if(editorIsBodyEmpty()){showToast('⚠ Escreva o conteúdo.');return;}
+  }
 
   const btn=document.getElementById('btn-save'); const saveLbl = document.getElementById('save-lbl');
   const prevLbl = saveLbl ? saveLbl.textContent : 'Publicar';
   btn.disabled=true; btn.innerHTML='<span class="spin" style="font-size:1rem">↻</span>';
   
   const payload={
-    title, cat, read_time:read, body, featured:featOn,
+    title, cat, read_time:read, body,
+    status,
+    featured: status==='published' ? featOn : false,
+    slug: slug || undefined,
+    meta_description: meta_description || null,
+    img_alt: img_alt || null,
     img:      capaMode==='img' ? uploadedUrl : null,
-    img_pos:  capaMode==='img' ? imgPos      : null, // Nova propriedade enviada para a API
+    img_pos:  capaMode==='img' ? imgPos      : null,
     yt_id:    capaMode==='yt'  ? ytVideoId   : null,
   };
 
@@ -1130,7 +1208,8 @@ async function savePost() {
       showToast('✗ '+msg); return;
     }
     clearDirty(); closeEditor();
-    showToast(isEdit?'✓ Post atualizado!':'✓ Post publicado!');
+    const okDraft = status==='draft';
+    showToast(isEdit ? '✓ Alterações guardadas!' : (okDraft ? '✓ Rascunho guardado!' : '✓ Post publicado!'));
     await loadPosts();
   } catch { showToast('✗ Erro de rede ao salvar.'); }
   finally {

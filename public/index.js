@@ -54,13 +54,13 @@ function acceptCookies(type) {
 
 const logo = document.getElementById("site-logo");
 
-window.addEventListener("scroll", function () {
-  if (window.scrollY > 50) {
-    logo.src = "/assets/logos/logovermelho.png";
-  } else {
-    logo.src = "/assets/logos/logo.png";
-  }
-});
+function syncNavLogo() {
+  if (!logo) return;
+  logo.src = window.scrollY > 50 ? "/assets/logos/logovermelho.png" : "/assets/logos/logo.png";
+}
+
+document.addEventListener("DOMContentLoaded", syncNavLogo);
+window.addEventListener("scroll", syncNavLogo);
 
 // 2. Eventos de Scroll: Navegação e Botão "Voltar ao Topo"
 window.addEventListener('scroll', () => {

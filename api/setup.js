@@ -27,6 +27,13 @@ export default async function handler(req, res) {
     await sql`ALTER TABLE posts ADD COLUMN IF NOT EXISTS img_pos TEXT`;
     await sql`ALTER TABLE posts ALTER COLUMN img DROP NOT NULL`;
 
+    await sql`ALTER TABLE posts ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'published'`;
+    await sql`UPDATE posts SET status = 'published' WHERE status IS NULL`;
+    await sql`ALTER TABLE posts ADD COLUMN IF NOT EXISTS slug TEXT`;
+    await sql`ALTER TABLE posts ADD COLUMN IF NOT EXISTS meta_description TEXT`;
+    await sql`ALTER TABLE posts ADD COLUMN IF NOT EXISTS img_alt TEXT`;
+    await sql`CREATE UNIQUE INDEX IF NOT EXISTS posts_slug_unique ON posts (slug) WHERE slug IS NOT NULL`;
+
     await sql`
       CREATE TABLE IF NOT EXISTS newsletter (
         id         SERIAL PRIMARY KEY,

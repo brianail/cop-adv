@@ -91,7 +91,7 @@
                     tabindex="0" onclick="window.location.href='index.html'"
                     onkeydown="if(event.key==='Enter')window.location.href='index.html'">
                     <div class="flex items-center gap-4">
-                        <img id="site-logo" src="/public/assets/logos/logo.png" alt="Logo COP Advogados"
+                        <img id="site-logo" src="/assets/logos/logo.png" alt="Logo COP Advogados"
                             class="h-12 w-auto object-contain transition-all duration-300">
                         <div class="flex flex-col border-l-2 border-[#C8102E] pl-4">
                             <span id="logo-main"
@@ -387,6 +387,11 @@
                     link.classList.add('text-gray-200', 'hover:text-white');
                 });
             }
+        });
+
+        window.addEventListener('load', () => {
+            if (!siteLogo) return;
+            siteLogo.src = window.scrollY > 50 ? '/assets/logos/logovermelho.png' : '/assets/logos/logo.png';
         });
 
         // Alternar Menu Mobile

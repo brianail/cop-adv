@@ -1,7 +1,8 @@
 import { sql } from '../lib/db.js';
-import { requireAuth } from '../lib/auth.js';
+import { requireAuth, optionalAuth } from '../lib/auth.js';
 import { applyCors } from '../lib/cors.js';
 import { ALLOWED_CATS, parsePostId, validatePostInput } from '../lib/validate.js';
+import { allocateSlug } from '../lib/allocateSlug.js';
 
 export default async function handler(req, res) {
   applyCors(res);
@@ -9,24 +10,38 @@ export default async function handler(req, res) {
 
   try {
     if (req.method === 'GET') {
+      const showDrafts = optionalAuth(req);
       const { cat } = req.query;
+
       if (cat && cat !== 'todos') {
         const c = String(cat).trim().toLowerCase();
         if (!ALLOWED_CATS.has(c)) {
           return res.status(400).json({ error: 'Categoria inválida.' });
         }
-        const result = await sql`
-          SELECT * FROM posts
-          WHERE LOWER(cat) = LOWER(${c})
-          ORDER BY created_at DESC
-        `;
+        const result = showDrafts
+          ? await sql`
+              SELECT * FROM posts
+              WHERE LOWER(cat) = LOWER(${c})
+              ORDER BY created_at DESC
+            `
+          : await sql`
+              SELECT * FROM posts
+              WHERE LOWER(cat) = LOWER(${c}) AND COALESCE(status, 'published') = 'published'
+              ORDER BY created_at DESC
+            `;
         return res.status(200).json(result.rows);
       }
 
-      const result = await sql`
-        SELECT * FROM posts
-        ORDER BY featured DESC, created_at DESC
-      `;
+      const result = showDrafts
+        ? await sql`
+            SELECT * FROM posts
+            ORDER BY featured DESC, created_at DESC
+          `
+        : await sql`
+            SELECT * FROM posts
+            WHERE COALESCE(status, 'published') = 'published'
+            ORDER BY featured DESC, created_at DESC
+          `;
       return res.status(200).json(result.rows);
     }
 
@@ -35,7 +50,21 @@ export default async function handler(req, res) {
       const parsed = validatePostInput(req.body || {});
       if (!parsed.ok) return res.status(400).json({ error: parsed.errors[0] });
 
-      const { title, cat, date, read_time, img, yt_id, body, featured, img_pos } = parsed.data;
+      const {
+        title,
+        cat,
+        date,
+        read_time,
+        img,
+        yt_id,
+        body,
+        featured,
+        img_pos,
+        status,
+        meta_description,
+        img_alt,
+        slug_custom,
+      } = parsed.data;
       const dateVal =
         date ||
         new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
@@ -44,8 +73,13 @@ export default async function handler(req, res) {
         await sql`UPDATE posts SET featured = false WHERE featured = true`;
       }
 
+      const slug = await allocateSlug(sql, title, slug_custom, null);
+
       const result = await sql`
-        INSERT INTO posts (title, cat, date, read_time, img, yt_id, img_pos, body, featured)
+        INSERT INTO posts (
+          title, cat, date, read_time, img, yt_id, img_pos, body, featured,
+          status, slug, meta_description, img_alt
+        )
         VALUES (
           ${title},
           ${cat},
@@ -55,7 +89,11 @@ export default async function handler(req, res) {
           ${yt_id},
           ${img_pos},
           ${body},
-          ${featured}
+          ${featured},
+          ${status},
+          ${slug},
+          ${meta_description},
+          ${img_alt}
         )
         RETURNING *
       `;
@@ -74,22 +112,41 @@ export default async function handler(req, res) {
       const row = await sql`SELECT id FROM posts WHERE id = ${id}`;
       if (!row.rows.length) return res.status(404).json({ error: 'Post não encontrado.' });
 
-      const { title, cat, read_time, img, yt_id, body, featured, img_pos } = parsed.data;
+      const {
+        title,
+        cat,
+        read_time,
+        img,
+        yt_id,
+        body,
+        featured,
+        img_pos,
+        status,
+        meta_description,
+        img_alt,
+        slug_custom,
+      } = parsed.data;
 
       if (featured) {
         await sql`UPDATE posts SET featured = false WHERE featured = true AND id <> ${id}`;
       }
 
+      const slug = await allocateSlug(sql, title, slug_custom, id);
+
       const result = await sql`
         UPDATE posts SET
-          title     = ${title},
-          cat       = ${cat},
-          read_time = ${read_time},
-          img       = ${img},
-          yt_id     = ${yt_id},
-          img_pos   = ${img_pos},
-          body      = ${body},
-          featured  = ${featured}
+          title            = ${title},
+          cat              = ${cat},
+          read_time        = ${read_time},
+          img              = ${img},
+          yt_id            = ${yt_id},
+          img_pos          = ${img_pos},
+          body             = ${body},
+          featured         = ${featured},
+          status           = ${status},
+          slug             = ${slug},
+          meta_description = ${meta_description},
+          img_alt          = ${img_alt}
         WHERE id = ${id}
         RETURNING *
       `;

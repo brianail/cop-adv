@@ -55,7 +55,7 @@
           "@type": "Organization",
           "name": "COP Advogados Associados",
           "url": "https://www.copadvogados.com.br/",
-          "logo": "/public/assets/logos/logo.png",
+          "logo": "/assets/logos/logo.png",
           "address": {
             "@type": "PostalAddress",
             "streetAddress": "Rua Uruguai, 240, Conj. 801",
@@ -310,7 +310,7 @@
                     tabindex="0" onclick="window.location.href='index.html'"
                     onkeydown="if(event.key==='Enter')window.location.href='index.html'">
                     <div class="flex items-center gap-4">
-                        <img id="site-logo" src="/public/assets/logos/logo.png" alt="Logo COP Advogados"
+                        <img id="site-logo" src="/assets/logos/logo.png" alt="Logo COP Advogados"
                             class="h-12 w-auto object-contain transition-all duration-300">
                         <div class="flex flex-col border-l-2 border-[#C8102E] pl-4">
                             <span id="logo-main"
@@ -581,12 +581,9 @@
             <div id="modal-scroll" class="overflow-y-auto w-full h-full relative scroll-smooth bg-white"
                 onscroll="updateReadProgress(this)">
 
-                <!-- MEDIA/IMAGEM: Mais alta e ocupando 100% da largura. Adicionado um gradiente para não chocar com o texto -->
-                <div id="m-media" class="w-full h-72 sm:h-[420px] bg-neutral-100 relative overflow-hidden group">
-                    <!-- A imagem entra aqui via JS. O ideal é usar object-cover -->
-                    <div
-                        class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none">
-                    </div>
+                <!-- MEDIA: vídeo em altura fixa; imagem em contain (inteira, sem esticar) -->
+                <div id="m-media"
+                    class="w-full min-h-[220px] max-h-[min(75vh,560px)] sm:min-h-[260px] sm:max-h-[500px] bg-neutral-100 relative overflow-hidden flex items-center justify-center p-4 sm:p-8 box-border">
                 </div>
 
                 <!-- CONTAINER DO CONTEÚDO: Sobe sobre a imagem (-mt-16) criando efeito de profundidade -->
@@ -699,7 +696,7 @@
         const ls = document.getElementById('logo-sub');
         const sl = document.getElementById('site-logo');
 
-        window.addEventListener('scroll', () => {
+        function applyBlogNavScroll() {
             const s = window.scrollY > 50;
 
             // Altera o fundo e o padding do Navbar
@@ -750,7 +747,10 @@
                     fb.classList.remove('shadow-md');
                 }
             }
-        });
+        }
+
+        window.addEventListener('scroll', applyBlogNavScroll);
+        document.addEventListener('DOMContentLoaded', applyBlogNavScroll);
 
         // ── Mobile Menu Inteligente (Padronizado) ──────────────────────────────────
         let mobOpen = false;
@@ -861,10 +861,11 @@
             const excerpt = safeBody.slice(0, 220) + (safeBody.length > 220 ? '…' : '');
 
             const fitStyle = thumbObjectStyle(p);
+            const featAlt = (p.img_alt || p.title || '').replace(/"/g, '&quot;');
             el.innerHTML = `
                 <article class="post-card grid grid-cols-1 md:grid-cols-2 border border-gray-100 shadow-[0_8px_40px_-12px_rgba(0,0,0,0.15)] group cursor-pointer bg-white" data-cat="${p.cat}" onclick="openPost(${p.id})">
                     <div class="img-wrap overflow-hidden relative min-h-[280px] md:min-h-[420px]">
-                        <img class="img-zoom w-full h-full absolute inset-0" style="${fitStyle}" src="${thumb}" alt="${p.title}" fetchpriority="high" decoding="async" loading="eager">
+                        <img class="img-zoom w-full h-full absolute inset-0" style="${fitStyle}" src="${thumb}" alt="${featAlt}" fetchpriority="high" decoding="async" loading="eager">
                         <div class="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent"></div>
                         <div class="absolute top-6 left-6">
                             <span class="bg-[#C8102E] text-white text-[10px] font-bold tracking-[.2em] uppercase px-3 py-1.5 shadow-md">
@@ -915,6 +916,7 @@
             list.forEach(p => {
                 const thumb = getPostThumb(p, 'mqdefault');
                 const fitStyle = thumbObjectStyle(p);
+                const gridAlt = (p.img_alt || p.title || '').replace(/"/g, '&quot;');
                 const safeBody = p.body ? p.body.replace(/<[^>]+>/g, '') : '';
                 const excerpt = safeBody.slice(0, 120) + (safeBody.length > 120 ? '…' : '');
 
@@ -924,7 +926,7 @@
                 a.onclick = () => openPost(p.id);
                 a.innerHTML = `
                     <div class="img-wrap overflow-hidden relative h-52 flex-shrink-0">
-                        <img class="img-zoom w-full h-full" style="${fitStyle}" src="${thumb}" alt="${p.title}" loading="lazy" decoding="async">
+                        <img class="img-zoom w-full h-full" style="${fitStyle}" src="${thumb}" alt="${gridAlt}" loading="lazy" decoding="async">
                         <div class="absolute top-4 left-4">
                             <span class="bg-[#1A1A1A] text-white text-[9px] font-bold tracking-[.2em] uppercase px-2.5 py-1">
                                 ${p.cat}
@@ -990,39 +992,27 @@
 
                 document.title = p.title + ' | COP Advogados · Blog';
                 if (metaDescEl) {
-                    const plain = (p.body || '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim().slice(0, 155);
-                    if (plain) metaDescEl.setAttribute('content', plain + (plain.length >= 155 ? '…' : ''));
+                    const fromMeta = (p.meta_description || '').trim();
+                    const plain = fromMeta
+                        ? fromMeta.slice(0, 160)
+                        : (p.body || '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim().slice(0, 155);
+                    if (plain) metaDescEl.setAttribute('content', plain + (plain.length >= 155 && !fromMeta ? '…' : ''));
                 }
 
                 const mediaContainer = document.getElementById('m-media');
-                const modalFit = thumbObjectStyle(p);
 
-                // Melhoria do tratamento de imagens vs videos
                 if (p.yt_id) {
+                    mediaContainer.className =
+                        'w-full h-[min(56vh,320px)] sm:h-72 md:h-[420px] bg-black relative overflow-hidden flex items-center justify-center';
                     const vEsc = String(p.yt_id).replace(/[^A-Za-z0-9_-]/g, '');
-                    mediaContainer.innerHTML = `<iframe class="w-full h-full" src="https://www.youtube.com/embed/${vEsc}?autoplay=1&mute=0" loading="lazy" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen title="Vídeo do artigo"></iframe>`;
+                    mediaContainer.innerHTML = `<iframe class="w-full h-full absolute inset-0" src="https://www.youtube.com/embed/${vEsc}?autoplay=1&mute=0" loading="lazy" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen title="Vídeo do artigo"></iframe>`;
                 } else {
+                    mediaContainer.className =
+                        'w-full min-h-[220px] max-h-[min(75vh,560px)] sm:min-h-[260px] sm:max-h-[500px] bg-neutral-100 relative overflow-hidden flex items-center justify-center p-4 sm:p-8 box-border';
                     const imgSrc = p.img || 'https://via.placeholder.com/800x450';
-                    const altAttr = String(p.title).replace(/"/g, '&quot;');
-                    mediaContainer.innerHTML = `
-                        <div class="zoom-hit relative w-full h-full group cursor-zoom-in flex items-center justify-center bg-[#111]" role="button" tabindex="0" aria-label="Ampliar imagem">
-                            <img src="${imgSrc}" alt="${altAttr}" class="w-full h-full" style="${modalFit}" decoding="async">
-                            <div class="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all duration-300 flex items-center justify-center pointer-events-none">
-                                <div class="bg-black/70 backdrop-blur-sm text-white px-5 py-2.5 rounded-full opacity-0 group-hover:opacity-100 transition-all transform translate-y-4 group-hover:translate-y-0 duration-300 flex items-center gap-2 border border-white/10">
-                                    <i data-lucide="zoom-in" class="w-4 h-4"></i>
-                                    <span class="text-xs font-bold tracking-widest uppercase">Ver tamanho real</span>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                    const hit = mediaContainer.querySelector('.zoom-hit');
-                    if (hit) {
-                        const openZ = () => openLightbox(imgSrc);
-                        hit.addEventListener('click', openZ);
-                        hit.addEventListener('keydown', (ev) => {
-                            if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); openZ(); }
-                        });
-                    }
+                    const altText = (p.img_alt || p.title || 'Ilustração do artigo').replace(/"/g, '&quot;');
+                    mediaContainer.innerHTML =
+                        `<img src="${imgSrc}" alt="${altText}" class="max-w-full max-h-[min(65vh,480px)] w-auto h-auto object-contain" decoding="async">`;
                 }
 
                 // Relacionados
