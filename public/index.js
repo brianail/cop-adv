@@ -636,12 +636,90 @@ faqButtons.forEach(button => {
       loadHomePosts();
       loadHomeVideos();
       loadHomeEvents();
+      loadHomeShorts();
     });
   } else {
     loadHomePosts();
     loadHomeVideos();
     loadHomeEvents();
+    loadHomeShorts();
   }
+
+  // ── SHORTS STORIES ──
+  let homeShorts = [];
+  let currentShortIdx = 0;
+  const seenShorts = new Set();
+
+  async function loadHomeShorts() {
+    const bubblesEl = document.getElementById('home-shorts-bubbles');
+    const emptyEl = document.getElementById('home-shorts-empty');
+    try {
+      const r = await fetch('/api/shorts?active=true&limit=20');
+      const data = r.ok ? await r.json() : [];
+      homeShorts = Array.isArray(data) ? data : [];
+      if (!bubblesEl) return;
+      if (!homeShorts.length) {
+        bubblesEl.innerHTML = '';
+        if (emptyEl) emptyEl.classList.remove('hidden');
+        return;
+      }
+      if (emptyEl) emptyEl.classList.add('hidden');
+      bubblesEl.innerHTML = homeShorts.map((s, i) => {
+        const thumb = `https://img.youtube.com/vi/${s.yt_id}/hqdefault.jpg`;
+        const label = s.title ? s.title.substring(0, 14) + (s.title.length > 14 ? '…' : '') : 'Short';
+        return `
+          <div class="story-bubble-wrap" onclick="openShortModal(${i})" role="button" tabindex="0" aria-label="Assistir: ${escHtml(s.title || 'Short')}">
+            <div class="story-bubble" id="story-bubble-${i}">
+              <div class="story-bubble-inner">
+                <img src="${thumb}" alt="${escHtml(s.title || 'Short')}" loading="lazy" onerror="this.style.display='none'">
+              </div>
+            </div>
+            <span class="story-label">${escHtml(label)}</span>
+          </div>`;
+      }).join('');
+    } catch {
+      if (bubblesEl) bubblesEl.innerHTML = '';
+    }
+  }
+
+  window.openShortModal = function(idx) {
+    if (!homeShorts.length) return;
+    currentShortIdx = Math.max(0, Math.min(idx, homeShorts.length - 1));
+    const s = homeShorts[currentShortIdx];
+    const modal = document.getElementById('shorts-modal');
+    const iframe = document.getElementById('shorts-iframe');
+    if (!modal || !iframe) return;
+    iframe.src = `https://www.youtube.com/embed/${s.yt_id}?autoplay=1&rel=0&playsinline=1`;
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => modal.classList.add('open'), 10);
+    // Mark as seen
+    seenShorts.add(currentShortIdx);
+    const bubble = document.getElementById(`story-bubble-${currentShortIdx}`);
+    if (bubble) { bubble.classList.remove('active-story'); bubble.classList.add('seen'); }
+    // Animate active
+    document.querySelectorAll('.story-bubble.active-story').forEach(b => b.classList.remove('active-story'));
+    if (bubble) bubble.classList.add('active-story');
+  };
+
+  window.closeShortModalBtn = function() {
+    const modal = document.getElementById('shorts-modal');
+    const iframe = document.getElementById('shorts-iframe');
+    if (!modal || !iframe) return;
+    modal.classList.remove('open');
+    setTimeout(() => { modal.style.display = 'none'; iframe.src = ''; document.body.style.overflow = ''; }, 280);
+    document.querySelectorAll('.story-bubble.active-story').forEach(b => b.classList.remove('active-story'));
+  };
+
+  window.closeShortModal = function(e) {
+    if (e && e.target !== e.currentTarget) return;
+    window.closeShortModalBtn();
+  };
+
+  window.navigateShort = function(dir) {
+    openShortModal(currentShortIdx + dir);
+  };
+
 
   window.closeEventModal = closeEventModal;
   window.closeHomePostModal = closeHomePostModal;
@@ -675,6 +753,16 @@ faqButtons.forEach(button => {
       }
       const ov = document.getElementById('event-modal-overlay');
       if (ov && !ov.classList.contains('hidden')) closeEventModal();
+      const smod = document.getElementById('shorts-modal');
+      if (smod && smod.classList.contains('open')) { closeShortModalBtn(); return; }
+    }
+    if (e.key === 'ArrowRight') {
+      const smod = document.getElementById('shorts-modal');
+      if (smod && smod.classList.contains('open')) navigateShort(1);
+    }
+    if (e.key === 'ArrowLeft') {
+      const smod = document.getElementById('shorts-modal');
+      if (smod && smod.classList.contains('open')) navigateShort(-1);
     }
   });
 

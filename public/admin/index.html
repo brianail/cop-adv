@@ -336,11 +336,13 @@
       .pr-meta { width:100%; }
       .post-row { flex-wrap:wrap; }
 
-      #editor-overlay, #event-overlay, #video-overlay { padding: 0; align-items:flex-end; }
+      #editor-overlay, #event-overlay, #video-overlay, #shorts-overlay { padding: 0; align-items:flex-end; }
       .e-panel { height: 95vh; display:flex; flex-direction:column; max-width:100%; border-radius:12px 12px 0 0; transform:translateY(100%); transition:transform .3s cubic-bezier(0.2, 0.8, 0.2, 1); }
       #editor-overlay.open .e-panel, #event-overlay.open .e-panel { transform:translateY(0); }
       #video-overlay .e-panel { transform:translateY(100%); }
       #video-overlay.open .e-panel { transform:translateY(0); }
+      #shorts-overlay .e-panel { transform:translateY(100%); }
+      #shorts-overlay.open .e-panel { transform:translateY(0); }
       #unsaved-banner { border-radius:12px 12px 0 0; }
       .e-body { padding: 1.25rem; overflow-y:auto; flex:1; }
       .e-header { padding: 1.25rem; }
@@ -389,6 +391,10 @@
       <button class="nav-item" aria-label="Aba Vídeos" onclick="showPage('videos',this)">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect><line x1="7" y1="2" x2="7" y2="22"></line><line x1="17" y1="2" x2="17" y2="22"></line><line x1="2" y1="12" x2="22" y2="12"></line><line x1="2" y1="7" x2="7" y2="7"></line><line x1="2" y1="17" x2="7" y2="17"></line><line x1="17" y1="17" x2="22" y2="17"></line><line x1="17" y1="7" x2="22" y2="7"></line></svg>Vídeos
         <span class="nav-badge" id="badge-videos">0</span>
+      </button>
+      <button class="nav-item" aria-label="Aba Shorts" onclick="showPage('shorts',this)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="7" y="2" width="10" height="20" rx="2"/><line x1="12" y1="8" x2="12" y2="8.01"/><path d="M10 12l2-2 2 2"/><line x1="12" y1="12" x2="12" y2="16"/></svg>Shorts
+        <span class="nav-badge" id="badge-shorts">0</span>
       </button>
       <div class="sb-section" style="margin-top:.4rem">Marketing</div>
       <button class="nav-item" aria-label="Aba Newsletter" onclick="showPage('newsletter',this)">
@@ -535,6 +541,25 @@
           <button onclick="openVideoEditor(null)">Adicionar o primeiro →</button>
         </div>
       </div>
+
+      <div class="page" id="page-shorts">
+        <div class="sec-head">
+          <div>
+            <div class="sec-title">Shorts & Reels</div>
+            <div class="sec-sub" id="shorts-sub">Gerencie os YouTube Shorts exibidos na seção de stories da página inicial.</div>
+          </div>
+          <button class="btn-primary" onclick="openShortEditor(null)">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Adicionar Short
+          </button>
+        </div>
+        <div class="post-list" id="shorts-list"></div>
+        <div class="empty" id="shorts-empty">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M10 10l2-2 2 2"/><line x1="12" y1="10" x2="12" y2="14"/></svg>
+          <p>Nenhum Short adicionado ainda.</p>
+          <button onclick="openShortEditor(null)">Adicionar o primeiro →</button>
+        </div>
+      </div>
+
 
       <div class="page" id="page-newsletter">
         <div class="sec-head">
@@ -871,6 +896,46 @@
   </div>
 </div>
 
+<div id="shorts-overlay" role="dialog" aria-modal="true" class="e-overlay-base" style="z-index:75">
+  <div class="e-panel" style="max-width:560px;">
+    <div class="e-header">
+      <div class="e-header-title" id="short-title-head">Adicionar Short</div>
+      <button class="btn-close" aria-label="Fechar" onclick="closeShortEditor()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="e-body">
+      <div>
+        <label class="form-label" for="short-url">URL do YouTube Short *</label>
+        <input id="short-url" type="text" class="form-input" placeholder="https://youtube.com/shorts/..." oninput="previewShortAdmin()">
+      </div>
+      <div id="short-preview-box" style="display:none; margin-top:1rem; display:flex; gap:1rem; align-items:flex-start;">
+        <img id="short-thumb" src="" alt="Preview" style="width:80px; height:140px; object-fit:cover; border-radius:8px; border:1px solid rgba(0,0,0,0.1); flex-shrink:0;">
+        <div style="flex:1;">
+          <label class="form-label" for="short-title-inp" style="margin-top:0">Título <em>— opcional</em></label>
+          <input id="short-title-inp" type="text" class="form-input" placeholder="Deixe em branco para título padrão.">
+        </div>
+      </div>
+      <div id="short-preview-hidden" style="display:block;">
+        <label class="form-label" for="short-title-only">Título <em>— opcional</em></label>
+        <input id="short-title-only" type="text" class="form-input" placeholder="Preenchido após colar a URL.">
+      </div>
+      <div class="toggle-row" id="short-active-row" onclick="toggleActiveShort()" style="margin-top:1.2rem">
+        <div class="toggle on" id="short-active-toggle"></div>
+        <div>
+          <div class="toggle-lbl">Visível na Home</div>
+          <div class="toggle-desc">Se ativado, aparecerá nos Stories da página inicial.</div>
+        </div>
+      </div>
+      <div class="e-actions" style="margin-top:1.5rem">
+        <button class="btn-danger" id="short-del" style="display:none" onclick="confirmDeleteShort()">Excluir short</button>
+        <div style="display:flex;gap:.45rem;margin-left:auto;flex-wrap:wrap;">
+          <button class="btn-secondary" onclick="closeShortEditor()">Cancelar</button>
+          <button class="btn-save" id="short-save" onclick="saveShort()">Salvar short</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div id="confirm-overlay" role="dialog" aria-modal="true" aria-labelledby="cm-title">
   <div class="confirm-box">
     <div id="cm-title" style="font-family:var(--serif);font-size:1.15rem;font-weight:700;color:var(--dark);margin-bottom:.6rem">Confirmar</div>
@@ -915,7 +980,7 @@ async function ensureSchema() {
 
 async function loadAll() {
   await ensureSchema();
-  await Promise.all([loadPosts(), loadEvents(), loadNewsletter(), loadVideos()]);
+  await Promise.all([loadPosts(), loadEvents(), loadNewsletter(), loadVideos(), loadShorts()]);
 }
 
 // ── AUTH ──
@@ -1216,6 +1281,168 @@ async function deleteVideo(id) {
     loadVideos();
   } catch {
     showToast('Falha ao excluir o vídeo.');
+  }
+}
+
+// ── SHORTS ──
+let allShorts = [];
+let shortCurrentId = null;
+let shortActive = true;
+
+async function loadShorts() {
+  const list = document.getElementById('shorts-list');
+  if (list) list.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--muted);font-size:.8rem">Carregando...</div>';
+  try {
+    const r = await fetch(`${API}/shorts`, { headers: { Authorization: `Bearer ${token}` } });
+    if (r.status === 401) { doLogout(); return; }
+    allShorts = r.ok ? await r.json() : [];
+    if (!Array.isArray(allShorts)) allShorts = [];
+    renderShorts();
+    const badge = document.getElementById('badge-shorts');
+    if (badge) badge.textContent = allShorts.length;
+  } catch {
+    if (list) list.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--muted);font-size:.8rem">Erro ao carregar shorts.</div>';
+  }
+}
+
+function renderShorts() {
+  const el = document.getElementById('shorts-list');
+  const empty = document.getElementById('shorts-empty');
+  const sub = document.getElementById('shorts-sub');
+  if (!el) return;
+  el.innerHTML = '';
+  if (!allShorts.length) {
+    if (empty) empty.style.display = 'block';
+    return;
+  }
+  if (empty) empty.style.display = 'none';
+  if (sub) sub.textContent = `${allShorts.length} short${allShorts.length === 1 ? '' : 's'} cadastrado${allShorts.length === 1 ? '' : 's'}`;
+  allShorts.forEach(s => {
+    const row = document.createElement('div');
+    row.className = 'post-row';
+    const activeBadge = s.active ? '' : '<span class="badge badge-draft">Inativo</span>';
+    row.innerHTML = `
+      <div class="pr-thumb-yt" style="width:50px;height:80px;border-radius:4px;overflow:hidden;flex-shrink:0;background:#111;">
+        <img src="https://img.youtube.com/vi/${s.yt_id}/hqdefault.jpg" alt="" style="width:100%;height:100%;object-fit:cover;opacity:.85;">
+      </div>
+      <div class="pr-meta">
+        <div class="pr-badges"><span class="badge badge-vid">Short</span>${activeBadge}</div>
+        <div class="pr-title">${s.title || 'Short sem título'}</div>
+        <div class="pr-date" style="font-size:.65rem;color:var(--muted)">ID: ${s.yt_id}</div>
+      </div>
+      <button class="btn-edit" onclick="event.stopPropagation();openShortEditor(${s.id})">Editar</button>
+    `;
+    row.querySelector('.pr-meta').onclick = () => openShortEditor(s.id);
+    el.appendChild(row);
+  });
+}
+
+function openShortEditor(id) {
+  shortCurrentId = id;
+  const overlay = document.getElementById('shorts-overlay');
+  document.getElementById('short-del').style.display = id == null ? 'none' : 'inline-flex';
+  document.getElementById('short-title-head').textContent = id == null ? 'Adicionar Short' : 'Editar Short';
+  document.getElementById('short-save').textContent = id == null ? 'Salvar short' : 'Salvar alterações';
+
+  if (id == null) {
+    document.getElementById('short-url').value = '';
+    document.getElementById('short-title-inp').value = '';
+    document.getElementById('short-title-only').value = '';
+    document.getElementById('short-preview-box').style.display = 'none';
+    document.getElementById('short-preview-hidden').style.display = 'block';
+    shortActive = true;
+  } else {
+    const s = allShorts.find(x => x.id === id);
+    if (!s) return;
+    document.getElementById('short-url').value = `https://youtube.com/shorts/${s.yt_id}`;
+    document.getElementById('short-title-inp').value = s.title || '';
+    document.getElementById('short-title-only').value = s.title || '';
+    document.getElementById('short-thumb').src = `https://img.youtube.com/vi/${s.yt_id}/hqdefault.jpg`;
+    document.getElementById('short-preview-box').style.display = 'flex';
+    document.getElementById('short-preview-hidden').style.display = 'none';
+    shortActive = s.active;
+  }
+  syncShortActive();
+  document.body.style.overflow = 'hidden';
+  overlay.style.display = 'flex';
+  setTimeout(() => overlay.classList.add('open'), 10);
+}
+
+function closeShortEditor() {
+  const overlay = document.getElementById('shorts-overlay');
+  overlay.classList.remove('open');
+  setTimeout(() => { overlay.style.display = 'none'; document.body.style.overflow = ''; }, 260);
+}
+
+function previewShortAdmin() {
+  const val = document.getElementById('short-url').value.trim();
+  const box = document.getElementById('short-preview-box');
+  const hidden = document.getElementById('short-preview-hidden');
+  const img = document.getElementById('short-thumb');
+  // Match: /shorts/ID or v=ID or youtu.be/ID
+  const match = val.match(/(?:shorts\/|v=|youtu\.be\/)([a-zA-Z0-9_-]{11})(?:\?|&|\/|$|)/);
+  if (match) {
+    img.src = `https://img.youtube.com/vi/${match[1]}/hqdefault.jpg`;
+    box.style.display = 'flex';
+    hidden.style.display = 'none';
+  } else {
+    box.style.display = 'none';
+    hidden.style.display = 'block';
+  }
+}
+
+function toggleActiveShort() {
+  shortActive = !shortActive;
+  syncShortActive();
+}
+function syncShortActive() {
+  const toggle = document.getElementById('short-active-toggle');
+  if (!toggle) return;
+  toggle.classList.toggle('on', shortActive);
+}
+
+async function saveShort() {
+  const val = document.getElementById('short-url').value.trim();
+  const match = val.match(/(?:shorts\/|v=|youtu\.be\/)([a-zA-Z0-9_-]{11})(?:\?|&|\/|$|)/);
+  if (!shortCurrentId && !match) return showToast('Link de Short inválido.');
+  const title = (document.getElementById('short-preview-box').style.display !== 'none'
+    ? document.getElementById('short-title-inp').value
+    : document.getElementById('short-title-only').value) || '';
+  const btn = document.getElementById('short-save');
+  btn.disabled = true; btn.textContent = 'Salvando...';
+  try {
+    const payload = shortCurrentId
+      ? { id: shortCurrentId, active: shortActive, title }
+      : { yt_id: match[1], title };
+    const method = shortCurrentId ? 'PUT' : 'POST';
+    const r = await fetch(`${API}/shorts`, {
+      method,
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify(payload)
+    });
+    if (!r.ok) throw new Error();
+    showToast(`✓ Short ${shortCurrentId ? 'atualizado' : 'adicionado'}!`);
+    closeShortEditor();
+    loadShorts();
+  } catch {
+    showToast('Erro ao salvar short.');
+  } finally {
+    btn.disabled = false; btn.textContent = shortCurrentId ? 'Salvar alterações' : 'Salvar short';
+  }
+}
+
+function confirmDeleteShort() {
+  closeShortEditor();
+  openConfirm('Excluir Short', 'Deseja excluir este Short? Ele deixará de aparecer na página inicial.', 'Excluir', () => deleteShort(shortCurrentId));
+}
+async function deleteShort(id) {
+  try {
+    const r = await fetch(`${API}/shorts?id=${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } });
+    if (!r.ok) throw new Error();
+    showToast('✓ Short excluído.');
+    loadShorts();
+  } catch {
+    showToast('Falha ao excluir o short.');
   }
 }
 
