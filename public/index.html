@@ -152,6 +152,104 @@
       -ms-overflow-style: none;
       scrollbar-width: none;
     }
+
+    /* Modal Animation */
+    @keyframes modalIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px) scale(.98);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    #home-post-modal-panel {
+      animation: modalIn .35s cubic-bezier(.2, .8, .2, 1) both;
+    }
+
+    /* Tipografia Dinâmica do Artigo */
+    .article-body h2,
+    .article-body h3 {
+      font-family: 'Playfair Display', serif;
+      color: #1A1A1A;
+      font-weight: 600;
+    }
+
+    .article-body h2 {
+      font-size: 1.5rem;
+      margin: 2rem 0 .8rem;
+    }
+
+    .article-body h3 {
+      font-size: 1.25rem;
+      margin: 1.8rem 0 .6rem;
+    }
+
+    .article-body p {
+      color: #555;
+      font-weight: 300;
+      line-height: 1.9;
+      margin-bottom: 1.1rem;
+      font-size: .95rem;
+    }
+
+    .article-body strong {
+      color: #1A1A1A;
+      font-weight: 600;
+    }
+
+    .article-body ul {
+      list-style: none;
+      margin: .8rem 0 1.4rem;
+      padding: 0;
+    }
+
+    .article-body ul li {
+      padding: .45rem 0 .45rem 1.4rem;
+      border-bottom: 1px solid #f2f2f2;
+      color: #555;
+      font-weight: 300;
+      font-size: .9rem;
+      position: relative;
+      line-height: 1.6;
+    }
+
+    .article-body ul li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #C8102E;
+    }
+
+    .article-body .highlight-box,
+    .article-body blockquote {
+      background: #F9F9F9;
+      border-left: 3px solid #C8102E;
+      padding: 1.1rem 1.4rem;
+      margin: 1.4rem 0;
+      border-radius: 0 2px 2px 0;
+    }
+
+    .article-body .highlight-box p,
+    .article-body blockquote p {
+      margin: 0;
+      font-style: italic;
+      color: #444;
+      font-size: .9rem;
+    }
+
+    .article-body a {
+      color: #C8102E;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
   </style>
 
   <script type="application/ld+json">
@@ -1359,27 +1457,58 @@
     </div>
   </footer>
 
-  <div id="home-post-modal-overlay" class="fixed inset-0 z-[245] hidden bg-black/70 backdrop-blur-sm items-end sm:items-center justify-center p-0 sm:p-6" onclick="closeHomePostModal(event)">
-    <div id="home-post-modal-panel" class="relative bg-white w-full max-w-4xl h-[100dvh] sm:h-auto sm:max-h-[90vh] flex flex-col overflow-hidden rounded-none sm:rounded-2xl shadow-2xl">
-      <button onclick="closeHomePostModal(event)" aria-label="Fechar notícia" class="absolute top-4 right-4 z-20 w-10 h-10 bg-white/85 rounded-full flex items-center justify-center border border-gray-200">
+  <div id="home-post-modal-overlay" class="fixed inset-0 z-[245] hidden bg-neutral-900/70 backdrop-blur-md items-end sm:items-center justify-center p-0 sm:p-6 md:p-12 transition-all duration-500" onclick="closeHomePostModal(event)">
+    <div id="home-post-modal-panel" class="relative bg-[#F8F9FA] w-full max-w-4xl h-[100dvh] sm:h-auto sm:max-h-[90vh] flex flex-col shadow-[0_20px_60px_-15px_rgba(0,0,0,0.4)] sm:rounded-2xl overflow-hidden">
+      
+      <button onclick="closeHomePostModal(event)" aria-label="Fechar notícia" class="absolute top-4 right-4 sm:top-6 sm:right-6 z-[60] flex items-center justify-center w-10 h-10 bg-white/80 hover:bg-white backdrop-blur-md text-gray-600 hover:text-[#C8102E] transition-all rounded-full shadow-sm border border-gray-200/50">
         <i data-lucide="x" class="w-5 h-5"></i>
       </button>
-      <div id="home-post-modal-scroll" class="overflow-y-auto w-full h-full">
-        <div id="home-post-modal-media" class="w-full min-h-[220px] max-h-[min(72vh,520px)] bg-neutral-100 flex items-center justify-center p-4 sm:p-8"></div>
-        <div class="px-6 sm:px-12 py-10">
-          <div class="flex flex-wrap items-center gap-3 text-xs uppercase tracking-widest text-gray-500 mb-5">
-            <span id="home-post-modal-cat"></span>
-            <span>•</span>
-            <span id="home-post-modal-date"></span>
-            <span>•</span>
-            <span id="home-post-modal-read"></span>
+
+      <div id="home-post-modal-scroll" class="overflow-y-auto w-full h-full relative scroll-smooth bg-white">
+        <div id="home-post-modal-media" class="w-full min-h-[220px] max-h-[min(75vh,560px)] sm:min-h-[260px] sm:max-h-[500px] bg-neutral-100 relative overflow-hidden flex items-center justify-center p-4 sm:p-8 box-border"></div>
+        
+        <div class="relative bg-white mx-auto w-full px-6 sm:px-12 md:px-20 py-10 sm:py-16 -mt-12 sm:-mt-20 rounded-t-3xl sm:rounded-t-[2.5rem] shadow-[0_-10px_40px_rgba(0,0,0,0.08)] z-10 flex flex-col items-center">
+          <div class="w-full max-w-2xl">
+            <div class="flex items-center justify-between mb-8">
+              <div class="flex items-center gap-3">
+                <span id="home-post-modal-cat" class="text-[11px] font-bold tracking-[0.2em] uppercase text-[#C8102E] bg-red-50 px-3 py-1 rounded-full"></span>
+                <span class="text-gray-300">·</span>
+                <span id="home-post-modal-date" class="text-[11px] tracking-wider uppercase text-gray-500 font-medium"></span>
+              </div>
+              <span id="home-post-modal-read" class="text-[11px] text-gray-500 font-medium flex items-center gap-1.5 hidden sm:flex">
+                <i data-lucide="clock" class="w-3.5 h-3.5"></i> <span class="read-time-text"></span>
+              </span>
+            </div>
+            
+            <h2 id="home-post-modal-title" class="font-serif text-3xl sm:text-4xl md:text-[2.75rem] text-[#111] leading-[1.15] tracking-tight mb-10"></h2>
+            
+            <div id="home-post-modal-body" class="article-body text-neutral-700"></div>
+            
+            <div class="mt-16 bg-[#1A1A1A] rounded-2xl p-8 sm:p-10 relative overflow-hidden shadow-xl">
+              <div class="absolute -top-24 -right-24 w-64 h-64 bg-[#C8102E] rounded-full blur-[80px] opacity-20 pointer-events-none"></div>
+              <div class="relative z-10">
+                <h3 class="font-serif text-white text-xl sm:text-2xl mb-3">Precisa de assessoria jurídica?</h3>
+                <p class="text-gray-400 text-sm sm:text-base font-light mb-8 max-w-lg leading-relaxed">Nossa equipe de especialistas está pronta para analisar o seu caso com total confidencialidade, ética e sem compromisso.</p>
+                <div class="flex flex-col sm:flex-row gap-4">
+                  <a href="https://wa.me/5551981915878" target="_blank" class="flex items-center justify-center gap-2 bg-[#C8102E] text-white text-xs font-bold tracking-[.15em] uppercase px-8 py-4 hover:bg-red-700 transition-all rounded-xl shadow-lg shadow-red-900/30">
+                    <i data-lucide="message-circle" class="w-4 h-4"></i> Falar no WhatsApp
+                  </a>
+                  <a href="mailto:cop@copadvogados.com.br" class="flex items-center justify-center gap-2 border border-white/20 bg-transparent text-white text-xs font-bold tracking-[.15em] uppercase px-8 py-4 hover:bg-white/10 transition-all rounded-xl">
+                    <i data-lucide="mail" class="w-4 h-4"></i> Enviar E-mail
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Fix the structure to have the read full blog button here -->
+            <div id="related-wrapper" class="mt-8 flex justify-center pt-8 border-t border-gray-100">
+              <a id="home-post-modal-link" href="blog.html" class="inline-flex items-center justify-center gap-3 bg-gray-900 text-white px-8 py-3 rounded-xl text-xs font-bold tracking-[.18em] uppercase hover:bg-[#C8102E] transition-colors">
+                Ver no blog
+                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              </a>
+            </div>
+
           </div>
-          <h3 id="home-post-modal-title" class="font-serif text-3xl sm:text-4xl text-[#1A1A1A] mb-6"></h3>
-          <div id="home-post-modal-body" class="text-[#555] font-light leading-relaxed mb-8"></div>
-          <a id="home-post-modal-link" href="blog.html" class="inline-flex items-center justify-center gap-3 bg-gray-900 text-white px-8 py-3 rounded-xl text-xs font-bold tracking-[.18em] uppercase hover:bg-[#C8102E] transition-colors">
-            Ver no blog
-            <i data-lucide="arrow-right" class="w-4 h-4"></i>
-          </a>
         </div>
       </div>
     </div>
