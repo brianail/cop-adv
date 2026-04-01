@@ -1,19 +1,28 @@
 # COP Blog — Deploy no Vercel
 
 ## Estrutura
-```
+```text
 /
-├── blog.html           ← página pública do blog
-├── admin/index.html    ← painel do cliente (protegido por senha)
-├── api/
-│   ├── posts.js        ← GET /api/posts · POST /api/posts
-│   ├── posts/[id].js   ← GET · PUT · DELETE /api/posts/:id
-│   ├── upload.js       ← POST /api/upload
-│   ├── setup.js        ← POST /api/setup (cria tabela — usar 1 vez)
-│   └── auth/login.js   ← POST /api/auth/login
+├── public/                 ← arquivos estáticos e páginas públicas
+│   ├── index.html          ← página inicial (home)
+│   ├── blog.html           ← blog e notícias (dinâmico)
+│   ├── clientes.html       ← página de parceiros/clientes (estático + JS dinâmico)
+│   ├── equipe.html         ← corpo jurídico e equipe (página dedicada)
+│   ├── admin/
+│   │   └── index.html      ← painel do cliente (protegido por senha/JWT)
+├── api/                    ← backend Vercel Serverless Functions
+│   ├── posts.js            ← GET /api/posts · POST /api/posts
+│   ├── posts/[id].js       ← GET · PUT · DELETE /api/posts/:id
+│   ├── events.js           ← GET /api/events · POST /api/events
+│   ├── events/[id].js      ← GET · PUT · DELETE /api/events/:id
+│   ├── shorts.js           ← GET /api/shorts · POST /api/shorts (CRUD Web Stories)
+│   ├── upload.js           ← POST /api/upload
+│   ├── setup.js            ← POST /api/setup (cria e formata tabelas do banco)
+│   └── auth/login.js       ← POST /api/auth/login
 ├── lib/
-│   ├── db.js           ← conexão Vercel Postgres
-│   └── auth.js         ← middleware JWT
+│   ├── db.js               ← conexão e métodos para @vercel/postgres
+│   ├── allocateSlug.js     ← gerador inteligente de slugs únicos para posts/eventos
+│   └── auth.js             ← middleware de autenticação JWT para API
 ├── .env.example
 ├── package.json
 └── vercel.json
@@ -60,10 +69,11 @@ No painel do projeto: **Settings → Environment Variables**
 ### 6. Faça redeploy
 - **Deployments → ⋯ → Redeploy**
 
-### 7. Inicialize o banco
-O endpoint `POST /api/setup` cria/atualiza tabelas e colunas e **exige JWT** (mesmo token do login).
+### 7. Inicialize o banco de dados
+O endpoint `POST /api/setup` cria/atualiza as tabelas estruturais de banco do sistema (`posts`, `events`, `shorts`, `metrics`) e **exige JWT autoritário** (mesmo token do login).
 
-Após entrar no painel `/admin`, o próprio dashboard chama `/api/setup` automaticamente (idempotente). Também é possível via curl, após obter o token em `POST /api/auth/login`:
+Após entrar no painel administrativo `/admin`, o próprio dashboard invoca o `/api/setup` na abas pertinentes, de forma automática e segura (idempotente).
+Também é possível fazê-lo manualmente via curl, após obter o token em `POST /api/auth/login`:
 
 ```bash
 curl -X POST https://seu-dominio.vercel.app/api/setup \
@@ -74,21 +84,25 @@ curl -X POST https://seu-dominio.vercel.app/api/setup \
 
 ## Uso
 
-### Painel do cliente
+### Painel Administrativo do Cliente
 Acesse: `https://seu-dominio.vercel.app/admin`
 - Entre com a senha definida em `ADMIN_PASSWORD`
-- Crie, edite e exclua posts
+- Crie, edite e exclua Posts (Artigos de Blog) e Eventos (Agenda OAB/Sindicatos)
+- Gerencie as URLs do YouTube Shorts que formam os Stories Circulares do portal
+- Visualize métricas e informações gerais.
 
-### Blog público
-Acesse: `https://seu-dominio.vercel.app/blog.html`
-- Posts carregados dinamicamente da API
+### Portal Público (Institucional)
+Acesse a raiz: `https://seu-dominio.vercel.app/`
+- Renderização limpa da apresentação geral do Escritório
+- Carrossel dinâmico de Web Stories (provenientes da tabela `shorts`)
+- Demais menus roteando nativamente para `/equipe.html` e `/clientes.html`.
+- O blog completo com Modal Viewer de alta performance está roteado em `/blog.html`.
 
 ---
 
-## Segurança
-- O painel `/admin` exige senha (comparação resistente a *timing attacks*)
-- Todas as rotas de escrita (posts, upload, newsletter admin, setup) exigem token JWT válido
-- A listagem de inscritos da newsletter (`GET /api/newsletter`) exige JWT — não use mais senha na query string
-- Tokens expiram em 8 horas
-- O banco só aceita conexões do servidor Vercel
-- Variável opcional `ALLOWED_ORIGIN` restringe o cabeçalho CORS ao domínio do site
+## Segurança e Performance
+- O painel `/admin` exige senha e resolve JWT tokens no cache (sem dependência de persistência para cookies).
+- Todas as rotas de escrita na API (POST/PUT/DELETE em /posts, /events, /shorts, /setup) exigem o token no Bearer Header HTTP.
+- Todos os endpoints com queries implementam **Bind Parameters** (ex: `sql\`SELECT * FROM posts WHERE id=${id}\``) via API nativa suportada pelo `@vercel/postgres`, garantindo proteção absoluta contra injeção de SQL.
+- Tokens JWT expiram tipicamente numa sessão local limitante em 8/12 horas.
+- Variável opcional `ALLOWED_ORIGIN` restringe o cabeçalho pre-flight de CORS apenas ao domínio verificado.
