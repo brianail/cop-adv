@@ -680,6 +680,39 @@
         const BLOG_LIST_TITLE = document.title;
         const metaDescEl = document.querySelector('meta[name="description"]');
 
+        function getDeepLinkedPostId() {
+            try {
+                const params = new URLSearchParams(window.location.search);
+                const raw = params.get('post');
+                if (!raw) return null;
+                const id = Number(raw);
+                if (!Number.isInteger(id) || id <= 0) return null;
+                return id;
+            } catch {
+                return null;
+            }
+        }
+
+        function setPostParam(id) {
+            try {
+                const url = new URL(window.location.href);
+                url.searchParams.set('post', String(id));
+                history.replaceState(null, '', url.toString());
+            } catch {
+                // noop
+            }
+        }
+
+        function clearPostParam() {
+            try {
+                const url = new URL(window.location.href);
+                url.searchParams.delete('post');
+                history.replaceState(null, '', url.toString());
+            } catch {
+                // noop
+            }
+        }
+
         function thumbObjectStyle(p) {
             const pos = (p && p.img_pos) ? String(p.img_pos) : 'center';
             if (pos === 'contain') return 'object-fit:contain;object-position:center;';
@@ -993,6 +1026,7 @@
                 else if (readWrap) readWrap.textContent = p.read_time || 'Leitura rápida';
                 document.getElementById('m-title').textContent = p.title;
                 document.getElementById('m-body').innerHTML = p.body;
+                setPostParam(p.id || id);
 
                 document.title = p.title + ' | COP Advogados · Blog';
                 if (metaDescEl) {
@@ -1122,6 +1156,7 @@
             ov.classList.remove('flex');
             document.body.style.overflow = '';
             document.title = BLOG_LIST_TITLE;
+            clearPostParam();
             if (metaDescEl) {
                 metaDescEl.setAttribute('content',
                     'Artigos, notícias e análises jurídicas em Direito do Trabalho, Previdência, contencioso administrativo e sindical, pela equipe COP Advogados em Porto Alegre.');
@@ -1211,7 +1246,10 @@
         });
 
         // ── Iniciar ───────────────────────────────────────────────────────────────
-        initBlog();
+        initBlog().then(() => {
+            const deepLinkedId = getDeepLinkedPostId();
+            if (deepLinkedId) openPost(deepLinkedId);
+        });
     </script>
 </body>
 

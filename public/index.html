@@ -1359,6 +1359,32 @@
     </div>
   </footer>
 
+  <div id="home-post-modal-overlay" class="fixed inset-0 z-[245] hidden bg-black/70 backdrop-blur-sm items-end sm:items-center justify-center p-0 sm:p-6" onclick="closeHomePostModal(event)">
+    <div id="home-post-modal-panel" class="relative bg-white w-full max-w-4xl h-[100dvh] sm:h-auto sm:max-h-[90vh] flex flex-col overflow-hidden rounded-none sm:rounded-2xl shadow-2xl">
+      <button onclick="closeHomePostModal(event)" aria-label="Fechar notícia" class="absolute top-4 right-4 z-20 w-10 h-10 bg-white/85 rounded-full flex items-center justify-center border border-gray-200">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+      <div id="home-post-modal-scroll" class="overflow-y-auto w-full h-full">
+        <div id="home-post-modal-media" class="w-full min-h-[220px] max-h-[min(72vh,520px)] bg-neutral-100 flex items-center justify-center p-4 sm:p-8"></div>
+        <div class="px-6 sm:px-12 py-10">
+          <div class="flex flex-wrap items-center gap-3 text-xs uppercase tracking-widest text-gray-500 mb-5">
+            <span id="home-post-modal-cat"></span>
+            <span>•</span>
+            <span id="home-post-modal-date"></span>
+            <span>•</span>
+            <span id="home-post-modal-read"></span>
+          </div>
+          <h3 id="home-post-modal-title" class="font-serif text-3xl sm:text-4xl text-[#1A1A1A] mb-6"></h3>
+          <div id="home-post-modal-body" class="text-[#555] font-light leading-relaxed mb-8"></div>
+          <a id="home-post-modal-link" href="blog.html" class="inline-flex items-center justify-center gap-3 bg-gray-900 text-white px-8 py-3 rounded-xl text-xs font-bold tracking-[.18em] uppercase hover:bg-[#C8102E] transition-colors">
+            Ver no blog
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div id="event-modal-overlay" class="fixed inset-0 z-[250] hidden bg-black/70 backdrop-blur-sm items-end sm:items-center justify-center p-0 sm:p-6" onclick="closeEventModal(event)">
     <div id="event-modal-panel" class="relative bg-white w-full max-w-4xl h-[100dvh] sm:h-auto sm:max-h-[90vh] flex flex-col overflow-hidden rounded-none sm:rounded-2xl shadow-2xl">
       <button onclick="closeEventModal(event)" aria-label="Fechar evento" class="absolute top-4 right-4 z-20 w-10 h-10 bg-white/85 rounded-full flex items-center justify-center border border-gray-200">

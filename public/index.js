@@ -179,6 +179,68 @@ faqButtons.forEach(button => {
     institucional: 'Institucional'
   };
 
+  function escHtml(raw) {
+    return String(raw || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function closeHomePostModal(ev) {
+    if (ev && ev.currentTarget && ev.currentTarget.id === 'home-post-modal-overlay' && ev.target !== ev.currentTarget) {
+      return;
+    }
+    const ov = document.getElementById('home-post-modal-overlay');
+    if (!ov) return;
+    ov.classList.add('hidden');
+    ov.classList.remove('flex');
+    document.body.style.overflow = '';
+  }
+
+  async function openHomePostModal(id) {
+    try {
+      const r = await fetch(`/api/posts/${id}`);
+      if (!r.ok) throw new Error();
+      const p = await r.json();
+
+      const media = document.getElementById('home-post-modal-media');
+      const title = document.getElementById('home-post-modal-title');
+      const cat = document.getElementById('home-post-modal-cat');
+      const date = document.getElementById('home-post-modal-date');
+      const read = document.getElementById('home-post-modal-read');
+      const body = document.getElementById('home-post-modal-body');
+      const link = document.getElementById('home-post-modal-link');
+      const sc = document.getElementById('home-post-modal-scroll');
+
+      if (!media || !title || !cat || !date || !read || !body || !link) return;
+
+      const thumb = p.yt_id
+        ? `https://img.youtube.com/vi/${p.yt_id}/hqdefault.jpg`
+        : (p.img || 'https://via.placeholder.com/1200x630?text=Publicação');
+      const alt = escHtml(p.img_alt || p.title || 'Imagem da publicação');
+      media.innerHTML = `<img src="${thumb}" alt="${alt}" class="max-w-full max-h-[min(65vh,460px)] w-auto h-auto object-contain" loading="lazy" decoding="async">`;
+
+      title.textContent = p.title || 'Publicação';
+      cat.textContent = CAT_LABELS[p.cat] || p.cat || 'Notícia';
+      date.textContent = p.date || '';
+      read.textContent = p.read_time || 'Leitura rápida';
+      body.innerHTML = p.body || '<p>Sem conteúdo.</p>';
+      link.href = `blog.html?post=${encodeURIComponent(String(p.id || id))}`;
+
+      if (sc) sc.scrollTop = 0;
+      const ov = document.getElementById('home-post-modal-overlay');
+      if (!ov) return;
+      ov.classList.remove('hidden');
+      ov.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+      lucide.createIcons();
+    } catch {
+      // silêncio para não quebrar home
+    }
+  }
+
   async function loadHomePosts() {
 
     const grid = document.getElementById('home-posts-grid');
@@ -220,7 +282,7 @@ faqButtons.forEach(button => {
 
         art.innerHTML = `
 
-          <a href="blog.html" class="block">
+          <button type="button" class="block text-left w-full" aria-label="Abrir prévia da publicação: ${escHtml(p.title)}">
 
             <div class="overflow-hidden relative h-52 flex-shrink-0">
 
@@ -283,9 +345,13 @@ faqButtons.forEach(button => {
 
             </div>
 
-          </a>
+          </button>
 
         `;
+        const trigger = art.querySelector('button');
+        if (trigger) {
+          trigger.addEventListener('click', () => openHomePostModal(p.id));
+        }
 
         grid.appendChild(art);
 
@@ -399,8 +465,14 @@ faqButtons.forEach(button => {
   }
 
   window.closeEventModal = closeEventModal;
+  window.closeHomePostModal = closeHomePostModal;
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
+      const pov = document.getElementById('home-post-modal-overlay');
+      if (pov && !pov.classList.contains('hidden')) {
+        closeHomePostModal();
+        return;
+      }
       const ov = document.getElementById('event-modal-overlay');
       if (ov && !ov.classList.contains('hidden')) closeEventModal();
     }
