@@ -310,8 +310,8 @@
           <button onclick="scrollToSection('areas-de-atuacao')"
             class="nav-link text-sm font-medium tracking-wide transition-colors duration-300 hover-underline-animation text-gray-200 hover:text-white">Áreas
             de Atuação</button>
-          <button onclick="scrollToSection('equipe')"
-            class="nav-link text-sm font-medium tracking-wide transition-colors duration-300 hover-underline-animation text-gray-200 hover:text-white">Equipe</button>
+          <a href="equipe.html"
+            class="inline-block nav-link text-sm font-medium tracking-wide transition-colors duration-300 hover-underline-animation text-gray-200 hover:text-white">Equipe</a>
           <a href="clientes.html"
             class="inline-block nav-link text-sm font-medium tracking-wide transition-colors duration-300 hover-underline-animation text-gray-200 hover:text-white">Clientes</a>
           <a href="blog.html"
@@ -339,8 +339,8 @@
         <button onclick="scrollToSection('areas-de-atuacao')"
           class="block w-full text-left text-lg font-serif text-[#2C2C2C] hover:text-[#C8102E] transition-colors py-2 border-b border-gray-50">Áreas
           de Atuação</button>
-        <button onclick="scrollToSection('equipe')"
-          class="block w-full text-left text-lg font-serif text-[#2C2C2C] hover:text-[#C8102E] transition-colors py-2 border-b border-gray-50">Equipe</button>
+        <a href="equipe.html"
+          class="block w-full text-left text-lg font-serif text-[#2C2C2C] hover:text-[#C8102E] transition-colors py-2 border-b border-gray-50">Equipe</a>
         <a href="clientes.html"
           class="block w-full text-left text-lg font-serif text-[#2C2C2C] hover:text-[#C8102E] transition-colors py-2 border-b border-gray-50">Clientes</a>
         <a href="blog.html"
@@ -730,130 +730,93 @@
 
 </section>
 
-  <!-- SEÇÃO DE VÍDEOS YOUTUBE -->
-  <section id="videos" class="py-24 md:py-32 bg-[#1A1A1A] relative overflow-hidden text-white border-b border-[#2A2A2A]">
+  <!-- CANAL COP SECTION (SHORTS + VIDEOS) -->
+  <section id="canal" class="py-24 md:py-32 bg-[#0A0A0A] relative text-white border-y border-[#1A1A1A]">
     <!-- Background estético com glow -->
-    <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-[#C8102E]/20 rounded-full blur-[140px] pointer-events-none transform translate-x-1/3 -translate-y-1/3"></div>
+    <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-[#C8102E]/10 rounded-full blur-[140px] pointer-events-none transform translate-x-1/3 -translate-y-1/3"></div>
+    <div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[#C8102E]/5 rounded-full blur-[120px] pointer-events-none transform -translate-x-1/3 translate-y-1/3"></div>
 
     <div class="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
       <div class="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 mb-16 js-scroll opacity-0 translate-y-8 transition-all duration-1000 ease-out">
         <div>
           <h2 class="text-[10px] md:text-xs font-bold tracking-[0.25em] text-[#C8102E] uppercase mb-4">Canal COP</h2>
-          <h3 class="text-3xl md:text-5xl font-serif leading-tight">Nossos <span class="italic text-gray-400">Vídeos</span></h3>
+          <h3 class="text-3xl md:text-5xl font-serif leading-tight">Em <span class="italic text-gray-400">Destaque</span></h3>
         </div>
-        <a href="https://www.youtube.com/@COPAdvogados" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors uppercase tracking-[0.1em] font-medium group">
-          Inscrever-se no Canal
-          <i data-lucide="youtube" class="w-5 h-5 text-[#C8102E] group-hover:scale-110 transition-transform"></i>
-        </a>
+        <div class="flex flex-col sm:flex-row items-start gap-4">
+          <a href="https://www.youtube.com/@COPAdvogados/shorts" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-xs md:text-sm text-gray-400 hover:text-white transition-colors uppercase tracking-[0.1em] font-medium group">
+            Ver Shorts
+            <i data-lucide="external-link" class="w-4 h-4 text-[#C8102E] group-hover:scale-110 transition-transform"></i>
+          </a>
+          <a href="https://www.youtube.com/@COPAdvogados" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-xs md:text-sm text-gray-400 hover:text-white transition-colors uppercase tracking-[0.1em] font-medium group">
+            Inscrever-se
+            <i data-lucide="youtube" class="w-5 h-5 text-[#C8102E] group-hover:scale-110 transition-transform"></i>
+          </a>
+        </div>
       </div>
 
       <style>
         .scrollbar-video::-webkit-scrollbar { display: none; }
         .scrollbar-video { -ms-overflow-style: none; scrollbar-width: none; }
+        .mask-carousel { -webkit-mask-image: linear-gradient(to right, transparent, black 4%, black 96%, transparent); mask-image: linear-gradient(to right, transparent, black 4%, black 96%, transparent); }
         
-        /* Fade effect masks */
-        .mask-carousel {
-          mask-image: linear-gradient(to right, transparent, black 4%, black 96%, transparent);
-          -webkit-mask-image: linear-gradient(to right, transparent, black 4%, black 96%, transparent);
-        }
-      </style>
-
-      <div class="relative w-full group/carousel">
-        <!-- Floating Nav Arrows -->
-        <button onclick="scrollVideoSlider(-1)" aria-label="Rolar para esquerda" class="absolute left-0 top-1/2 -translate-y-1/2 z-20 w-12 h-12 flex items-center justify-center bg-black/40 hover:bg-[#C8102E] text-white backdrop-blur-md rounded-full border border-white/10 opacity-0 group-hover/carousel:opacity-100 transition-all duration-300 transform -translate-x-1/2 hover:scale-110 shadow-xl pointer-events-auto">
-          <i data-lucide="chevron-left" class="w-6 h-6"></i>
-        </button>
-        
-        <button onclick="scrollVideoSlider(1)" aria-label="Rolar para direita" class="absolute right-0 top-1/2 -translate-y-1/2 z-20 w-12 h-12 flex items-center justify-center bg-black/40 hover:bg-[#C8102E] text-white backdrop-blur-md rounded-full border border-white/10 opacity-0 group-hover/carousel:opacity-100 transition-all duration-300 transform translate-x-1/2 hover:scale-110 shadow-xl pointer-events-auto">
-          <i data-lucide="chevron-right" class="w-6 h-6"></i>
-        </button>
-
-        <div class="mask-carousel -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-12 lg:px-12">
-          <div id="home-videos-slider" class="flex overflow-x-auto gap-4 md:gap-6 pb-8 snap-x snap-mandatory scrollbar-video" style="scroll-padding-left: 24px;">
-            <!-- Skeletons preenchidos no JS -->
-            <div class="aspect-video bg-white/5 animate-pulse rounded-lg md:rounded-2xl shrink-0 snap-center w-[85vw] sm:w-[45vw] lg:w-[30vw] max-w-[420px]"></div>
-            <div class="aspect-video bg-white/5 animate-pulse rounded-lg md:rounded-2xl shrink-0 snap-center w-[85vw] sm:w-[45vw] lg:w-[30vw] max-w-[420px]"></div>
-            <div class="aspect-video bg-white/5 animate-pulse rounded-lg md:rounded-2xl shrink-0 snap-center w-[85vw] sm:w-[45vw] lg:w-[30vw] max-w-[420px]"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Estado vazio -->
-      <div id="home-videos-empty" class="hidden text-center py-24 bg-white/5 rounded-2xl border border-white/10 mt-8">
-        <i data-lucide="video-off" class="w-10 h-10 text-gray-500 mx-auto mb-4"></i>
-        <p class="text-gray-400 font-medium tracking-wide">Nenhum vídeo disponível no momento.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- SHORTS STORIES SECTION -->
-  <section id="shorts" class="py-20 md:py-28 bg-[#0d0d0d] border-t border-white/5">
-    <div class="max-w-7xl mx-auto px-6 lg:px-12">
-      <div class="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-10">
-        <div>
-          <h2 class="text-[10px] md:text-xs font-bold tracking-[0.25em] text-[#C8102E] uppercase mb-4">Shorts & Reels</h2>
-          <h3 class="text-3xl md:text-5xl font-serif leading-tight text-white">Em <span class="italic text-gray-400">Destaque</span></h3>
-        </div>
-        <a href="https://www.youtube.com/@COPAdvogados/shorts" target="_blank" rel="noopener noreferrer"
-           class="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors uppercase tracking-[0.1em] font-medium group shrink-0">
-          Ver todos os Shorts
-          <i data-lucide="external-link" class="w-4 h-4 text-[#C8102E] group-hover:scale-110 transition-transform"></i>
-        </a>
-      </div>
-
-      <style>
         /* STORIES BUBBLES */
         .stories-row { display:flex; gap:1.5rem; overflow-x:auto; padding-bottom:1.5rem; scroll-snap-type:x mandatory; -ms-overflow-style:none; scrollbar-width:none; }
         .stories-row::-webkit-scrollbar { display:none; }
         .story-bubble-wrap { display:flex; flex-direction:column; align-items:center; gap:.65rem; cursor:pointer; flex-shrink:0; scroll-snap-align:start; width:110px; }
         .story-bubble { width:96px; height:96px; border-radius:50%; padding:3px; background: conic-gradient(#C8102E 0%, #ff4d4d 40%, #C8102E 70%, #8b0000 100%); position:relative; transition:transform .2s cubic-bezier(0.34,1.56,0.64,1); flex-shrink:0; }
         .story-bubble:hover { transform: scale(1.08); }
-        .story-bubble-inner { width:100%; height:100%; border-radius:50%; overflow:hidden; border:3px solid #0d0d0d; }
+        .story-bubble-inner { width:100%; height:100%; border-radius:50%; overflow:hidden; border:3px solid #0A0A0A; }
         .story-bubble-inner img { width:100%; height:100%; object-fit:cover; display:block; }
         .story-bubble.seen { background: conic-gradient(#444 0%, #555 100%); }
         .story-bubble.active-story { animation: story-pulse 1.5s ease-in-out infinite; }
         @keyframes story-pulse { 0%,100%{box-shadow:0 0 0 0 rgba(200,16,46,.5)} 50%{box-shadow:0 0 0 10px rgba(200,16,46,0)} }
         .story-label { font-size:.65rem; color:rgba(255,255,255,.6); text-align:center; max-width:100px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-weight:500; letter-spacing:.02em; }
-
-        /* STORIES VIEWER MODAL */
-        #shorts-modal { display:none; position:fixed; inset:0; z-index:9000; background:rgba(0,0,0,.92); backdrop-filter:blur(8px); align-items:center; justify-content:center; opacity:0; transition:opacity .25s ease; }
-        #shorts-modal.open { display:flex; opacity:1; }
-        .shorts-modal-inner { position:relative; width:100%; max-width:360px; height:100vh; max-height:680px; display:flex; align-items:center; justify-content:center; }
-        .shorts-modal-frame { width:100%; height:100%; max-height:640px; border-radius:18px; overflow:hidden; box-shadow:0 30px 80px rgba(0,0,0,.8); background:#000; aspect-ratio:9/16; }
-        .shorts-modal-frame iframe { width:100%; height:100%; border:none; display:block; }
-        .shorts-modal-close { position:absolute; top: -3rem; right:0; background:rgba(255,255,255,.12); border:none; color:#fff; border-radius:50%; width:36px; height:36px; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:background .2s; }
-        .shorts-modal-close:hover { background:rgba(200,16,46,.8); }
-        .shorts-modal-nav { position:absolute; top:50%; transform:translateY(-50%); background:rgba(255,255,255,.12); border:none; color:#fff; border-radius:50%; width:42px; height:42px; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all .2s; z-index:1; }
-        .shorts-modal-nav:hover { background:rgba(200,16,46,.8); }
-        .shorts-modal-prev { left: -56px; }
-        .shorts-modal-next { right: -56px; }
-        @media(max-width:640px) {
-          .shorts-modal-inner { max-width:100vw; max-height:100dvh; border-radius:0; }
-          .shorts-modal-frame { border-radius:0; max-height:100dvh; }
-          .shorts-modal-prev { left:8px; }
-          .shorts-modal-next { right:8px; }
-          .shorts-modal-close { top:1rem; right:1rem; position:fixed; }
-        }
       </style>
 
-      <!-- Bolinhas stories -->
-      <div class="stories-row" id="home-shorts-bubbles">
-        <!-- Skeletons -->
-        <div class="story-bubble-wrap" style="pointer-events:none">
-          <div class="story-bubble" style="background:#222;"><div class="story-bubble-inner" style="background:#333;border:3px solid #0d0d0d;"></div></div>
-          <div style="height:.5rem;width:60px;background:#222;border-radius:4px;"></div>
+      <!-- BOLINHAS STORIES (Shorts) -->
+      <div class="mb-14 border-b border-white/5 pb-8 js-scroll opacity-0 translate-y-8 transition-all duration-1000 delay-150 ease-out">
+        <h4 class="text-xs uppercase tracking-widest text-gray-500 mb-6 font-medium pl-2">Shorts Recentes</h4>
+        <div class="stories-row" id="home-shorts-bubbles">
+          <!-- Skeletons -->
+          <div class="story-bubble-wrap" style="pointer-events:none">
+            <div class="story-bubble" style="background:#222;"><div class="story-bubble-inner" style="background:#333;border:3px solid #0A0A0A;"></div></div>
+            <div style="height:.5rem;width:60px;background:#222;border-radius:4px;"></div>
+          </div>
+          <div class="story-bubble-wrap" style="pointer-events:none">
+            <div class="story-bubble" style="background:#222;"><div class="story-bubble-inner" style="background:#333;border:3px solid #0A0A0A;"></div></div>
+            <div style="height:.5rem;width:50px;background:#222;border-radius:4px;"></div>
+          </div>
         </div>
-        <div class="story-bubble-wrap" style="pointer-events:none">
-          <div class="story-bubble" style="background:#222;"><div class="story-bubble-inner" style="background:#333;border:3px solid #0d0d0d;"></div></div>
-          <div style="height:.5rem;width:50px;background:#222;border-radius:4px;"></div>
-        </div>
-        <div class="story-bubble-wrap" style="pointer-events:none">
-          <div class="story-bubble" style="background:#222;"><div class="story-bubble-inner" style="background:#333;border:3px solid #0d0d0d;"></div></div>
-          <div style="height:.5rem;width:55px;background:#222;border-radius:4px;"></div>
-        </div>
+        <div id="home-shorts-empty" class="hidden text-left py-6 text-gray-500 text-sm pl-2">Nenhum short disponível no momento.</div>
       </div>
 
-      <div id="home-shorts-empty" class="hidden text-center py-16 text-gray-500 text-sm">Nenhum short disponível no momento.</div>
+      <!-- CAROUSEL VIDEOS TUBE -->
+      <div class="js-scroll opacity-0 translate-y-8 transition-all duration-1000 delay-300 ease-out">
+        <h4 class="text-xs uppercase tracking-widest text-gray-500 mb-6 font-medium pl-2">Últimos Vídeos</h4>
+        <div class="relative w-full group/carousel">
+          <button onclick="scrollVideoSlider(-1)" aria-label="Rolar para esquerda" class="absolute left-0 top-1/2 -translate-y-1/2 z-20 w-12 h-12 flex items-center justify-center bg-black/40 hover:bg-[#C8102E] text-white backdrop-blur-md rounded-full border border-white/10 opacity-0 group-hover/carousel:opacity-100 transition-all duration-300 transform -translate-x-1/2 hover:scale-110 shadow-xl pointer-events-auto">
+            <i data-lucide="chevron-left" class="w-6 h-6"></i>
+          </button>
+          
+          <button onclick="scrollVideoSlider(1)" aria-label="Rolar para direita" class="absolute right-0 top-1/2 -translate-y-1/2 z-20 w-12 h-12 flex items-center justify-center bg-black/40 hover:bg-[#C8102E] text-white backdrop-blur-md rounded-full border border-white/10 opacity-0 group-hover/carousel:opacity-100 transition-all duration-300 transform translate-x-1/2 hover:scale-110 shadow-xl pointer-events-auto">
+            <i data-lucide="chevron-right" class="w-6 h-6"></i>
+          </button>
+
+          <div class="mask-carousel -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-12 lg:px-12">
+            <div id="home-videos-slider" class="flex overflow-x-auto gap-4 md:gap-6 pb-8 snap-x snap-mandatory scrollbar-video" style="scroll-padding-left: 24px;">
+              <!-- Skeletons -->
+              <div class="aspect-video bg-white/5 animate-pulse rounded-lg md:rounded-2xl shrink-0 snap-center w-[85vw] sm:w-[45vw] lg:w-[30vw] max-w-[420px]"></div>
+              <div class="aspect-video bg-white/5 animate-pulse rounded-lg md:rounded-2xl shrink-0 snap-center w-[85vw] sm:w-[45vw] lg:w-[30vw] max-w-[420px]"></div>
+              <div class="aspect-video bg-white/5 animate-pulse rounded-lg md:rounded-2xl shrink-0 snap-center w-[85vw] sm:w-[45vw] lg:w-[30vw] max-w-[420px]"></div>
+            </div>
+          </div>
+        </div>
+
+        <div id="home-videos-empty" class="hidden text-center py-20 bg-white/5 rounded-2xl border border-white/10 mt-4">
+          <i data-lucide="video-off" class="w-10 h-10 text-gray-600 mx-auto mb-4"></i>
+          <p class="text-gray-500 font-medium tracking-wide">Nenhum vídeo disponível no momento.</p>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -896,395 +859,7 @@
     </div>
   </section>
 
-  <section id="equipe" class="py-32 bg-[#F9F9F9] border-b border-gray-200">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
-      <div class="text-center mb-24 js-scroll opacity-0 translate-y-12 transition-all duration-1000 ease-out">
-        <h2 class="text-xs font-bold tracking-[0.2em] text-[#C8102E] uppercase mb-4">Capital Humano</h2>
-        <h3 class="text-4xl md:text-5xl font-serif text-[#1A1A1A] mb-6">Sócios Fundadores</h3>
-        <div class="w-px h-16 bg-[#C8102E] mx-auto mt-8"></div>
-      </div>
-
-      <div class="mb-32">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-16">
-          <div class="flex flex-col items-center group cursor-default js-scroll opacity-0 scale-90 transition-all duration-1000 ease-out" data-delay="100">
-            <div
-              class="w-52 h-52 rounded-full bg-gray-200 mb-8 overflow-hidden relative border-4 border-transparent group-hover:border-[#C8102E] transition-all duration-500 shadow-lg">
-              <img loading="lazy"
-                src="https://ui-avatars.com/api/?name=Antônio+Escosteguy+Castro&background=e5e7eb&color=374151&size=256"
-                alt="Antônio Escosteguy Castro"
-                class="w-full h-full object-cover grayscale opacity-90 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" />
-            </div>
-            <h4 class="font-serif text-2xl text-[#1A1A1A] mb-2 text-center">Antônio Escosteguy Castro</h4>
-            <p class="text-[#C8102E] text-xs font-bold tracking-widest uppercase">Sócio Fundador</p>
-          </div>
-
-          <div class="flex flex-col items-center group cursor-default js-scroll opacity-0 scale-90 transition-all duration-1000 ease-out" data-delay="200">
-            <div
-              class="w-52 h-52 rounded-full bg-gray-200 mb-8 overflow-hidden relative border-4 border-transparent group-hover:border-[#C8102E] transition-all duration-500 shadow-lg">
-              <img loading="lazy"
-                src="https://ui-avatars.com/api/?name=Pedro+Luiz+Corrêa+Osorio&background=e5e7eb&color=374151&size=256"
-                alt="Pedro Luiz Corrêa Osorio"
-                class="w-full h-full object-cover grayscale opacity-90 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" />
-            </div>
-            <h4 class="font-serif text-2xl text-[#1A1A1A] mb-2 text-center">Pedro Luiz Corrêa Osorio</h4>
-            <p class="text-[#C8102E] text-xs font-bold tracking-widest uppercase">Sócio Fundador</p>
-          </div>
-
-          <div class="flex flex-col items-center group cursor-default js-scroll opacity-0 scale-90 transition-all duration-1000 ease-out" data-delay="300">
-            <div
-              class="w-52 h-52 rounded-full bg-gray-200 mb-8 overflow-hidden relative border-4 border-transparent group-hover:border-[#C8102E] transition-all duration-500 shadow-lg">
-              <img loading="lazy"
-                src="https://ui-avatars.com/api/?name=Maurício+Pedrassani&background=e5e7eb&color=374151&size=256"
-                alt="Maurício Pedrassani"
-                class="w-full h-full object-cover grayscale opacity-90 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" />
-            </div>
-            <h4 class="font-serif text-2xl text-[#1A1A1A] mb-2 text-center">Maurício Pedrassani</h4>
-            <p class="text-[#C8102E] text-xs font-bold tracking-widest uppercase">Sócio Fundador</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="mb-32">
-        <div class="text-center mb-20 js-scroll opacity-0 translate-y-12 transition-all duration-1000 ease-out">
-          <h3 class="text-3xl font-serif text-[#1A1A1A]">Sócios</h3>
-          <div class="w-10 h-[1px] bg-[#C8102E] mx-auto mt-6"></div>
-        </div>
-
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-y-14 gap-x-10 lg:gap-x-12">
-
-          <!-- 1 -->
-          <div class="flex flex-col items-center text-center group js-scroll opacity-0 scale-90 transition-all duration-700 ease-out" data-delay="100">
-            <div
-              class="w-28 h-28 lg:w-32 lg:h-32 rounded-full overflow-hidden bg-gray-100 mb-5 border border-transparent transition-all duration-500 group-hover:border-[#C8102E]">
-              <img src="https://ui-avatars.com/api/?name=Luiz+Gustavo+Reimann&background=e5e7eb&color=374151&size=256"
-                class="w-full h-full object-cover grayscale opacity-90 transition-all duration-700 group-hover:grayscale-0 group-hover:opacity-100" />
-            </div>
-            <h4 class="font-serif text-[15px] lg:text-base text-[#1A1A1A] leading-snug">
-              Luiz Gustavo Capitani e Silva Reimann
-            </h4>
-            <span class="mt-2 text-[10px] tracking-[0.25em] text-[#C8102E] uppercase font-medium">Sócio</span>
-          </div>
-
-          <!-- 2 -->
-          <div class="flex flex-col items-center text-center group js-scroll opacity-0 scale-90 transition-all duration-700 ease-out" data-delay="150">
-            <div
-              class="w-28 h-28 lg:w-32 lg:h-32 rounded-full overflow-hidden bg-gray-100 mb-5 border border-transparent transition-all duration-500 group-hover:border-[#C8102E]">
-              <img
-                src="https://ui-avatars.com/api/?name=Priscila+Freitas+Matheus&background=e5e7eb&color=374151&size=256"
-                class="w-full h-full object-cover grayscale opacity-90 transition-all duration-700 group-hover:grayscale-0 group-hover:opacity-100" />
-            </div>
-            <h4 class="font-serif text-[15px] lg:text-base text-[#1A1A1A] leading-snug">
-              Priscila Freitas Matheus
-            </h4>
-            <span class="mt-2 text-[10px] tracking-[0.25em] text-[#C8102E] uppercase font-medium">Sócia</span>
-          </div>
-
-          <!-- 3 -->
-          <div class="flex flex-col items-center text-center group js-scroll opacity-0 scale-90 transition-all duration-700 ease-out" data-delay="200">
-            <div
-              class="w-28 h-28 lg:w-32 lg:h-32 rounded-full overflow-hidden bg-gray-100 mb-5 border border-transparent transition-all duration-500 group-hover:border-[#C8102E]">
-              <img src="https://ui-avatars.com/api/?name=Fabio+Ferronato+Matei&background=e5e7eb&color=374151&size=256"
-                class="w-full h-full object-cover grayscale opacity-90 transition-all duration-700 group-hover:grayscale-0 group-hover:opacity-100" />
-            </div>
-            <h4 class="font-serif text-[15px] lg:text-base text-[#1A1A1A] leading-snug">
-              Fabio Ferronato Matei
-            </h4>
-            <span class="mt-2 text-[10px] tracking-[0.25em] text-[#C8102E] uppercase font-medium">Sócio</span>
-          </div>
-
-          <!-- 4 -->
-          <div class="flex flex-col items-center text-center group js-scroll opacity-0 scale-90 transition-all duration-700 ease-out" data-delay="250">
-            <div
-              class="w-28 h-28 lg:w-32 lg:h-32 rounded-full overflow-hidden bg-gray-100 mb-5 border border-transparent transition-all duration-500 group-hover:border-[#C8102E]">
-              <img
-                src="https://ui-avatars.com/api/?name=Caroline+Barden+Goulart&background=e5e7eb&color=374151&size=256"
-                class="w-full h-full object-cover grayscale opacity-90 transition-all duration-700 group-hover:grayscale-0 group-hover:opacity-100" />
-            </div>
-            <h4 class="font-serif text-[15px] lg:text-base text-[#1A1A1A] leading-snug">
-              Caroline Barden Goulart
-            </h4>
-            <span class="mt-2 text-[10px] tracking-[0.25em] text-[#C8102E] uppercase font-medium">Sócia</span>
-          </div>
-
-          <!-- 5 -->
-          <div class="flex flex-col items-center text-center group js-scroll opacity-0 scale-90 transition-all duration-700 ease-out" data-delay="300">
-            <div
-              class="w-28 h-28 lg:w-32 lg:h-32 rounded-full overflow-hidden bg-gray-100 mb-5 border border-transparent transition-all duration-500 group-hover:border-[#C8102E]">
-              <img src="https://ui-avatars.com/api/?name=Ingrid+Emiliano&background=e5e7eb&color=374151&size=256"
-                class="w-full h-full object-cover grayscale opacity-90 transition-all duration-700 group-hover:grayscale-0 group-hover:opacity-100" />
-            </div>
-            <h4 class="font-serif text-[15px] lg:text-base text-[#1A1A1A] leading-snug">
-              Ingrid Emiliano
-            </h4>
-            <span class="mt-2 text-[10px] tracking-[0.25em] text-[#C8102E] uppercase font-medium">Sócia</span>
-          </div>
-
-          <!-- 6 -->
-          <div class="flex flex-col items-center text-center group js-scroll opacity-0 scale-90 transition-all duration-700 ease-out" data-delay="100">
-            <div
-              class="w-28 h-28 lg:w-32 lg:h-32 rounded-full overflow-hidden bg-gray-100 mb-5 border border-transparent transition-all duration-500 group-hover:border-[#C8102E]">
-              <img
-                src="https://ui-avatars.com/api/?name=Ramiro+Crochemore+Castro&background=e5e7eb&color=374151&size=256"
-                class="w-full h-full object-cover grayscale opacity-90 transition-all duration-700 group-hover:grayscale-0 group-hover:opacity-100" />
-            </div>
-            <h4 class="font-serif text-[15px] lg:text-base text-[#1A1A1A] leading-snug">
-              Ramiro Crochemore Castro
-            </h4>
-            <span class="mt-2 text-[10px] tracking-[0.25em] text-[#C8102E] uppercase font-medium">Sócio</span>
-          </div>
-
-          <!-- 7 -->
-          <div class="flex flex-col items-center text-center group js-scroll opacity-0 scale-90 transition-all duration-700 ease-out" data-delay="150">
-            <div
-              class="w-28 h-28 lg:w-32 lg:h-32 rounded-full overflow-hidden bg-gray-100 mb-5 border border-transparent transition-all duration-500 group-hover:border-[#C8102E]">
-
-              <img
-                src="https://ui-avatars.com/api/?name=Clarissa+M%C3%A1ssia+Os%C3%B3rio&background=e5e7eb&color=374151&size=256"
-                alt="Clarissa Mássia Osório"
-                class="w-full h-full object-cover grayscale opacity-90 transition-all duration-700 group-hover:grayscale-0 group-hover:opacity-100" />
-
-            </div>
-
-            <h4 class="font-serif text-[15px] lg:text-base text-[#1A1A1A] leading-snug">
-              Clarissa Mássia Osório
-            </h4>
-
-            <span class="mt-2 text-[10px] tracking-[0.25em] text-[#C8102E] uppercase font-medium">
-              Sócia
-            </span>
-          </div>
-
-          <!-- 8 -->
-          <div class="flex flex-col items-center text-center group js-scroll opacity-0 scale-90 transition-all duration-700 ease-out" data-delay="200">
-            <div
-              class="w-28 h-28 lg:w-32 lg:h-32 rounded-full overflow-hidden bg-gray-100 mb-5 border border-transparent transition-all duration-500 group-hover:border-[#C8102E]">
-
-              <img
-                src="https://ui-avatars.com/api/?name=Augusto+St%C3%BCrmer+Caye&background=e5e7eb&color=374151&size=256"
-                alt="Augusto Stürmer Caye"
-                class="w-full h-full object-cover grayscale opacity-90 transition-all duration-700 group-hover:grayscale-0 group-hover:opacity-100" />
-
-            </div>
-
-            <h4 class="font-serif text-[15px] lg:text-base text-[#1A1A1A] leading-snug">
-              Augusto Stürmer Caye
-            </h4>
-
-            <span class="mt-2 text-[10px] tracking-[0.25em] text-[#C8102E] uppercase font-medium">
-              Sócio
-            </span>
-          </div>
-
-          <!-- 9 -->
-          <div class="flex flex-col items-center text-center group js-scroll opacity-0 scale-90 transition-all duration-700 ease-out" data-delay="250">
-            <div
-              class="w-28 h-28 lg:w-32 lg:h-32 rounded-full overflow-hidden bg-gray-100 mb-5 border border-transparent transition-all duration-500 group-hover:border-[#C8102E]">
-              <img src="https://ui-avatars.com/api/?name=Thassia+Menotti&background=e5e7eb&color=374151&size=256"
-                class="w-full h-full object-cover grayscale opacity-90 transition-all duration-700 group-hover:grayscale-0 group-hover:opacity-100" />
-            </div>
-            <h4 class="font-serif text-[15px] lg:text-base text-[#1A1A1A] leading-snug">
-              Thassia Menotti de Souza Araújo
-            </h4>
-            <span class="mt-2 text-[10px] tracking-[0.25em] text-[#C8102E] uppercase font-medium">Sócia</span>
-          </div>
-
-          <!-- 10 -->
-          <div class="flex flex-col items-center text-center group js-scroll opacity-0 scale-90 transition-all duration-700 ease-out" data-delay="300">
-            <div
-              class="w-28 h-28 lg:w-32 lg:h-32 rounded-full overflow-hidden bg-gray-100 mb-5 border border-transparent transition-all duration-500 group-hover:border-[#C8102E]">
-              <img src="https://ui-avatars.com/api/?name=Luiza+de+Mello+Viera&background=e5e7eb&color=374151&size=256"
-                class="w-full h-full object-cover grayscale opacity-90 transition-all duration-700 group-hover:grayscale-0 group-hover:opacity-100" />
-            </div>
-            <h4 class="font-serif text-[15px] lg:text-base text-[#1A1A1A] leading-snug">
-              Luiza de Mello Viera
-            </h4>
-            <span class="mt-2 text-[10px] tracking-[0.25em] text-[#C8102E] uppercase font-medium">Sócia</span>
-          </div>
-
-        </div>
-      </div>
-
-      <div class="pt-20 border-t border-gray-200">
-        <div class="text-center mb-16 js-scroll opacity-0 translate-y-12 transition-all duration-1000 ease-out">
-          <h3 class="text-3xl font-serif text-[#1A1A1A] mb-4">Equipe de Advogados</h3>
-          <p class="text-[#666666] font-light max-w-2xl mx-auto">
-            Uma robusta equipe técnica formada por associados dedicados, garantindo excelência e profundidade na análise
-            de cada caso que chega ao escritório.
-          </p>
-        </div>
-        <ul class="columns-1 sm:columns-2 lg:columns-3 gap-8 space-y-4 js-scroll opacity-0 translate-y-12 transition-all duration-1000 ease-out" data-delay="200" id="team-list">
-          <li
-            class="break-inside-avoid text-[#444444] font-light text-sm tracking-wide border-b border-gray-200 pb-2 hover:text-[#C8102E] hover:border-[#C8102E] transition-colors cursor-default flex items-center">
-            <span class="w-1 h-1 bg-gray-300 rounded-full mr-3"></span>Andressa Dias Pizzutti
-          </li>
-          <li
-            class="break-inside-avoid text-[#444444] font-light text-sm tracking-wide border-b border-gray-200 pb-2 hover:text-[#C8102E] hover:border-[#C8102E] transition-colors cursor-default flex items-center">
-            <span class="w-1 h-1 bg-gray-300 rounded-full mr-3"></span>Biloa Marguerite Luciana Graça Mveh
-          </li>
-          <li
-            class="break-inside-avoid text-[#444444] font-light text-sm tracking-wide border-b border-gray-200 pb-2 hover:text-[#C8102E] hover:border-[#C8102E] transition-colors cursor-default flex items-center">
-            <span class="w-1 h-1 bg-gray-300 rounded-full mr-3"></span>Brenda Calistro Lucas
-          </li>
-          <li
-            class="break-inside-avoid text-[#444444] font-light text-sm tracking-wide border-b border-gray-200 pb-2 hover:text-[#C8102E] hover:border-[#C8102E] transition-colors cursor-default flex items-center">
-            <span class="w-1 h-1 bg-gray-300 rounded-full mr-3"></span>Brendon José Machado Ferreira
-          </li>
-          <li
-            class="break-inside-avoid text-[#444444] font-light text-sm tracking-wide border-b border-gray-200 pb-2 hover:text-[#C8102E] hover:border-[#C8102E] transition-colors cursor-default flex items-center">
-            <span class="w-1 h-1 bg-gray-300 rounded-full mr-3"></span>Camila Recova de Avila
-          </li>
-          <li
-            class="break-inside-avoid text-[#444444] font-light text-sm tracking-wide border-b border-gray-200 pb-2 hover:text-[#C8102E] hover:border-[#C8102E] transition-colors cursor-default flex items-center">
-            <span class="w-1 h-1 bg-gray-300 rounded-full mr-3"></span>Carlos Alexandre dos Santos de Lima
-          </li>
-          <li
-            class="break-inside-avoid text-[#444444] font-light text-sm tracking-wide border-b border-gray-200 pb-2 hover:text-[#C8102E] hover:border-[#C8102E] transition-colors cursor-default flex items-center">
-            <span class="w-1 h-1 bg-gray-300 rounded-full mr-3"></span>Caroline Stürmer Corrêa
-          </li>
-          <li
-            class="break-inside-avoid text-[#444444] font-light text-sm tracking-wide border-b border-gray-200 pb-2 hover:text-[#C8102E] hover:border-[#C8102E] transition-colors cursor-default flex items-center">
-            <span class="w-1 h-1 bg-gray-300 rounded-full mr-3"></span>Caroline Vieira Antunes
-          </li>
-          <li
-            class="break-inside-avoid text-[#444444] font-light text-sm tracking-wide border-b border-gray-200 pb-2 hover:text-[#C8102E] hover:border-[#C8102E] transition-colors cursor-default flex items-center">
-            <span class="w-1 h-1 bg-gray-300 rounded-full mr-3"></span>Deisiane Anzolin
-          </li>
-          <li
-            class="break-inside-avoid text-[#444444] font-light text-sm tracking-wide border-b border-gray-200 pb-2 hover:text-[#C8102E] hover:border-[#C8102E] transition-colors cursor-default flex items-center">
-            <span class="w-1 h-1 bg-gray-300 rounded-full mr-3"></span>Emely Martins Baptista
-          </li>
-          <li
-            class="break-inside-avoid text-[#444444] font-light text-sm tracking-wide border-b border-gray-200 pb-2 hover:text-[#C8102E] hover:border-[#C8102E] transition-colors cursor-default flex items-center">
-            <span class="w-1 h-1 bg-gray-300 rounded-full mr-3"></span>Fábio Fernandes Franco
-          </li>
-          <li
-            class="break-inside-avoid text-[#444444] font-light text-sm tracking-wide border-b border-gray-200 pb-2 hover:text-[#C8102E] hover:border-[#C8102E] transition-colors cursor-default flex items-center">
-            <span class="w-1 h-1 bg-gray-300 rounded-full mr-3"></span>Felipe Brasil Brancher
-          </li>
-          <li
-            class="break-inside-avoid text-[#444444] font-light text-sm tracking-wide border-b border-gray-200 pb-2 hover:text-[#C8102E] hover:border-[#C8102E] transition-colors cursor-default flex items-center">
-            <span class="w-1 h-1 bg-gray-300 rounded-full mr-3"></span>Fernanda Leal Silva
-          </li>
-          <li
-            class="break-inside-avoid text-[#444444] font-light text-sm tracking-wide border-b border-gray-200 pb-2 hover:text-[#C8102E] hover:border-[#C8102E] transition-colors cursor-default flex items-center">
-            <span class="w-1 h-1 bg-gray-300 rounded-full mr-3"></span>Flavia Hagen Matias
-          </li>
-          <li
-            class="break-inside-avoid text-[#444444] font-light text-sm tracking-wide border-b border-gray-200 pb-2 hover:text-[#C8102E] hover:border-[#C8102E] transition-colors cursor-default flex items-center">
-            <span class="w-1 h-1 bg-gray-300 rounded-full mr-3"></span>Gabriela Garcia Escobar
-          </li>
-          <li
-            class="break-inside-avoid text-[#444444] font-light text-sm tracking-wide border-b border-gray-200 pb-2 hover:text-[#C8102E] hover:border-[#C8102E] transition-colors cursor-default flex items-center">
-            <span class="w-1 h-1 bg-gray-300 rounded-full mr-3"></span>Geancarlos Valduga Moreira
-          </li>
-          <li
-            class="break-inside-avoid text-[#444444] font-light text-sm tracking-wide border-b border-gray-200 pb-2 hover:text-[#C8102E] hover:border-[#C8102E] transition-colors cursor-default flex items-center">
-            <span class="w-1 h-1 bg-gray-300 rounded-full mr-3"></span>Henrique Beal Tavares
-          </li>
-          <li
-            class="break-inside-avoid text-[#444444] font-light text-sm tracking-wide border-b border-gray-200 pb-2 hover:text-[#C8102E] hover:border-[#C8102E] transition-colors cursor-default flex items-center">
-            <span class="w-1 h-1 bg-gray-300 rounded-full mr-3"></span>Jackeline Stegues Vieira
-          </li>
-          <li
-            class="break-inside-avoid text-[#444444] font-light text-sm tracking-wide border-b border-gray-200 pb-2 hover:text-[#C8102E] hover:border-[#C8102E] transition-colors cursor-default flex items-center">
-            <span class="w-1 h-1 bg-gray-300 rounded-full mr-3"></span>Juliana Cremonese Lopes
-          </li>
-          <li
-            class="break-inside-avoid text-[#444444] font-light text-sm tracking-wide border-b border-gray-200 pb-2 hover:text-[#C8102E] hover:border-[#C8102E] transition-colors cursor-default flex items-center">
-            <span class="w-1 h-1 bg-gray-300 rounded-full mr-3"></span>Kele Mariane Silva da Silveira
-          </li>
-          <li
-            class="break-inside-avoid text-[#444444] font-light text-sm tracking-wide border-b border-gray-200 pb-2 hover:text-[#C8102E] hover:border-[#C8102E] transition-colors cursor-default flex items-center">
-            <span class="w-1 h-1 bg-gray-300 rounded-full mr-3"></span>Kelly Pereira da Rocha
-          </li>
-          <li
-            class="break-inside-avoid text-[#444444] font-light text-sm tracking-wide border-b border-gray-200 pb-2 hover:text-[#C8102E] hover:border-[#C8102E] transition-colors cursor-default flex items-center">
-            <span class="w-1 h-1 bg-gray-300 rounded-full mr-3"></span>Keynne Nathyele Duarte Bueno Spindola
-          </li>
-          <li
-            class="break-inside-avoid text-[#444444] font-light text-sm tracking-wide border-b border-gray-200 pb-2 hover:text-[#C8102E] hover:border-[#C8102E] transition-colors cursor-default flex items-center">
-            <span class="w-1 h-1 bg-gray-300 rounded-full mr-3"></span>Márcia Dullius Cerqueira
-          </li>
-          <li
-            class="break-inside-avoid text-[#444444] font-light text-sm tracking-wide border-b border-gray-200 pb-2 hover:text-[#C8102E] hover:border-[#C8102E] transition-colors cursor-default flex items-center">
-            <span class="w-1 h-1 bg-gray-300 rounded-full mr-3"></span>Marjorie dos Santos Hampe
-          </li>
-          <li
-            class="break-inside-avoid text-[#444444] font-light text-sm tracking-wide border-b border-gray-200 pb-2 hover:text-[#C8102E] hover:border-[#C8102E] transition-colors cursor-default flex items-center">
-            <span class="w-1 h-1 bg-gray-300 rounded-full mr-3"></span>Marlise Heck Silva
-          </li>
-          <li
-            class="break-inside-avoid text-[#444444] font-light text-sm tracking-wide border-b border-gray-200 pb-2 hover:text-[#C8102E] hover:border-[#C8102E] transition-colors cursor-default flex items-center">
-            <span class="w-1 h-1 bg-gray-300 rounded-full mr-3"></span>Michele Chelmicki Gabriel
-          </li>
-          <li
-            class="break-inside-avoid text-[#444444] font-light text-sm tracking-wide border-b border-gray-200 pb-2 hover:text-[#C8102E] hover:border-[#C8102E] transition-colors cursor-default flex items-center">
-            <span class="w-1 h-1 bg-gray-300 rounded-full mr-3"></span>Michelle Pires Barbosa
-          </li>
-          <li
-            class="break-inside-avoid text-[#444444] font-light text-sm tracking-wide border-b border-gray-200 pb-2 hover:text-[#C8102E] hover:border-[#C8102E] transition-colors cursor-default flex items-center">
-            <span class="w-1 h-1 bg-gray-300 rounded-full mr-3"></span>Mônica Marques Godoy Maahs
-          </li>
-          <li
-            class="break-inside-avoid text-[#444444] font-light text-sm tracking-wide border-b border-gray-200 pb-2 hover:text-[#C8102E] hover:border-[#C8102E] transition-colors cursor-default flex items-center">
-            <span class="w-1 h-1 bg-gray-300 rounded-full mr-3"></span>Natália Ferro Zonatto
-          </li>
-          <li
-            class="break-inside-avoid text-[#444444] font-light text-sm tracking-wide border-b border-gray-200 pb-2 hover:text-[#C8102E] hover:border-[#C8102E] transition-colors cursor-default flex items-center">
-            <span class="w-1 h-1 bg-gray-300 rounded-full mr-3"></span>Nicole Drescher de Oliveira
-          </li>
-          <li
-            class="break-inside-avoid text-[#444444] font-light text-sm tracking-wide border-b border-gray-200 pb-2 hover:text-[#C8102E] hover:border-[#C8102E] transition-colors cursor-default flex items-center">
-            <span class="w-1 h-1 bg-gray-300 rounded-full mr-3"></span>Patrícia Da Silveira Gonçalves
-          </li>
-          <li
-            class="break-inside-avoid text-[#444444] font-light text-sm tracking-wide border-b border-gray-200 pb-2 hover:text-[#C8102E] hover:border-[#C8102E] transition-colors cursor-default flex items-center">
-            <span class="w-1 h-1 bg-gray-300 rounded-full mr-3"></span>Patrícia Kling Trott
-          </li>
-          <li
-            class="break-inside-avoid text-[#444444] font-light text-sm tracking-wide border-b border-gray-200 pb-2 hover:text-[#C8102E] hover:border-[#C8102E] transition-colors cursor-default flex items-center">
-            <span class="w-1 h-1 bg-gray-300 rounded-full mr-3"></span>Paula Quevedo Brage
-          </li>
-          <li
-            class="break-inside-avoid text-[#444444] font-light text-sm tracking-wide border-b border-gray-200 pb-2 hover:text-[#C8102E] hover:border-[#C8102E] transition-colors cursor-default flex items-center">
-            <span class="w-1 h-1 bg-gray-300 rounded-full mr-3"></span>Priscilla Ruschel da Silva
-          </li>
-          <li
-            class="break-inside-avoid text-[#444444] font-light text-sm tracking-wide border-b border-gray-200 pb-2 hover:text-[#C8102E] hover:border-[#C8102E] transition-colors cursor-default flex items-center">
-            <span class="w-1 h-1 bg-gray-300 rounded-full mr-3"></span>Rafael Martins Nogueira
-          </li>
-          <li
-            class="break-inside-avoid text-[#444444] font-light text-sm tracking-wide border-b border-gray-200 pb-2 hover:text-[#C8102E] hover:border-[#C8102E] transition-colors cursor-default flex items-center">
-            <span class="w-1 h-1 bg-gray-300 rounded-full mr-3"></span>Renata Sanzo Moczulski
-          </li>
-          <li
-            class="break-inside-avoid text-[#444444] font-light text-sm tracking-wide border-b border-gray-200 pb-2 hover:text-[#C8102E] hover:border-[#C8102E] transition-colors cursor-default flex items-center">
-            <span class="w-1 h-1 bg-gray-300 rounded-full mr-3"></span>Rodrigo Teixeira Verçoza
-          </li>
-          <li
-            class="break-inside-avoid text-[#444444] font-light text-sm tracking-wide border-b border-gray-200 pb-2 hover:text-[#C8102E] hover:border-[#C8102E] transition-colors cursor-default flex items-center">
-            <span class="w-1 h-1 bg-gray-300 rounded-full mr-3"></span>Sabrina Giacomini
-          </li>
-          <li
-            class="break-inside-avoid text-[#444444] font-light text-sm tracking-wide border-b border-gray-200 pb-2 hover:text-[#C8102E] hover:border-[#C8102E] transition-colors cursor-default flex items-center">
-            <span class="w-1 h-1 bg-gray-300 rounded-full mr-3"></span>Tatiana Araújo Flores
-          </li>
-          <li
-            class="break-inside-avoid text-[#444444] font-light text-sm tracking-wide border-b border-gray-200 pb-2 hover:text-[#C8102E] hover:border-[#C8102E] transition-colors cursor-default flex items-center">
-            <span class="w-1 h-1 bg-gray-300 rounded-full mr-3"></span>Tayná Rubim Machado
-          </li>
-          <li
-            class="break-inside-avoid text-[#444444] font-light text-sm tracking-wide border-b border-gray-200 pb-2 hover:text-[#C8102E] hover:border-[#C8102E] transition-colors cursor-default flex items-center">
-            <span class="w-1 h-1 bg-gray-300 rounded-full mr-3"></span>Thauana Nicole Horst
-          </li>
-          <li
-            class="break-inside-avoid text-[#444444] font-light text-sm tracking-wide border-b border-gray-200 pb-2 hover:text-[#C8102E] hover:border-[#C8102E] transition-colors cursor-default flex items-center">
-            <span class="w-1 h-1 bg-gray-300 rounded-full mr-3"></span>Theo Baratojo Soares
-          </li>
-        </ul>
-      </div>
-    </div>
-  </section>
+  
 
   <section id="clientes" class="py-32 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
@@ -1577,17 +1152,17 @@
             <li><button onclick="scrollToSection('areas-de-atuacao')"
                 class="hover:text-[#C8102E] transition-colors flex items-center"><i data-lucide="chevron-right"
                   class="w-3 h-3 mr-2 text-gray-700"></i> Áreas de Atuação</button></li>
-            <li><button onclick="scrollToSection('equipe')"
+            <li><a href="equipe.html"
                 class="hover:text-[#C8102E] transition-colors flex items-center"><i data-lucide="chevron-right"
-                  class="w-3 h-3 mr-2 text-gray-700"></i> Corpo Jurídico</button></li>
+                  class="w-3 h-3 mr-2 text-gray-700"></i> Corpo Jurídico</a></li>
           </ul>
         </div>
       </div>
 
-      <div class="w-full h-px bg-gray-900 mb-8 js-scroll opacity-0 transition-all duration-1000" data-delay="500"></div>
+      <div class="w-full h-px bg-gray-900 mb-8"></div>
 
       <div
-        class="flex flex-col md:flex-row justify-between items-center text-xs font-light tracking-wide text-gray-600 js-scroll opacity-0 translate-y-8 transition-all duration-1000 ease-out" data-delay="600">
+        class="flex flex-col md:flex-row justify-between items-center text-xs font-light tracking-wide text-gray-600">
         <p class="mb-4 md:mb-0 text-center md:text-left">
           © <span id="current-year"></span> COP Advogados Associados. Todos os direitos reservados.
         </p>
