@@ -473,7 +473,7 @@ faqButtons.forEach(button => {
         const thumb = `https://img.youtube.com/vi/${v.yt_id}/maxresdefault.jpg`;
         const titleEsc = escHtml(v.title || 'Vídeo COP Advogados');
         const d = document.createElement('article');
-        d.className = `group relative aspect-video bg-neutral-900 rounded-lg md:rounded-2xl overflow-hidden cursor-pointer shadow-[0_10px_30px_rgba(0,0,0,0.5)] hover:shadow-[0_15px_50px_rgba(200,16,46,0.35)] shrink-0 snap-center w-[85vw] sm:w-[45vw] lg:w-[30vw] max-w-[420px] transition-all duration-500 hover:-translate-y-2 border border-white/5 hover:border-[#C8102E]/40 z-10 relative`;
+        d.className = `group relative aspect-video bg-neutral-900 rounded-lg md:rounded-2xl overflow-hidden cursor-pointer shadow-[0_10px_30px_rgba(0,0,0,0.5)] hover:shadow-2xl hover:shadow-[#C8102E]/20 shrink-0 snap-center w-[85vw] sm:w-[45vw] lg:w-[30vw] max-w-[420px] transition-all duration-500 hover:-translate-y-1 border border-white/5 hover:border-[#C8102E]/40 z-10 relative`;
         
         d.onclick = () => openVideoModal(v.yt_id);
         
