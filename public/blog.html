@@ -977,6 +977,10 @@
         // ── Abrir Artigo (Modal) ──────────────────────────────────────────────────
         async function openPost(id) {
             try {
+                const sc = document.getElementById('modal-scroll');
+                if (sc) {
+                    sc.scrollTop = 0;
+                }
                 const r = await fetch(API + '/posts/' + id);
                 if (!r.ok) throw new Error();
                 const p = await r.json();
@@ -1056,8 +1060,12 @@
                     relWrapper.style.display = 'none';
                 }
 
-                const sc = document.getElementById('modal-scroll');
-                sc.scrollTop = 0;
+                if (sc) {
+                    sc.scrollTop = 0;
+                    requestAnimationFrame(() => {
+                        sc.scrollTop = 0;
+                    });
+                }
                 document.getElementById('modal-progress').style.width = '0%';
 
                 const ov = document.getElementById('modal-overlay');
