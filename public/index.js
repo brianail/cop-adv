@@ -113,7 +113,8 @@ window.addEventListener('scroll', () => {
 });
 
 // 3. Controlar o Menu Mobile
-menuToggleBtn.addEventListener('click', () => {
+menuToggleBtn.addEventListener('click', (e) => {
+  e.stopPropagation(); // Evita que o clique no botão feche o menu imediatamente pelo listener do document
   isMenuOpen = !isMenuOpen;
 
   if (isMenuOpen) {
@@ -121,6 +122,16 @@ menuToggleBtn.addEventListener('click', () => {
     iconMenu.classList.add('hidden');
     iconX.classList.remove('hidden');
   } else {
+    mobileMenu.classList.add('hidden');
+    iconMenu.classList.remove('hidden');
+    iconX.classList.add('hidden');
+  }
+});
+
+// Fechar menu ao clicar fora dele
+document.addEventListener('click', (e) => {
+  if (isMenuOpen && !navbar.contains(e.target) && !mobileMenu.contains(e.target)) {
+    isMenuOpen = false;
     mobileMenu.classList.add('hidden');
     iconMenu.classList.remove('hidden');
     iconX.classList.add('hidden');

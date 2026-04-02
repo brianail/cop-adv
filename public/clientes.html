@@ -83,7 +83,7 @@
     </div>
 
     <!-- Navegação -->
-    <nav id="navbar" class="fixed w-full z-50 transition-all duration-500 bg-transparent py-6 top-0 left-0 right-0">
+    <nav id="navbar" class="fixed w-full left-0 right-0 z-50 transition-all duration-500 bg-transparent py-6 top-0 left-0 right-0">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
             <div class="flex justify-between items-center">
 
@@ -322,84 +322,9 @@
     </footer>
 
     <script>
+        // Re-inicializar os ícones da biblioteca Lucide
         lucide.createIcons();
         document.getElementById('current-year').textContent = new Date().getFullYear();
-
-        // 1. Lógica do Menu Mobile e Scroll da Nav
-        const navbar = document.getElementById('navbar');
-        const logoMain = document.getElementById('logo-main');
-        const logoSub = document.getElementById('logo-sub');
-        const siteLogo = document.getElementById('site-logo');
-        const navLinks = document.querySelectorAll('.nav-link');
-        const menuToggleBtn = document.getElementById('menu-toggle-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
-        const iconMenu = document.getElementById('icon-menu');
-        const iconX = document.getElementById('icon-x');
-
-        // Efeito da NavBar ao fazer Scroll
-        window.addEventListener('scroll', () => {
-            const scrollPos = window.scrollY;
-
-            if (scrollPos > 50) {
-                // Background Branco com Sombra
-                navbar.classList.add('bg-white', 'shadow-[0_4px_20px_-10px_rgba(0,0,0,0.1)]', 'py-4');
-                navbar.classList.remove('bg-transparent', 'py-6');
-
-                // Mudar a Imagem do Logo para a versão vermelha
-                siteLogo.src = '/assets/logos/logovermelho.png';
-
-                // Cores do Logótipo (Escuras)
-                logoMain.classList.add('text-[#1A1A1A]');
-                logoMain.classList.remove('text-white');
-                logoSub.classList.add('text-[#666666]');
-                logoSub.classList.remove('text-gray-300');
-
-                // Botão Menu Mobile (Escuro)
-                menuToggleBtn.classList.add('text-[#2C2C2C]');
-                menuToggleBtn.classList.remove('text-white');
-
-                // Transição das Letras (Pretas, Hover Vermelho)
-                navLinks.forEach(link => {
-                    link.classList.add('text-[#2C2C2C]', 'hover:text-[#C8102E]');
-                    link.classList.remove('text-gray-200', 'hover:text-white');
-                });
-            } else {
-                // Voltar ao Topo (Transparente)
-                navbar.classList.remove('bg-white', 'shadow-[0_4px_20px_-10px_rgba(0,0,0,0.1)]', 'py-4');
-                navbar.classList.add('bg-transparent', 'py-6');
-
-                // Voltar a Imagem do Logo Original (Branca)
-                siteLogo.src = '/assets/logos/logo.png';
-
-                // Cores do Logótipo (Claras)
-                logoMain.classList.remove('text-[#1A1A1A]');
-                logoMain.classList.add('text-white');
-                logoSub.classList.remove('text-[#666666]');
-                logoSub.classList.add('text-gray-300');
-
-                // Botão Menu Mobile (Claro)
-                menuToggleBtn.classList.remove('text-[#2C2C2C]');
-                menuToggleBtn.classList.add('text-white');
-
-                // Transição das Letras (Claras, Hover Branco)
-                navLinks.forEach(link => {
-                    link.classList.remove('text-[#2C2C2C]', 'hover:text-[#C8102E]');
-                    link.classList.add('text-gray-200', 'hover:text-white');
-                });
-            }
-        });
-
-        window.addEventListener('load', () => {
-            if (!siteLogo) return;
-            siteLogo.src = window.scrollY > 50 ? '/assets/logos/logovermelho.png' : '/assets/logos/logo.png';
-        });
-
-        // Alternar Menu Mobile
-        menuToggleBtn.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-            iconMenu.classList.toggle('hidden');
-            iconX.classList.toggle('hidden');
-        });
 
         // Base de Dados de Clientes (Consolidada e Formatada)
         const clientes = [
